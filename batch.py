@@ -16,11 +16,13 @@ FILE_NAME = {
     'result': '{}.time.txt'
 }
 
+
 def compile(test_path, c_file_path, c_file_name, bytecode_file_path):
          compile = CMD['compile'].format(c_file_path, bytecode_file_path)
 
          print(compile)
          os.system(CMD['bash'].format(compile))
+
 
 def test(test_path, c_file_name, bytecode_file_path):
          test_result_file = FILE_NAME['result'].format(c_file_name)
@@ -29,11 +31,11 @@ def test(test_path, c_file_name, bytecode_file_path):
          test = CMD['test'].format(test_output_dir, bytecode_file_path, klee_args, test_result_path)
          print(test)
          os.system(CMD['bash'].format(test))
-        
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print('Usage: batch [test directory] [symbolic arguments]')
+        print('Usage: batch [test directory] [klee symbolic input args]')
         sys.exit(1)
 
     test_dir = sys.argv[1]
@@ -51,4 +53,4 @@ if __name__ == '__main__':
          compile(test_path, c_file_path, c_file_name, bytecode_file_path)
 
          test(test_path, c_file_name, bytecode_file_path)
-                
+
