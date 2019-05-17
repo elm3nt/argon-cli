@@ -1,6 +1,6 @@
-# Klee Analysis
+# Symbolic Analysis
 
-Klee Analysis is set of scripts to automate Klee symbolic analyzer, record timing and generate stats.
+Symbolic Analysis is set of scripts to automate Klee symbolic analyzer, record timing and generate stats.
 
 
 ### Prerequisites
