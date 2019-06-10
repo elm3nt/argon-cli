@@ -3,10 +3,22 @@
 import os
 import sys
 import shutil
+
 from pathlib import Path
 
+VN = 1
+ALL_DIRS = 1
+RENDUNDANT_DIRS = 2
+NO_OF_VARIANTS = 20
+RENDUNDANT_DIR_LENGTH = 2
+INPUT_FILE = 'original.c'
+ABSCTRACT = 'A'
+VIRTUALIZATION = 'V'
+CONTROL_FLOW = 'C'
+DATA = 'D'
+
 #all combinations 
-combi = {'A', 'ACD', 'ACDV', 'ADC', 'ADCV', 'C', 'CAD', 'CADV', 'CDA', 'CDAV'}
+COMBINATIONS = {'A', 'ACD', 'ACDV', 'ADC', 'ADCV', 'C', 'CAD', 'CADV', 'CDA', 'CDAV'}
 
 #tigress commands
 CMD = {
@@ -14,7 +26,7 @@ CMD = {
 
     'compileA': '''tigress \
 				--Verbosity=1 \
-				--FilePrefix=v{}a \
+				--FilePrefix=v{v}a \
 				--Transform=Split \
 				--Seed=0 \
 				--SplitKinds=deep,block,top \
@@ -22,7 +34,7 @@ CMD = {
 				--Functions=SECRET \
 				--Transform=CleanUp \
 				--CleanUpKinds=annotations \
-				--out={}1A.c {} ''',
+				--out={output}/1A.c {input} ''',
 
 	'compileA2': '''tigress \
 				--FilePrefix=v{a}b \
@@ -42,7 +54,7 @@ CMD = {
 				+ ",_v{a}a_1_SECRET_SECRET_split_10 " +
 				'''--Transform=CleanUp \
 				--CleanUpKinds=annotations \
-				--out={d}2A.c {s}''',
+				--out={d}/2A.c {s}''',
 
 	'compileA3': '''tigress --Verbosity=1   \
 				--FilePrefix=v{a} \
@@ -65,7 +77,7 @@ CMD = {
 				+ ",_v{a}a_1_SECRET_SECRET_split_10 " +
 				'''--Transform=CleanUp \
 				--CleanUpKinds=annotations  \
-				--out={d}{n}{num}.c {s}''',
+				--out={d}/{n}{num}.c {s}''',
 
 	'compileC': 'tigress \
 				--Verbosity=1 \
@@ -110,65 +122,84 @@ CMD = {
 	}
 
 #compilation of Abstract, controlflow, data, and virtualization
-def compile(case, dir, file_path, file_num, name, vn):
-	if case == 'A':
-		compileA = CMD['compileA'].format(vn, dir + name + '/', file_path)
+def compile(obfuscation, path, file_path, file_num, file_name, vn):
+
+	file_path = os.path.join(path, file_name)
+
+	if obfuscation == ABSCTRACT:
+		compileA = CMD['compileA'].format(v = vn, output = file_path, input = file_name)
 		os.system(CMD['bash'].format(compileA))
-		src = os.path.abspath(dir + name + '/1A.c')
-		compileA2 = CMD['compileA2'].format(a = vn, d = dir + name + '/', s = src)
+
+		src = os.path.abspath(path + file_name + '1A.c')
+		compileA2 = CMD['compileA2'].format(a = vn, d = file_path, s = src)
 		os.system(CMD['bash'].format(compileA2))
-		src2 = os.path.abspath(dir + name + '/2A.c')
-		compileA3 = CMD['compileA3'].format(a = vn, d = dir + name + '/', n = name, num = file_num, s = src2)
+
+		src2 = os.path.abspath(path + file_name + '2A.c')
+		compileA3 = CMD['compileA3'].format(a = vn, d = file_path, n = file_name, num = file_num, s = src2)
 		os.system(CMD['bash'].format(compileA3))
+	
 		os.remove(src) 
 		os.remove(src2)
-	elif case == 'C':
-		compileC = CMD['compileC'].format(a = vn, d = dir + name + '/', n = name, num = file_num, s = file_path)
+	elif obfuscation == CONTROL_FLOW:
+		compileC = CMD['compileC'].format(a = vn, d = path + file_name + '/', n = file_name, num = file_num, s = file_path)
 		os.system(CMD['bash'].format(compileC))
-	elif case == 'D':
-		compileD = CMD['compileD'].format(vn, dir + name + '/', name, file_num, file_path)
+	elif obfuscation == DATA:
+		compileD = CMD['compileD'].format(vn, path + file_name + '/', file_name, file_num, file_path)
 		os.system(CMD['bash'].format(compileD))
-	elif case == 'V':
-		compileV = CMD['compileV'].format(vn, dir + name + '/', name, file_num, file_path)
+	elif obfuscation == VIRTUALIZATION:
+		compileV = CMD['compileV'].format(vn, path + file_name + '/', file_name, file_num, file_path)
 		os.system(CMD['bash'].format(compileV))
 
-	return os.path.abspath(dir + name + '/' + name + str(file_num) + '.c')
+	return os.path.abspath(path + file_name + '/' + file_name + str(file_num) + '.c')
 
-#clears out folders in directory
-def CleanUp(option):
-	folder_list = os.listdir(dir)
-	if option == 1:
-		for folder in folder_list:
-			if os.path.isdir(dir + folder):
-				shutil.rmtree(dir + folder)
-	elif option == 2:
-		for folder in folder_list:
-			if len(folder) == 2:
-				shutil.rmtree(dir + folder)
+def clean_up(path, option):
+	dir_list = os.listdir(path)
 
-def Variants(combinations, file_num):
-	for combo in combinations:
-		path = os.path.abspath(dir + 'original.c')
+	for dir in dir_list:
+		target_path = os.path.join(path, dir)
+
+		if option == ALL_DIRS and os.path.isdir(target_path):
+			shutil.rmtree(target_path)
+		elif option == RENDUNDANT_DIRS and len(dir) == RENDUNDANT_DIR_LENGTH:
+			shutil.rmtree(target_path)
+
+def variant(path, input_file, combinations, index):
+	for combination in combinations:
+		input_file_path = os.path.join(path, input_file)
+
+		vn = VN
 		file_name = ''
-		vn = 1
-		for char in combo:
-			file_name += char
-			if os.path.isdir(dir + file_name):
-				pass
-			else:
-				os.mkdir(dir + file_name)
-			new_path = compile(char, dir, path, file_num, file_name, vn)
+		for obfuscation in combination:
+			file_name += obfuscation
+			target_path = os.path.join(path, file_name)
+
+			if not os.path.isdir(target_path):
+				os.mkdir(target_path)
+
+			new_path = compile(obfuscation, path+'/', input_file_path, index, file_name, vn)
+
 			vn += 1
-			path = new_path
+			input_file_path = new_path
 
 #main
+
+
 dir = sys.argv[1]
+if __name__ == '__main__':
+	output_path = os.path.abspath(sys.argv[1])
 
-#cleans directory
-CleanUp(1)
+	clean_up(output_path, ALL_DIRS)
 
-#creates the 20 variants
-for i in range(1, 21):
-	Variants(combi, i)
+	for i in range(1, NO_OF_VARIANTS + 1):
+		variant(output_path, INPUT_FILE, COMBINATIONS, i)
 
-CleanUp(2)
+	clean_up(2)
+
+
+Java
+thisIsAVariable
+ThisIsAClass
+
+Python
+this_is_a_variable
+ThisClass
