@@ -9,150 +9,157 @@ from pathlib import Path
 VN = 1
 ALL_DIRS = 1
 RENDUNDANT_DIRS = 2
-NO_OF_VARIANTS = 20
-RENDUNDANT_DIR_LENGTH = 2
-INPUT_FILE = 'original.c'
-ABSCTRACT = 'A'
+ABSTRACT = 'A'
 VIRTUALIZATION = 'V'
 CONTROL_FLOW = 'C'
 DATA = 'D'
 
-#all combinations 
-COMBINATIONS = {'A', 'ACD', 'ACDV', 'ADC', 'ADCV', 'C', 'CAD', 'CADV', 'CDA', 'CDAV'}
 
-#tigress commands
 CMD = {
-    'bash': '/bin/bash -c "{}"',
+    'bash': '/bin/bash -c "{}"'
+}
 
-    'compileA': '''tigress \
-				--Verbosity=1 \
-				--FilePrefix=v{v}a \
-				--Transform=Split \
-				--Seed=0 \
-				--SplitKinds=deep,block,top \
-				--SplitCount=10 \
-				--Functions=SECRET \
-				--Transform=CleanUp \
-				--CleanUpKinds=annotations \
-				--out={output}/1A.c {input} ''',
+OBFUSCATION = {
+    'abstract': 'tigress \
+		--Verbosity=1 \
+		--FilePrefix=v{vn}a \
+		--Transform=Split \
+		--Seed=0 \
+		--SplitKinds=deep,block,top \
+		--SplitCount=10 \
+		--Functions=SECRET \
+		--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}',
 
-	'compileA2': '''tigress \
-				--FilePrefix=v{a}b \
-				--Verbosity=1  \
-				--Transform=RndArgs \
-				--Seed=0 \
-				--RndArgsBogusNo=2?5 \
-				''' + "--Functions=_v{a}a_1_SECRET_SECRET_split_1"
-				+ ",_v{a}a_1_SECRET_SECRET_split_2"
-				+ ",_v{a}a_1_SECRET_SECRET_split_3"
-				+ ",_v{a}a_1_SECRET_SECRET_split_4"
-				+ ",_v{a}a_1_SECRET_SECRET_split_5"
-				+ ",_v{a}a_1_SECRET_SECRET_split_6"
-				+ ",_v{a}a_1_SECRET_SECRET_split_7"
-				+ ",_v{a}a_1_SECRET_SECRET_split_8"
-				+ ",_v{a}a_1_SECRET_SECRET_split_9"
-				+ ",_v{a}a_1_SECRET_SECRET_split_10 " +
-				'''--Transform=CleanUp \
-				--CleanUpKinds=annotations \
-				--out={d}/2A.c {s}''',
+	'abstract-2': '''tigress \
+		--FilePrefix=v{vn}b \
+		--Verbosity=1  \
+		--Transform=RndArgs \
+		--Seed=0 \
+		--RndArgsBogusNo=2?5 \
+				''' + "--Functions=_v{vn}a_1_SECRET_SECRET_split_1"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_2"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_3"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_4"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_5"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_6"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_7"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_8"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_9"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_10 " +
+'''--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}''',
 
-	'compileA3': '''tigress --Verbosity=1   \
-				--FilePrefix=v{a} \
-				--Transform=InitEntropy \
-				--Functions=main  \
-				--Transform=InitOpaque \
-				--Functions=main \
-				--InitOpaqueCount=2 \
-				--InitOpaqueStructs=list,array  \
+	'abstract-3': '''tigress --Verbosity=1   \
+		--FilePrefix=v{vn} \
+		--Transform=InitEntropy \
+		--Functions=main  \
+		--Transform=InitOpaque \
+		--Functions=main \
+		--InitOpaqueCount=2 \
+		--InitOpaqueStructs=list,array  \
 				--Transform=Merge \
-				''' + "--Functions=_v{a}a_1_SECRET_SECRET_split_1"
-				+ ",_v{a}a_1_SECRET_SECRET_split_2"
-				+ ",_v{a}a_1_SECRET_SECRET_split_3"
-				+ ",_v{a}a_1_SECRET_SECRET_split_4"
-				+ ",_v{a}a_1_SECRET_SECRET_split_5"
-				+ ",_v{a}a_1_SECRET_SECRET_split_6"
-				+ ",_v{a}a_1_SECRET_SECRET_split_7"
-				+ ",_v{a}a_1_SECRET_SECRET_split_8"
-				+ ",_v{a}a_1_SECRET_SECRET_split_9"
-				+ ",_v{a}a_1_SECRET_SECRET_split_10 " +
-				'''--Transform=CleanUp \
-				--CleanUpKinds=annotations  \
-				--out={d}/{n}{num}.c {s}''',
+				''' + "--Functions=_v{vn}a_1_SECRET_SECRET_split_1"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_2"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_3"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_4"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_5"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_6"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_7"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_8"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_9"
+				+ ",_v{vn}a_1_SECRET_SECRET_split_10 " +
+		'''--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}''',
 
-	'compileC': 'tigress \
-				--Verbosity=1 \
-				--FilePrefix=v{a} \
-				--Transform=InitOpaque \
-				--Functions=main \
-				--Transform=UpdateOpaque \
-				--Functions=SECRET \
-				--UpdateOpaqueCount=10 \
-				--Transform=AddOpaque \
-				--Functions=SECRET \
-				--AddOpaqueCount=10  \
-				--AddOpaqueKinds=call,bug,true,junk \
-				--Transform=Flatten \
-				--Functions=SECRET \
-				-FlattenObfuscateNext=true \
-				--FlattenDispatch=switch \
-				--Transform=CleanUp \
-				--CleanUpKinds=annotations \
-				--out={d}{n}{num}.c {s}',
+	'control-flow': 'tigress \
+		--Verbosity=1 \
+		--FilePrefix=v{vn} \
+		--Transform=InitOpaque \
+		--Functions=main \
+		--Transform=UpdateOpaque \
+		--Functions=SECRET \
+		--UpdateOpaqueCount=10 \
+		--Transform=AddOpaque \
+		--Functions=SECRET \
+		--AddOpaqueCount=10  \
+		--AddOpaqueKinds=call,bug,true,junk \
+		--Transform=Flatten \
+		--Functions=SECRET \
+		-FlattenObfuscateNext=true \
+		--FlattenDispatch=switch \
+		--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}',
 	
-	'compileD': '''tigress \
-				--Verbosity=1  \
-				--FilePrefix=v{} \
-				--Transform=InitEntropy \
-				--Functions=main  \
-				--Transform=EncodeLiterals \
-				--Functions=SECRET  \
-				--Transform=CleanUp \
-				--CleanUpKinds=annotations \
-				--out={}{}{}.c {}''',
+	'data': 'tigress \
+		--Verbosity=1  \
+		--FilePrefix=v{vn} \
+		--Transform=InitEntropy \
+		--Functions=main  \
+		--Transform=EncodeLiterals \
+		--Functions=SECRET  \
+		--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}',
 
-	'compileV': '''tigress \
-				--Verbosity=1  \
-				--FilePrefix=v{} \
-				--Transform=Virtualize \
-				--Functions=SECRET \
-				--VirtualizeDispatch=switch \
-				--Transform=CleanUp \
-				--CleanUpKinds=annotations \
-				--out={}{}{}.c {}'''
+	'virtualization': 'tigress \
+		--Verbosity=1  \
+		--FilePrefix=v{vn} \
+		--Transform=Virtualize \
+		--Functions=SECRET \
+		--VirtualizeDispatch=switch \
+		--Transform=CleanUp \
+		--CleanUpKinds=annotations \
+		--out={output} {input}'
 	}
 
-#compilation of Abstract, controlflow, data, and virtualization
-def compile(obfuscation, path, file_path, file_num, file_name, vn):
 
-	file_path = os.path.join(path, file_name)
+def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
+	temp_c_file_1 = 'temp1.c'
+	temp_c_file_2 = 'temp2.c'
+	output_file = '{}{}.c'.format(file_name, index)
+	output_file_path = ''
+	print(input_path, output_path, obfuscation, file_name, index, vn)
+	if obfuscation == ABSTRACT:
+		output_file_path_1 = os.path.join(output_path, file_name, temp_c_file_1)
+		cmd_temp_1 = OBFUSCATION['abstract'].format(vn = vn, output = output_file_path_1, input = input_path)
+		os.system(CMD['bash'].format(cmd_temp_1))
 
-	if obfuscation == ABSCTRACT:
-		compileA = CMD['compileA'].format(v = vn, output = file_path, input = file_name)
-		os.system(CMD['bash'].format(compileA))
+		output_file_path_2 = os.path.join(output_path, file_name, temp_c_file_2)
+		cmd_temp_2 = OBFUSCATION['abstract-2'].format(vn = vn, output = output_file_path_2, input = output_file_path_1)
+		os.system(CMD['bash'].format(cmd_temp_2))
 
-		src = os.path.abspath(path + file_name + '1A.c')
-		compileA2 = CMD['compileA2'].format(a = vn, d = file_path, s = src)
-		os.system(CMD['bash'].format(compileA2))
 
-		src2 = os.path.abspath(path + file_name + '2A.c')
-		compileA3 = CMD['compileA3'].format(a = vn, d = file_path, n = file_name, num = file_num, s = src2)
-		os.system(CMD['bash'].format(compileA3))
+		output_file_path = os.path.join(output_path, file_name, output_file)
+		cmd = OBFUSCATION['abstract-3'].format(vn = vn, output = output_file_path, input = output_file_path_2)
+		os.system(CMD['bash'].format(cmd))
 	
-		os.remove(src) 
-		os.remove(src2)
+		os.remove(output_file_path_1) 
+		os.remove(output_file_path_2)
+
 	elif obfuscation == CONTROL_FLOW:
-		compileC = CMD['compileC'].format(a = vn, d = path + file_name + '/', n = file_name, num = file_num, s = file_path)
-		os.system(CMD['bash'].format(compileC))
+		output_file_path = os.path.join(output_path, file_name, output_file)
+		cmd = OBFUSCATION['control-flow'].format(vn = vn, output = output_file_path, input = input_path)
+		os.system(CMD['bash'].format(cmd))
+
 	elif obfuscation == DATA:
-		compileD = CMD['compileD'].format(vn, path + file_name + '/', file_name, file_num, file_path)
-		os.system(CMD['bash'].format(compileD))
+		output_file_path = os.path.join(output_path, file_name, output_file)
+		cmd = OBFUSCATION['data'].format(vn = vn, output = output_file_path, input = input_path)
+		os.system(CMD['bash'].format(cmd))
+
 	elif obfuscation == VIRTUALIZATION:
-		compileV = CMD['compileV'].format(vn, path + file_name + '/', file_name, file_num, file_path)
-		os.system(CMD['bash'].format(compileV))
+		output_file_path = os.path.join(output_path, file_name, output_file)
+		cmd = OBFUSCATION['virtualization'].format(vn = vn, output = output_file_path, input = input_path)
+		os.system(CMD['bash'].format(cmd))
 
-	return os.path.abspath(path + file_name + '/' + file_name + str(file_num) + '.c')
+	return output_file_path
 
-def clean_up(path, option):
+
+def clean_up(path, option, core_dirs = {}):
 	dir_list = os.listdir(path)
 
 	for dir in dir_list:
@@ -160,46 +167,38 @@ def clean_up(path, option):
 
 		if option == ALL_DIRS and os.path.isdir(target_path):
 			shutil.rmtree(target_path)
-		elif option == RENDUNDANT_DIRS and len(dir) == RENDUNDANT_DIR_LENGTH:
+		elif option == RENDUNDANT_DIRS and dir not in core_dirs:
 			shutil.rmtree(target_path)
 
-def variant(path, input_file, combinations, index):
-	for combination in combinations:
-		input_file_path = os.path.join(path, input_file)
 
-		vn = VN
-		file_name = ''
-		for obfuscation in combination:
-			file_name += obfuscation
-			target_path = os.path.join(path, file_name)
+def variant(input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
+	for index in range(1, no_of_variants + 1):
+		for combination in obfuscation_combinations:
+			vn = VN
+			file_name = ''
+			
+			for obfuscation in combination:
+				file_name += obfuscation
+				target_path = os.path.join(output_path, file_name)
 
-			if not os.path.isdir(target_path):
-				os.mkdir(target_path)
+				if not os.path.isdir(target_path):
+					os.mkdir(target_path)
 
-			new_path = compile(obfuscation, path+'/', input_file_path, index, file_name, vn)
+				new_path = obfuscate(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
 
-			vn += 1
-			input_file_path = new_path
-
-#main
+				vn += 1
+				input_file_path = new_path
 
 
 dir = sys.argv[1]
 if __name__ == '__main__':
-	output_path = os.path.abspath(sys.argv[1])
-
+	obfuscation_combinations = {'A', 'ADC'}
+	input_path = os.path.abspath(sys.argv[1])
+	output_path = os.path.abspath(sys.argv[2]) 
+	no_of_variants = int(sys.argv[3])
+	
 	clean_up(output_path, ALL_DIRS)
 
-	for i in range(1, NO_OF_VARIANTS + 1):
-		variant(output_path, INPUT_FILE, COMBINATIONS, i)
+	variant(input_path, output_path, obfuscation_combinations, no_of_variants)
 
-	clean_up(2)
-
-
-Java
-thisIsAVariable
-ThisIsAClass
-
-Python
-this_is_a_variable
-ThisClass
+	clean_up(output_path, RENDUNDANT_DIRS, obfuscation_combinations)
