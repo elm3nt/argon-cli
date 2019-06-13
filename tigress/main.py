@@ -20,9 +20,9 @@ def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
         os.system(CMD['bash'].format(cmd_temp_1))
 
         output_file_path_2 = os.path.join(output_path, file_name, temp_c_file_2)
+        print('out_file: ', output_file_path_1)
         cmd_temp_2 = OBFUSCATION['abstract-2'].format(vn = vn, output = output_file_path_2, input = output_file_path_1)
         os.system(CMD['bash'].format(cmd_temp_2))
-
 
         output_file_path = os.path.join(output_path, file_name, output_file)
         cmd = OBFUSCATION['abstract-3'].format(vn = vn, output = output_file_path, input = output_file_path_2)
@@ -46,6 +46,7 @@ def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
         cmd = OBFUSCATION['virtualization'].format(vn = vn, output = output_file_path, input = input_path)
         os.system(CMD['bash'].format(cmd))
 
+    return output_file_path
 
 def clean_up(path, option, core_dirs = {}):
     dir_list = os.listdir(path)
@@ -59,9 +60,10 @@ def clean_up(path, option, core_dirs = {}):
             shutil.rmtree(target_path)
 
 
-def variant(input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
+def variant(original_input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
     for index in range(1, no_of_variants + 1):
         for combination in obfuscation_combinations:
+            input_path = original_input_path
             vn = VN
             file_name = ''
 
@@ -72,9 +74,13 @@ def variant(input_path, output_path, obfuscation_combinations = {}, no_of_varian
                 if not os.path.isdir(target_path):
                     os.mkdir(target_path)
 
-                obfuscate(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
+                new_input_path = obfuscate(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
+                input_path = new_input_path
                 vn += 1
 
+def generate(input_path, output_path, password, pin = {}):
+    cmd_generate_file = GENERATE['generate'].format(password = password, pin = pin, output = output_path, input = input_path)
+    os.system(CMD['bash'].format(cmd_generate_file))
 
 def task(input_path, output_path, obfuscation_combinations, no_of_variants):
     clean_up(output_path, ALL_DIRS)
