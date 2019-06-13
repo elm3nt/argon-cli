@@ -46,8 +46,6 @@ def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
         cmd = OBFUSCATION['virtualization'].format(vn = vn, output = output_file_path, input = input_path)
         os.system(CMD['bash'].format(cmd))
 
-    return output_file_path
-
 
 def clean_up(path, option, core_dirs = {}):
     dir_list = os.listdir(path)
