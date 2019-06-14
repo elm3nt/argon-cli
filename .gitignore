@@ -103,5 +103,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Klee test directory
-tests/*
+# Text editors
+.vscode
+*.swp
+*~
+
+# C exectutables
+*.out
