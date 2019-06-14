@@ -79,8 +79,8 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 vn += 1
 
 def generate(input_path, output_path, password, pin = {}):
-    cmd_generate_file = GENERATE['generate'].format(password = password, pin = pin, output = output_path, input = input_path)
-    os.system(CMD['bash'].format(cmd_generate_file))
+    cmd = GENERATE['generate'].format(password = password, pin = pin, output = output_path, input = input_path)
+    os.system(CMD['bash'].format(cmd))
 
 def task(input_path, output_path, obfuscation_combinations, no_of_variants):
     clean_up(output_path, ALL_DIRS)
