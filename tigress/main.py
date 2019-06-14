@@ -20,7 +20,6 @@ def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
         os.system(CMD['bash'].format(cmd_temp_1))
 
         output_file_path_2 = os.path.join(output_path, file_name, temp_c_file_2)
-        print('out_file: ', output_file_path_1)
         cmd_temp_2 = OBFUSCATION['abstract-2'].format(vn = vn, output = output_file_path_2, input = output_file_path_1)
         os.system(CMD['bash'].format(cmd_temp_2))
 
