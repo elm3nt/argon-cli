@@ -8,7 +8,7 @@ from .const import *
 from core.const import *
 
 
-def obfuscate(input_path, output_path, obfuscation, file_name, index, vn):
+def obscure(input_path, output_path, obfuscation, file_name, index, vn):
     output_file_path = ''
     temp_c_file_1 = 'temp1.c'
     temp_c_file_2 = 'temp2.c'
@@ -62,9 +62,9 @@ def clean_up(path, option, core_dirs = {}):
 def variant(original_input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
     for index in range(1, no_of_variants + 1):
         for combination in obfuscation_combinations:
-            input_path = original_input_path
             vn = VN
             file_name = ''
+            input_path = original_input_path
 
             for obfuscation in combination:
                 file_name += obfuscation
@@ -73,15 +73,14 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 if not os.path.isdir(target_path):
                     os.mkdir(target_path)
 
-                new_input_path = obfuscate(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
-                input_path = new_input_path
+                input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
                 vn += 1
 
-def generate(input_path, output_path, password, pin = {}):
+def generate(input_path, output_path, password = [], pin = []):
     cmd = GENERATE['generate'].format(password = password, pin = pin, output = output_path, input = input_path)
     os.system(CMD['bash'].format(cmd))
 
-def task(input_path, output_path, obfuscation_combinations, no_of_variants):
+def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
     clean_up(output_path, ALL_DIRS)
     variant(input_path, output_path, obfuscation_combinations, no_of_variants)
     clean_up(output_path, RENDUNDANT_DIRS, obfuscation_combinations)
