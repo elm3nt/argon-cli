@@ -2,58 +2,58 @@
 
 import os
 import sys
+import shutil
+from .const import *
+from core.const import *
 from pathlib import Path
 
-
-CMD = {
-    'bash': '/bin/bash -c "{}"',
-    'compile': 'clang -emit-llvm -c {} -o {}',
-    'test' :'{{ time klee --libc=uclibc --output-dir={} --only-output-states-covering-new --optimize --posix-runtime {} {}; }} 2> {}',
-}
-
-FILE_NAME = {
-    'bytecode': '{}.bc',
-    'result': '{}.time.txt'
-}
-
-
 def compile(test_path, c_file_path, c_file_name, bytecode_file_path):
-        compile = CMD['compile'].format(c_file_path, bytecode_file_path)
-
-        print(compile)
+        compile = COMPILE['compile'].format(input = c_file_path, output = bytecode_file_path)
         os.system(CMD['bash'].format(compile))
 
+def klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search, credentials):
+        result_file = FILE_NAME['result'].format(name = c_file_name)
+        result_text_path = os.path.join(output_path, result_file)
+        output_dir = os.path.join(output_path, c_file_name)
+        klee = KLEE['klee'].format(input = bytecode_file_path, output = output_dir, time = timeout, search = search,
+                                    max = stdin[NUM_ARGS], num = stdin[LENGTH_ARGS], n = stdin[LENGTH_INPUT], text = result_text_path)
+        os.system(CMD['bash'].format(klee))
 
-def test(test_path, c_file_name, bytecode_file_path):
-        test_result_file = FILE_NAME['result'].format(c_file_name)
-        test_result_path = os.path.join(test_path, test_result_file)
-        test_output_dir = os.path.join(test_path, c_file_name)
-        test = CMD['test'].format(test_output_dir, bytecode_file_path, klee_args, test_result_path)
-        os.system(CMD['bash'].format(test))
+def clean_up(path, option):
+    if option == EVERTHING:
+        shutil.rmtree(path)
+        os.mkdir(path)
 
-def clean_up(input_dir):
-    dir_path_list = Path(input_dir).glob('**/*.bc')
-    for file in dir_path_list:
-        os.remove(str(file))
+    elif option == BYTECODE_FILES:
+        dir_path_list = Path(path).glob('**/*.bc')
+        for file in dir_path_list:
+            os.remove(str(file))
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print('Usage: batch [test directory] [klee symbolic input args]')
-        sys.exit(1)
 
-    input_dir = sys.argv[1]
-    klee_args = sys.argv[2]
+def symbolic_execution(input_path, output_path, stdin, timeout, memory, search, credentials):
+    clean_up(output_path, EVERTHING)
 
-    test_dir_path_list = Path(input_dir).glob('**/*.c')
-    for path in test_dir_path_list:
-        c_file_path = str(path.absolute())
+    def klee_args(output_path, c_file_path):
+
         c_file = os.path.basename(c_file_path)
         c_file_name, _ = os.path.splitext(c_file)
-        test_path = os.path.dirname(c_file_path)
-        bytecode_file = FILE_NAME['bytecode'].format(c_file_name)
-        bytecode_file_path = os.path.join(test_path, bytecode_file)
-        compile(test_path, c_file_path, c_file_name, bytecode_file_path)
 
-        test(test_path, c_file_name, bytecode_file_path)
-        print(test_path)
-    clean_up(input_dir)
+        bytecode_file = FILE_NAME['bytecode'].format(name = c_file_name)
+        bytecode_file_path = os.path.join(output_path, bytecode_file)
+
+        compile(output_path, c_file_path, c_file_name, bytecode_file_path)
+
+        klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search, credentials)
+
+
+    if os.path.isdir(input_path):
+        dir_path_list = Path(input_path).glob('**/*.c')
+        for path in dir_path_list:
+            c_file_path = str(path.absolute())
+            klee_args(output_path, c_file_path)
+
+    elif os.path.isfile(input_path):
+        c_file_path = input_path
+        klee_args(output_path, c_file_path)
+
+    clean_up(output_path, BYTECODE_FILES)
