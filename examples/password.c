@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
     char password[20];
-    char secret[9] = "password";
+    char secret[9] = "p@$$w0rd";
 
     printf("Enter password: ");
     scanf("%s", password);

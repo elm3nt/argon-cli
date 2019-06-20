@@ -14,10 +14,10 @@ tigress_obfuscate_option = sub_parser.add_parser('obfuscate', parents = [common_
 tigress_obfuscate_option.add_argument('n', type=int, help = 'the number of variants to be created')
 
 se_parser = argparse.ArgumentParser(add_help = False)
-se_parser.add_argument('-na', '--num-args', type = int, help = 'enter number of arguments for the program')
-se_parser.add_argument('-la', '--lenth-args', type = int, help = 'enter length of arguments for the program')
+se_parser.add_argument('-na', '--num-arg', type = int, help = 'enter number of arguments for the program')
+se_parser.add_argument('-la', '--length-arg', type = int, help = 'enter length of arguments for the program')
 se_parser.add_argument('-ni', '--num-input', type = int, help = 'enter number of inputs for the program')
-se_parser.add_argument('-li', '--lenth-input', type = int, help = 'enter length of inputs for the program')
+se_parser.add_argument('-li', '--length-input', type = int, help = 'enter length of inputs for the program')
 se_parser.add_argument('-t', '--timeout', type = int, help = 'enter time to stop symbolic analyzer')
 se_parser.add_argument('-c', '--code', type = list, help = 'enter list of activaton codes')
 se_parser.add_argument('-p', '--password', type = list, help = 'enter list of passwords')

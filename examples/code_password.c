@@ -5,7 +5,7 @@
 int main(int argc, char* argv[]) {
     char password[20];
     int activation_code = 2019;
-    char secret[9] = "password";
+    char secret[9] = "p@$$w0rd";
 
     if (argc != 2) {
         printf("Usage: code_password <activation code>\n");
