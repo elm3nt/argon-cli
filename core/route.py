@@ -1,6 +1,6 @@
 import argparse
 
-parser = argparse.ArgumentParser(prog = 'Argon')
+parser = argparse.ArgumentParser(prog = 'ArgParser')
 sub_parser = parser.add_subparsers(help = 'option', dest = 'option')
 
 common_parser = argparse.ArgumentParser(add_help = False)
