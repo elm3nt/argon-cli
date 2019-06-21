@@ -16,7 +16,7 @@ def symbolic_execution(input_file_path, output_dir_path, stdin):
     args = []
     if stdin['num-arg'] >= 1:
         for i in range(0, stdin['num-arg']):
-            args.append(claripy.BVS('arg'+str(i), int(stdin['arg-length']) * 8))
+            args.append(claripy.BVS('arg'+str(i), int(stdin['length-arg']) * 8))
 
         entry_state = [input_file_path] + args
         state = project.factory.entry_state(args = entry_state)

@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 
@@ -27,3 +28,8 @@ def list(path, ext):
         return [ str(file_path) for file_path in file_list ]
 
     return []
+
+def clean_up(path):
+    shutil.rmtree(path) #TODO: Fix file permissions
+    os.mkdir(path)
+
