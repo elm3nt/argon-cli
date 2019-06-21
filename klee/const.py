@@ -17,6 +17,7 @@ KLEE = {
             --only-output-states-covering-new \
             --optimize \
             --posix-runtime \
+            --max-memory={memory} \
             --max-time={time} \
             --search={search} \
             {input} \

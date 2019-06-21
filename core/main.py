@@ -26,6 +26,6 @@ def run(argv):
         timeout = args.timeout
         memory = args.memory
         search = args.search
-        credentials = [args.password, args.code]
+        #credentials = [args.password, args.code]
 
-        symbolic_execution(input_path, output_path, stdin, timeout, memory, search, credentials)
+        symbolic_execution(input_path, output_path, stdin, timeout, memory, search)

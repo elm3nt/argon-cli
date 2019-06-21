@@ -11,12 +11,14 @@ def compile(test_path, c_file_path, c_file_name, bytecode_file_path):
         compile = COMPILE['compile'].format(input = c_file_path, output = bytecode_file_path)
         os.system(CMD['bash'].format(compile))
 
-def klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search, credentials):
+def klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search):
         result_file = FILE_NAME['result'].format(name = c_file_name)
         result_text_path = os.path.join(output_path, result_file)
         output_dir = os.path.join(output_path, c_file_name)
-        klee = KLEE['klee'].format(input = bytecode_file_path, output = output_dir, time = timeout, search = search,
+
+        klee = KLEE['klee'].format(input = bytecode_file_path, output = output_dir, memory = memory, time = timeout, search = search,
                                     max = stdin[NUM_ARGS], num = stdin[LENGTH_ARGS], n = stdin[LENGTH_INPUT], text = result_text_path)
+
         os.system(CMD['bash'].format(klee))
 
 def clean_up(path, option):
@@ -30,7 +32,7 @@ def clean_up(path, option):
             os.remove(str(file))
 
 
-def symbolic_execution(input_path, output_path, stdin, timeout, memory, search, credentials):
+def symbolic_execution(input_path, output_path, stdin, timeout = 0, memory = 2000, search = 'random-path'):
     clean_up(output_path, EVERTHING)
 
     def klee_args(output_path, c_file_path):
@@ -43,7 +45,7 @@ def symbolic_execution(input_path, output_path, stdin, timeout, memory, search, 
 
         compile(output_path, c_file_path, c_file_name, bytecode_file_path)
 
-        klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search, credentials)
+        klee_execute(output_path, stdin, c_file_name, bytecode_file_path, timeout, memory, search)
 
 
     if os.path.isdir(input_path):

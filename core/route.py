@@ -18,16 +18,14 @@ se_parser.add_argument('-na', '--num-args', type = int, help = 'enter number of 
 se_parser.add_argument('-la', '--length-args', type = int, help = 'enter length of arguments for the program')
 se_parser.add_argument('-ni', '--num-input', type = int, help = 'enter number of inputs for the program')
 se_parser.add_argument('-li', '--length-input', type = int, help = 'enter length of inputs for the program')
-se_parser.add_argument('-t', '--timeout', type = int, help = 'enter time to stop symbolic analyzer')
-se_parser.add_argument('-c', '--code', type = list, help = 'enter list of activaton codes')
-se_parser.add_argument('-p', '--password', type = list, help = 'enter list of passwords')
+se_parser.add_argument('-t', '--timeout', required = False, default = 0, type = int, help = 'enter time to stop symbolic analyzer')
+se_parser.add_argument('-c', '--code', required = False, type = list, help = 'enter list of activaton codes')
+se_parser.add_argument('-p', '--password', type = list, required = False, help = 'enter list of passwords')
 
 angr_option = sub_parser.add_parser('angr', parents = [common_parser, se_parser])
 
 klee_option = sub_parser.add_parser('klee', parents = [common_parser, se_parser])
-klee_option.add_argument('-m', '--memory', type = int,
-                        choices = [1],
-                        help = 'enter memory limit for symbolic analyzer')
-klee_option.add_argument('-s', '--search',
+klee_option.add_argument('-m', '--memory', required = False, default = 2000, type = int, help = 'enter memory limit for symbolic analyzer')
+klee_option.add_argument('-s', '--search', default = 'random-path',
                         choices = ['dfs', 'random-state', 'random-path', 'nurs:covnew', 'nurs:md2u', 'nurs:depth', 'nurs:icnt', 'nurs:cpicnt', 'nurs:qc'],
                         help = 'select search type to perform symbolic analysis')
