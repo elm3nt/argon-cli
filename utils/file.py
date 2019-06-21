@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+
 
 def details(file_path):
     path = os.path.dirname(str(file_path))
@@ -20,7 +22,7 @@ def list(path, ext):
             return [ path ]
 
     elif os.path.isdir(path):
-        file_list = Path(path).glob('*/*{}'.format(ext))
+        file_list = Path(path).glob('**/*{}'.format(ext))
 
         return [ str(file_path) for file_path in file_list ]
 
