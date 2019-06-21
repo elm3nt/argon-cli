@@ -11,3 +11,17 @@ def details(file_path):
         'path': path,
         'file': file,
     }
+
+def list(path, ext):
+    if os.path.isfile(path):
+        file = details(path)
+
+        if file['ext'] == ext:
+            return [ path ]
+
+    elif os.path.isdir(path):
+        file_list = Path(path).glob('*/*{}'.format(ext))
+
+        return [ str(file_path) for file_path in file_list ]
+
+    return []
