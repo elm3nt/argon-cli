@@ -17,13 +17,11 @@ def run(argv):
     if args.option == 'generate':
         password = args.password
         pin = args.code
-
         generate(input_path, output_path, password, pin)
 
     elif args.option == 'obfuscate':
-        obfuscation_combinations = {'A', 'ADC'}
-        no_of_variants = args.num
-
+        obfuscation_combinations = args.obfuscation_list
+        no_of_variants = args.num_variants
         obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants)
 
     elif args.option == ANGR or args.option == KLEE or args.option == SYMBOLIC_EXECUTION or args.option == SE:

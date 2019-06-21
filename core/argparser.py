@@ -11,7 +11,8 @@ tigress_genenerate_option = sub_parser.add_parser('generate', parents = [common_
 tigress_genenerate_option.add_argument('-p', '--password', help = 'input password for generating file')
 tigress_genenerate_option.add_argument('-c', '--code', help = 'input activation code for generating file')
 tigress_obfuscate_option = sub_parser.add_parser('obfuscate', parents = [common_parser])
-tigress_obfuscate_option.add_argument('n', type=int, help = 'the number of variants to be created')
+tigress_obfuscate_option.add_argument('-nv', '--num-variants', type=int, help = 'the number of variants to be created')
+tigress_obfuscate_option.add_argument('-ol', '--obfuscation-list', nargs = '*', help = 'enter list of obfuscation combinations')
 
 se_parser = argparse.ArgumentParser(add_help = False)
 se_parser.add_argument('-na', '--num-arg', type = int, help = 'enter number of arguments for the program')

@@ -48,14 +48,16 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
     return output_file_path
 
 def clean_up(path, option, core_dirs = {}):
+    if option == ALL_DIRS:
+        shutil.rmtree(path)
+        os.mkdir(path)
+
     dir_list = os.listdir(path)
 
     for dir in dir_list:
         target_path = os.path.join(path, dir)
 
-        if option == ALL_DIRS and os.path.isdir(target_path):
-            shutil.rmtree(target_path)
-        elif option == RENDUNDANT_DIRS and dir not in core_dirs:
+        if option == RENDUNDANT_DIRS and dir not in core_dirs:
             shutil.rmtree(target_path)
 
 
