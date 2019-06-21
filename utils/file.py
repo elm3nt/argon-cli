@@ -1,6 +1,6 @@
 import os
 
-def file_details(file_path):
+def details(file_path):
     path = os.path.dirname(str(file_path))
     file = os.path.basename(str(file_path))
     name, ext = os.path.splitext(file)

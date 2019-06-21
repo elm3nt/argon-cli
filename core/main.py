@@ -3,7 +3,7 @@ import os
 from .const import *
 from core.argparser import *
 from tigress.main import obfuscate, generate
-from ABC.main import run as angr_run
+from mangr.main import run as angr_run
 
 def run(argv):
     args = parser.parse_args()
