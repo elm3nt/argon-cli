@@ -45,7 +45,7 @@ RUN pip3 install -U angr claripy
 RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && unzip tigress-Linux-x86_64-2.2.zip && rm tigress-Linux-x86_64-2.2.zip
 
 # Add path
-RUN echo 'PATH=$PATH:${TOOLS}/klee-2.0/build/bin:${TOOLS}/tigress-Linux-x86_64-2.2' >> ${HOME}/.bashrc
+RUN echo 'PATH=$PATH:${TOOLS}/klee-2.0/build/bin:${TOOLS}/tigress-2.2' >> ${HOME}/.bashrc
 
 # User and permissions
 USER argon
