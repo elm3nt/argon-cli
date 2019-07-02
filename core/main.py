@@ -5,8 +5,8 @@ from utils import file
 from shutil import copy2
 from core.argparser import *
 from stats.main import analysis
-# from mangr.main import run as angr_run
 from klee.main import run as klee_run
+from mangr.main import run as angr_run
 from tigress.main import obfuscate, generate
 
 def run(argv):
@@ -43,7 +43,7 @@ def run(argv):
 
 def symbolic_execution(input_path, output_path, stdin, tool, options):
     input_files_path = file.list(input_path, '.c')
-    data = [ ['File', 'Time taken Klee', 'File size (in bytes)', 'Path'] ]
+    data = [ ['File', 'Time taken by Angr', 'Time taken by Klee', 'File size (in bytes)', 'Path'] ]
 
     if (os.path.isdir(output_path)):
         file.clean_up(output_path)
@@ -59,18 +59,17 @@ def symbolic_execution(input_path, output_path, stdin, tool, options):
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         if tool == ANGR:
-            pass
-            # test_results = angr_run(input_file_path, output_dir_path, stdin)
-            # data.append([input_file['file'], str(test_results['time']), input_file_size, input_file_path])
+            test_result = angr_run(input_file_path, output_dir_path, stdin)
+            data.append([input_file['file'], str(test_result['time']), '', input_file_size, input_file_path])
 
         elif tool == KLEE:
-            test_results = klee_run(input_file_path, output_dir_path, stdin, options)
-            data.append([input_file['file'], str(test_results['time']), input_file_size, input_file_path])
+            test_result = klee_run(input_file_path, output_dir_path, stdin, options)
+            data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
 
         elif tool == SYMBOLIC_EXECUTION or tool == SE:
-            data.append([input_file['file'], str(test_results['time']), input_file_size, input_file_path])
-            pass
-            # angr_run(input_path, output_dir_path, stdin)
+            angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
+            klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
+            data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']), input_file_size, input_file_path])
 
     analysis_file_path = os.path.join(output_path, 'analysis.csv')
     analysis(analysis_file_path, data)
