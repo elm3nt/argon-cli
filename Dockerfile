@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y wget unzip python3-pip curl \
   build-essential libcap-dev git cmake libncurses5-dev python-minimal \
   python-pip libtcmalloc-minimal4 libgoogle-perftools-dev libsqlite3-dev \
   doxygen clang-6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-tools bison flex sudo \
-  libboost-all-dev perl zlib1g-dev minisat vim && apt-get clean
+  libboost-all-dev perl zlib1g-dev minisat vim && apt-get clean && \\
+  rm -rf /var/lib/apt/lists/*
 RUN pip3 install -U --upgrade pip
 RUN pip3 install -U tabulate
 
