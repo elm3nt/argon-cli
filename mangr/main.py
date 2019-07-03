@@ -16,7 +16,7 @@ def symbolic_execution(input_file_path, output_dir_path, stdin):
     args = []
     if stdin['num-arg'] >= 1:
         for i in range(0, stdin['num-arg']):
-            args.append(claripy.BVS('arg'+str(i), int(stdin['length-arg']) * 8))
+            args.append(claripy.BVS('arg'+str(i), int(stdin['length-arg']) * ONE_BYTE))
 
         entry_state = [input_file_path] + args
         state = project.factory.entry_state(args = entry_state)
@@ -63,16 +63,16 @@ def symbolic_execution(input_file_path, output_dir_path, stdin):
         'time': time_taken.total_seconds()
     }
 
+
 def compile(input_path, output_path):
     gcc = CMD['gcc'].format(input = input_path, output = output_path)
     cmd = CMD['bash'].format(gcc)
     os.system(cmd)
+
 
 def run(input_file_path, output_dir_path, stdin):
     input_file = file.details(input_file_path)
     output_file_path = os.path.join(output_dir_path, input_file['name'])
     compile(input_file_path, output_file_path)
 
-    test_details = symbolic_execution(output_file_path, output_dir_path, stdin)
-
-    return test_details
+    return symbolic_execution(output_file_path, output_dir_path, stdin)
