@@ -8,6 +8,7 @@ from utils import file
 from core.const import *
 from pathlib import Path
 
+
 def compile(input_file_path, output_file_path):
     cmd = KLEE_CMD['compile'].format(input = input_file_path, output = output_file_path)
     os.system(CMD['bash'].format(cmd))
@@ -75,11 +76,8 @@ def run(input_file_path, output_dir_path, stdin, options):
     bytecode_file_path = os.path.join(output_dir_path, bytecode_file)
 
     compile(input_file_path, bytecode_file_path)
-
     symbolic_execution(output_dir_path, stdin, input_file['name'], bytecode_file_path, options)
 
-    time = time_taken(output_dir_path, input_file['name'])
-
     return {
-        'time': time
+        'time': time_taken(output_dir_path, input_file['name'])
     }
