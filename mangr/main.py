@@ -3,7 +3,6 @@ import angr
 import claripy
 from datetime import datetime
 
-from .const import *
 from utils import file
 from core.const import *
 
@@ -33,7 +32,7 @@ def symbolic_execution(input_file_path, output_dir_path, stdin):
 
         for deadended in simulation_manager.deadended:
             content = ''
-            test_file_name = FILE_NAME['test'].format(index = str(index))
+            test_file_name = FILE_NAME['angr-test'].format(index = str(index))
             output_test_file_path = os.path.join(output_dir_path, test_file_name)
 
             content += 'Arg(s)\n'
@@ -72,7 +71,8 @@ def compile(input_path, output_path):
 
 def run(input_file_path, output_dir_path, stdin):
     input_file = file.details(input_file_path)
-    output_file_path = os.path.join(output_dir_path, input_file['name'])
+    output_file = FILE_NAME['c-out'].format(name = input_file['name'])
+    output_file_path = os.path.join(output_dir_path, output_file)
     compile(input_file_path, output_file_path)
 
     return symbolic_execution(output_file_path, output_dir_path, stdin)
