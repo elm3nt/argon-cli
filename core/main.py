@@ -16,8 +16,8 @@ def run(argv):
 
     if option == GENERATE:
         code = str(args.code)
-        password = args.password
-        generate(output_path, password, code)
+        password = str(args.password)
+        generate(output_path, code, password)
 
     elif (option == OBFUSCATE or option == ANGR or option == KLEE or
           option == SE or option == SYMBOLIC_EXECUTION):
