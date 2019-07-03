@@ -1,4 +1,7 @@
 KLEE_CMD = {
+    'sym-stdin': '--sym-stdin {length}',
+    'sym-args': '--sym-args 1 {max} {length}',
+    'stats': 'klee-stats --print-rel-times {input}',
     'compile': 'clang -emit-llvm -c {input} -o {output}',
     'options':'{{ time klee \
                 --libc=uclibc \
@@ -11,6 +14,4 @@ KLEE_CMD = {
                 --search={search} \
                 {input} {sym_args} {sym_stdin};\
                }} 2> {file}',
-    'sym-args': '--sym-args 1 {max} {length}',
-    'sym-stdin': '--sym-stdin {length}'
 }
