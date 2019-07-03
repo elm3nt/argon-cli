@@ -11,44 +11,48 @@ from tigress.main import obfuscate, generate
 
 def run(argv):
     args = parser.parse_args()
-    input_path = os.path.abspath(args.input)
+    option = args.option
     output_path = os.path.abspath(args.output)
 
-    if args.option == 'generate':
+    if option == GENERATE:
+        code = str(args.code)
         password = args.password
-        pin = args.code
-        generate(input_path, output_path, password, pin)
+        generate(output_path, password, code)
 
-    elif args.option == 'obfuscate':
-        obfuscation_combinations = args.obfuscation_list
-        no_of_variants = args.num_variants
-        obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants)
+    elif (option == OBFUSCATE or option == ANGR or option == KLEE or
+          option == SE or option == SYMBOLIC_EXECUTION):
+        input_path = os.path.abspath(args.input)
 
-    elif args.option == ANGR or args.option == KLEE or args.option == SYMBOLIC_EXECUTION or args.option == SE:
-        stdin = {
-            'num-arg': args.num_arg,
-            'length-arg': args.length_arg,
-            'num-input': args.num_input,
-            'length-input': args.length_input
-        }
+        if not os.path.isdir(output_path):
+            os.mkdir(output_path)
 
-        options = {
-            'memory': args.memory,
-            'search': args.search,
-            'timeout': args.timeout,
-        }
+        if option == OBFUSCATE:
+            num_variants = args.num_variants
+            obfuscation_combinations = args.obfuscation_list
+            obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
 
-        symbolic_execution(input_path, output_path, stdin, args.option, options)
+        elif (option == ANGR or option == KLEE or  option == SE or
+              option == SYMBOLIC_EXECUTION):
+            stdin = {
+                'num-arg': args.num_arg,
+                'length-arg': args.length_arg,
+                'num-input': args.num_input,
+                'length-input': args.length_input
+            }
+
+            se_options = {
+                'memory': args.memory,
+                'search': args.search,
+                'timeout': args.timeout,
+            }
+
+            symbolic_execution(input_path, output_path, stdin, option, se_options)
 
 
 def symbolic_execution(input_path, output_path, stdin, tool, options):
-    input_files_path = file.list(input_path, '.c')
-    data = [ ['File', 'Time taken by Angr', 'Time taken by Klee', 'File size (in bytes)', 'Path'] ]
-
-    if (os.path.isdir(output_path)):
-        file.clean_up(output_path)
-    else:
-        os.mkdir(output_path)
+    input_files_path = file.list(input_path, C_EXT)
+    data = [ [CSV_HEAD['file'], CSV_HEAD['time-angr'], CSV_HEAD['time-klee'],CSV_HEAD['file-size'],
+              CSV_HEAD['file-path']] ]
 
     for input_file_path in input_files_path:
         input_file = file.details(input_file_path)
@@ -69,7 +73,8 @@ def symbolic_execution(input_path, output_path, stdin, tool, options):
         elif tool == SYMBOLIC_EXECUTION or tool == SE:
             angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
             klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
-            data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']), input_file_size, input_file_path])
+            data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
+                         input_file_size, input_file_path])
 
-    analysis_file_path = os.path.join(output_path, 'analysis.csv')
+    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
     analysis(analysis_file_path, data)
