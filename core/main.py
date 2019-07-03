@@ -51,7 +51,7 @@ def run(argv):
 
 def symbolic_execution(input_path, output_path, stdin, tool, options):
     input_files_path = file.list(input_path, C_EXT)
-    data = [ [CSV_HEAD['file'], CSV_HEAD['time-angr'], CSV_HEAD['time-klee'],CSV_HEAD['file-size'],
+    data = [ [CSV_HEAD['file-name'], CSV_HEAD['angr-time'], CSV_HEAD['klee-time'],CSV_HEAD['file-size'],
               CSV_HEAD['file-path']] ]
 
     for input_file_path in input_files_path:
@@ -71,8 +71,8 @@ def symbolic_execution(input_path, output_path, stdin, tool, options):
             data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
 
         elif tool == SYMBOLIC_EXECUTION or tool == SE:
-            angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
             klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
+            angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
             data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
                          input_file_size, input_file_path])
 
