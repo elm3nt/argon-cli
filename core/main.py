@@ -9,6 +9,7 @@ from klee.main import run as klee_run
 from angrio.main import run as angr_run
 from tigress.main import obfuscate, generate
 
+
 def run(argv):
     args = parser.parse_args()
     option = args.option
@@ -46,12 +47,18 @@ def run(argv):
                 'timeout': args.timeout,
             }
 
-            symbolic_execution(input_path, output_path, stdin, option, se_options)
+            credentials = {
+                'code': args.code,
+                'password': args.password
+            }
+
+            symbolic_execution(input_path, output_path, stdin, option, se_options, credentials)
 
 
-def symbolic_execution(input_path, output_path, stdin, tool, options):
+def symbolic_execution(input_path, output_path, stdin, tool, options, credentials):
     input_files_path = file.list(input_path, C_EXT)
-    data = [ [CSV_HEAD['file-name'], CSV_HEAD['angr-time'], CSV_HEAD['klee-time'],CSV_HEAD['file-size'],
+    data = [ [CSV_HEAD['file-name'], CSV_HEAD['angr-time'], CSV_HEAD['klee-time'], 'Is code cracked?', 'Is password cracked?',
+    'Generated codes', 'Generated passwords', CSV_HEAD['file-size'],
               CSV_HEAD['file-path']] ]
 
     for input_file_path in input_files_path:
@@ -63,18 +70,23 @@ def symbolic_execution(input_path, output_path, stdin, tool, options):
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         if tool == ANGR:
-            test_result = angr_run(input_file_path, output_dir_path, stdin)
-            data.append([input_file['file'], str(test_result['time']), '', input_file_size, input_file_path])
+            test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
+            data.append([input_file['file'], str(test_result['time-taken']), '',
+            test_result['is-code-cracked'],
+            test_result['is-password-cracked'],
+            test_result['generated-codes'],
+            test_result['generated-passwords'],
+            input_file_size, input_file_path])
 
-        elif tool == KLEE:
-            test_result = klee_run(input_file_path, output_dir_path, stdin, options)
-            data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
+        # elif tool == KLEE:
+        #     test_result = klee_run(input_file_path, output_dir_path, stdin, options, credentials)
+        #     data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
 
-        elif tool == SYMBOLIC_EXECUTION or tool == SE:
-            angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
-            klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
-            data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
-                         input_file_size, input_file_path])
+        # elif tool == SYMBOLIC_EXECUTION or tool == SE:
+        #     angr_test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
+        #     klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options, credentials)
+        #     data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
+        #                  input_file_size, input_file_path])
 
     analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
     analysis(analysis_file_path, data)
