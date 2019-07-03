@@ -44,6 +44,7 @@ def time_taken(input_path):
 
     return time
 
+
 def run(input_file_path, output_dir_path, stdin, options):
     input_file = file.details(input_file_path)
     bytecode_file = FILE_NAME['bytecode'].format(name = input_file['name'])
