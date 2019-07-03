@@ -6,7 +6,7 @@ from shutil import copy2
 from core.argparser import *
 from stats.main import analysis
 from klee.main import run as klee_run
-from mangr.main import run as angr_run
+from angrio.main import run as angr_run
 from tigress.main import obfuscate, generate
 
 def run(argv):
@@ -71,8 +71,8 @@ def symbolic_execution(input_path, output_path, stdin, tool, options):
             data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
 
         elif tool == SYMBOLIC_EXECUTION or tool == SE:
-            klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
             angr_test_result = angr_run(input_file_path, output_dir_path, stdin)
+            klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options)
             data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
                          input_file_size, input_file_path])
 
