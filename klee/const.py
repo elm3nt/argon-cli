@@ -1,6 +1,3 @@
-EVERTHING = 1
-BYTECODE_FILES = 2
-
 KLEE_CMD = {
     'compile': 'clang -emit-llvm -c {input} -o {output}',
     'options':'{{ time klee \
@@ -16,9 +13,4 @@ KLEE_CMD = {
                }} 2> {file}',
     'sym-args': '--sym-args 1 {max} {length}',
     'sym-stdin': '--sym-stdin {length}'
-}
-
-FILE_NAME = {
-    'log': '{name}_log.txt',
-    'bytecode': '{name}.bc',
 }
