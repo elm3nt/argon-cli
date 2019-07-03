@@ -8,8 +8,10 @@ RUN apt-get update && apt-get install -y wget unzip python3-pip curl \
   doxygen clang-6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-tools bison flex sudo \
   libboost-all-dev perl zlib1g-dev minisat vim && apt-get clean && \
   rm -rf /var/lib/apt/lists/*
+
+# Install Klee pip packages
 RUN pip3 install -U --upgrade pip
-RUN pip3 install -U tabulate
+RUN pip2 install -U tabulate
 
 # Create sym link for LLVM
 RUN ln -s /usr/bin/llvm-config-6.0 /usr/bin/llvm-config && \
@@ -54,6 +56,8 @@ RUN wget https://github.com/klee/klee/archive/v2.0.zip && unzip v2.0.zip && \
 
 # Install Angr
 RUN pip3 install -U angr claripy
+
+# Download Tigress
 RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && \
   unzip tigress-Linux-x86_64-2.2.zip && rm tigress-Linux-x86_64-2.2.zip
 
