@@ -2,91 +2,32 @@ import os
 
 from .const import *
 from utils import file
-from shutil import copy2
 from core.argparser import *
-from stats.main import analysis
-from klee.main import run as klee_run
-from angrio.main import run as angr_run
+from core.tool import run as run_tool
 from tigress.main import obfuscate, generate
+from core.args import stdin, se_options, credentials
 
 
 def run(argv):
     args = parser.parse_args()
-    option = args.option
+    tool = args.option
     output_path = os.path.abspath(args.output)
 
-    if option == GENERATE:
+    if tool == GENERATE:
         code = str(args.code)
         password = str(args.password)
         generate(output_path, code, password)
 
-    elif (option == OBFUSCATE or option == ANGR or option == KLEE or
-          option == SE or option == SYMBOLIC_EXECUTION):
+    elif tool == OBFUSCATE:
+        num_variants = args.num_variants
         input_path = os.path.abspath(args.input)
+        file.make_dir_if_not_exists(output_path)
+        obfuscation_combinations = args.obfuscation_list
+        obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
 
-        if not os.path.isdir(output_path):
-            os.mkdir(output_path)
-
-        if option == OBFUSCATE:
-            num_variants = args.num_variants
-            obfuscation_combinations = args.obfuscation_list
-            obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
-
-        elif (option == ANGR or option == KLEE or  option == SE or
-              option == SYMBOLIC_EXECUTION):
-            stdin = {
-                'num-arg': args.num_arg,
-                'length-arg': args.length_arg,
-                'num-input': args.num_input,
-                'length-input': args.length_input
-            }
-
-            se_options = {
-                'memory': args.memory,
-                'search': args.search,
-                'timeout': args.timeout,
-            }
-
-            credentials = {
-                'code': args.code,
-                'password': args.password
-            }
-
-            symbolic_execution(input_path, output_path, stdin, option, se_options, credentials)
+    elif (tool == ANGR or tool == KLEE or tool == EXECUTION):
+        input_path = os.path.abspath(args.input)
+        file.make_dir_if_not_exists(output_path)
+        run_tool(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
 
 
-def symbolic_execution(input_path, output_path, stdin, tool, options, credentials):
-    input_files_path = file.list(input_path, C_EXT)
-    data = [ [CSV_HEAD['file-name'], CSV_HEAD['angr-time'], CSV_HEAD['klee-time'], 'Is code cracked?', 'Is password cracked?',
-    'Generated codes', 'Generated passwords', CSV_HEAD['file-size'],
-              CSV_HEAD['file-path']] ]
-
-    for input_file_path in input_files_path:
-        input_file = file.details(input_file_path)
-        input_file_size = os.path.getsize(input_file_path)
-        output_dir_path = os.path.join(output_path, input_file['name'])
-
-        os.mkdir(output_dir_path)
-        copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
-
-        if tool == ANGR:
-            test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
-            data.append([input_file['file'], str(test_result['time-taken']), '',
-            test_result['is-code-cracked'],
-            test_result['is-password-cracked'],
-            test_result['generated-codes'],
-            test_result['generated-passwords'],
-            input_file_size, input_file_path])
-
-        # elif tool == KLEE:
-        #     test_result = klee_run(input_file_path, output_dir_path, stdin, options, credentials)
-        #     data.append([input_file['file'], '', str(test_result['time']), input_file_size, input_file_path])
-
-        # elif tool == SYMBOLIC_EXECUTION or tool == SE:
-        #     angr_test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
-        #     klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options, credentials)
-        #     data.append([input_file['file'], str(angr_test_result['time']), str(klee_test_result['time']),
-        #                  input_file_size, input_file_path])
-
-    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
-    analysis(analysis_file_path, data)
