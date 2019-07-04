@@ -29,7 +29,6 @@ def run_compiled_code(input_path, output_dir_path, args, stdin):
 
     content = file.read(run_output_file_path)
 
-
     return {
         'time-taken': get_time(content),
     }
