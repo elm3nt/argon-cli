@@ -16,7 +16,12 @@ def details(file_path):
     }
 
 
-def list(path, ext):
+def write(path, content):
+    with open(path, 'w') as file:
+        file.write(content)
+
+
+def lists(path, ext):
     if os.path.isfile(path):
         file = details(path)
 
@@ -40,3 +45,7 @@ def remove_dirs_except(path, dir_exception_list = {}):
         if dir not in dir_exception_list:
             shutil.rmtree(target_path)
 
+
+def make_dir_if_not_exists(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
