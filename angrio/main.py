@@ -92,16 +92,9 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
     }
 
 
-def compile(input_path, output_path):
-    gcc = CMD['gcc'].format(input = input_path, output = output_path)
-    cmd = CMD['bash'].format(gcc)
-    os.system(cmd)
-
-
 def run(input_file_path, output_dir_path, stdin, options, credentials):
     input_file = file.details(input_file_path)
     output_file = FILE_NAME['c-out'].format(name = input_file['name'])
     output_file_path = os.path.join(output_dir_path, output_file)
-    compile(input_file_path, output_file_path)
 
     return symbolic_execution(output_file_path, output_dir_path, stdin, options, credentials)
