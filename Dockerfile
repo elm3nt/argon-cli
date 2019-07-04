@@ -6,10 +6,10 @@ RUN apt-get update && apt-get install -y wget unzip python3-pip curl \
   build-essential libcap-dev git cmake libncurses5-dev python-minimal \
   python-pip libtcmalloc-minimal4 libgoogle-perftools-dev libsqlite3-dev \
   doxygen clang-6.0 llvm-6.0 llvm-6.0-dev llvm-6.0-tools bison flex sudo \
-  libboost-all-dev perl zlib1g-dev minisat vim && apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  libboost-all-dev perl zlib1g-dev minisat vim gcc-4.8 g++-4.8 && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Klee pip packages
+# Install dependencies for klee-stats
 RUN pip3 install -U --upgrade pip
 RUN pip2 install -U tabulate
 
@@ -60,6 +60,8 @@ RUN pip3 install -U angr claripy
 # Download Tigress
 RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && \
   unzip tigress-Linux-x86_64-2.2.zip && rm tigress-Linux-x86_64-2.2.zip
+# Tigress requires older version of Gcc
+RUN sudo rm /usr/bin/gcc && sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
 
 # Add path of Klee and Tigress
 RUN echo 'export TIGRESS_HOME=/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
@@ -68,4 +70,4 @@ RUN echo 'export PATH=$PATH:/home/argon/tools/klee-2.0/build/bin:/home/argon/too
 # Update user and permissions
 USER argon
 WORKDIR /home/argon
-ADD --chown=argon:argon / /home/argon/tools
+RUN sudo chown argon:argon tools/ -R
