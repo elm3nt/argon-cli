@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from .const import *
+from utils import file
 from core.const import *
 
 
@@ -16,15 +17,15 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
 
     if obfuscation == ABSTRACT:
         output_file_path_1 = os.path.join(output_path, file_name, temp_c_file_1)
-        cmd_temp_1 = OBFUSCATION['abstract'].format(vn = vn, output = output_file_path_1, input = input_path)
+        cmd_temp_1 = TIGRESS_CMD['abstract'].format(vn = vn, output = output_file_path_1, input = input_path)
         os.system(CMD['bash'].format(cmd_temp_1))
 
         output_file_path_2 = os.path.join(output_path, file_name, temp_c_file_2)
-        cmd_temp_2 = OBFUSCATION['abstract-2'].format(vn = vn, output = output_file_path_2, input = output_file_path_1)
+        cmd_temp_2 = TIGRESS_CMD['abstract-2'].format(vn = vn, output = output_file_path_2, input = output_file_path_1)
         os.system(CMD['bash'].format(cmd_temp_2))
 
         output_file_path = os.path.join(output_path, file_name, output_file)
-        cmd = OBFUSCATION['abstract-3'].format(vn = vn, output = output_file_path, input = output_file_path_2)
+        cmd = TIGRESS_CMD['abstract-3'].format(vn = vn, output = output_file_path, input = output_file_path_2)
         os.system(CMD['bash'].format(cmd))
 
         os.remove(output_file_path_1)
@@ -32,33 +33,20 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
 
     elif obfuscation == CONTROL_FLOW:
         output_file_path = os.path.join(output_path, file_name, output_file)
-        cmd = OBFUSCATION['control-flow'].format(vn = vn, output = output_file_path, input = input_path)
+        cmd = TIGRESS_CMD['control-flow'].format(vn = vn, output = output_file_path, input = input_path)
         os.system(CMD['bash'].format(cmd))
 
     elif obfuscation == DATA:
         output_file_path = os.path.join(output_path, file_name, output_file)
-        cmd = OBFUSCATION['data'].format(vn = vn, output = output_file_path, input = input_path)
+        cmd = TIGRESS_CMD['data'].format(vn = vn, output = output_file_path, input = input_path)
         os.system(CMD['bash'].format(cmd))
 
     elif obfuscation == VIRTUALIZATION:
         output_file_path = os.path.join(output_path, file_name, output_file)
-        cmd = OBFUSCATION['virtualization'].format(vn = vn, output = output_file_path, input = input_path)
+        cmd = TIGRESS_CMD['virtualization'].format(vn = vn, output = output_file_path, input = input_path)
         os.system(CMD['bash'].format(cmd))
 
     return output_file_path
-
-def clean_up(path, option, core_dirs = {}):
-    if option == ALL_DIRS:
-        shutil.rmtree(path)
-        os.mkdir(path)
-
-    dir_list = os.listdir(path)
-
-    for dir in dir_list:
-        target_path = os.path.join(path, dir)
-
-        if option == RENDUNDANT_DIRS and dir not in core_dirs:
-            shutil.rmtree(target_path)
 
 
 def variant(original_input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
@@ -78,11 +66,13 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
                 vn += 1
 
-def generate(input_path, output_path, password = [], pin = []):
-    cmd = GENERATE['generate'].format(password = password, pin = pin, output = output_path, input = input_path)
+
+def generate(output_path, code = '18', password = 'p@$$w0rd'):
+    input_path = os.path.join(os.getcwd(), DIR_NAME['samples'], FILE_NAME['empty-c-file'])
+    cmd = TIGRESS_CMD['generate'].format(password = password, code = code, output = output_path, input = input_path)
     os.system(CMD['bash'].format(cmd))
 
+
 def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
-    clean_up(output_path, ALL_DIRS)
     variant(input_path, output_path, obfuscation_combinations, no_of_variants)
-    clean_up(output_path, RENDUNDANT_DIRS, obfuscation_combinations)
+    file.remove_dirs_except(output_path, obfuscation_combinations)

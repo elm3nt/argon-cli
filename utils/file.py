@@ -15,7 +15,21 @@ def details(file_path):
         'file': file,
     }
 
-def list(path, ext):
+
+def read(path):
+    content = ''
+    with open(path, 'r') as file:
+        content = file.read()
+
+    return content
+
+
+def write(path, content):
+    with open(path, 'w') as file:
+        file.write(content)
+
+
+def lists(path, ext):
     if os.path.isfile(path):
         file = details(path)
 
@@ -29,7 +43,17 @@ def list(path, ext):
 
     return []
 
-def clean_up(path):
-    shutil.rmtree(path) #TODO: Fix file permissions
-    os.mkdir(path)
 
+def remove_dirs_except(path, dir_exception_list = {}):
+    dir_list = os.listdir(path)
+
+    for dir in dir_list:
+        target_path = os.path.join(path, dir)
+
+        if dir not in dir_exception_list:
+            shutil.rmtree(target_path)
+
+
+def make_dir_if_not_exists(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)

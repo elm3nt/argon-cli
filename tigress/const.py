@@ -1,14 +1,12 @@
 VN = 1
-
-ALL_DIRS = 1
-RENDUNDANT_DIRS = 2
-
 DATA = 'D'
+ALL_DIRS = 1
 ABSTRACT = 'A'
 CONTROL_FLOW = 'C'
+RENDUNDANT_DIRS = 2
 VIRTUALIZATION = 'V'
 
-OBFUSCATION = {
+TIGRESS_CMD = {
     'abstract': 'tigress \
         --Verbosity=1 \
         --FilePrefix=v{vn}a \
@@ -103,10 +101,8 @@ OBFUSCATION = {
         --VirtualizeDispatch=switch \
         --Transform=CleanUp \
         --CleanUpKinds=annotations \
-        --out={output} {input}'
-    }
+        --out={output} {input}',
 
-GENERATE = {
     'generate': 'tigress \
         --Verbosity=1 \
         --Seed=0 \
@@ -120,7 +116,7 @@ GENERATE = {
         --RandomFunsPasswordCheckCount=1 \
         --RandomFunsPassword={password} \
         --RandomFunsActivationCodeCheckCount=1 \
-        --RandomFunsActivationCode={pin} \
+        --RandomFunsActivationCode={code} \
         --RandomFunsFailureKind=segv  \
         --out={output} {input}'
 }

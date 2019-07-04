@@ -5,8 +5,10 @@ import shutil
 
 from .const import *
 from utils import file
+from utils import lists
 from core.const import *
 from pathlib import Path
+
 
 def compile(input_file_path, output_file_path):
     cmd = KLEE_CMD['compile'].format(input = input_file_path, output = output_file_path)
@@ -14,8 +16,6 @@ def compile(input_file_path, output_file_path):
 
 
 def symbolic_execution(output_path, stdin, file_name, bytecode_file_path, options):
-    log_file = FILE_NAME['log'].format(name = file_name)
-    log_file_path = os.path.join(output_path, log_file)
     output_dir = os.path.join(output_path, file_name)
 
     sym_args = ''
@@ -27,59 +27,57 @@ def symbolic_execution(output_path, stdin, file_name, bytecode_file_path, option
         sym_stdin = KLEE_CMD['sym-stdin'].format(length = str(stdin['length-input']))
 
     cmd = KLEE_CMD['options'].format(input = bytecode_file_path, output = output_dir, memory = str(options['memory']),
-                                 time = str(options['timeout']), search = options['search'], file = log_file_path,
-                                 sym_args = sym_args, sym_stdin = sym_stdin)
+                                 time = str(options['timeout']), search = options['search'], sym_args = sym_args,
+                                 sym_stdin = sym_stdin)
     os.system(CMD['bash'].format(cmd))
 
 
-def get_time(content):
-    hour =  re.search(r'real\t(.*?)h(.*?)m(.*?)s', content)
-    if hour:
-        hh = int(hour.group(1))
+def time_taken(input_path):
+    time = 0
+    cmd = KLEE_CMD['stats'].format(input = input_path)
+    content = str(os.popen(cmd).read())
 
-        min_sec = re.search(r'real\t[\d]*h(.*?)m(.*?)s', content)
-        if min_sec:
-            mm = int(min_sec.group(1))
-            ss = int(min_sec.group(2).split('.')[0])
-            ms = int(min_sec.group(2).split('.')[1])
-
-            return (hh * 3600) + (mm * 60) + ss + (ms / 1000)
-
-    else:
-        min_sec = re.search(r'real\t(.*?)m(.*?)s', content)
-        if min_sec:
-            mm = int(min_sec.group(1))
-            ss = int(min_sec.group(2).split('.')[0])
-            ms = int(min_sec.group(2).split('.')[1])
-
-            return (mm * 60) + ss + (ms / 1000)
-
-    return '#error'
-
-
-def time_taken(output_path, file_name):
-    log_file = FILE_NAME['log'].format(name = file_name)
-    log_file_path = os.path.join(output_path, log_file)
-
-    time = '#error'
-    with open(log_file_path, 'r') as log_file:
-        content = log_file.read()
-        time = get_time(content)
+    seconds =  re.search(r'[\s]*[\d]*\.[\d]*', str(content))
+    if seconds:
+        time = float(seconds.group(0).strip())
 
     return time
 
 
-def run(input_file_path, output_dir_path, stdin, options):
+def stats(output_dir_path, credentials):
+    input_ktest_files_path = file.lists(output_dir_path, EXT['ktest'])
+
+    codes = []
+    passwords = []
+    for input_ktest_file_path in input_ktest_files_path:
+        cmd = KLEE_CMD['ktest'].format(input = input_ktest_file_path)
+        content = str(os.popen(cmd).read())
+
+        input_ktest_file = file.details(input_ktest_file_path)
+        output_ktest_file = FILE_NAME['klee-test'].format(name = input_ktest_file['name'])
+        output_ktest_file_path = os.path.join(output_dir_path, output_ktest_file)
+        file.write(output_ktest_file_path, content)
+
+        results = re.findall(r'text:[\s].*\n', content)
+        texts = [ text.replace('text: ', '') for text in results ]
+        codes = codes + texts
+        passwords = passwords + texts
+
+    return {
+        'time-taken': time_taken(output_dir_path),
+        'generated-codes': lists.to_str_with_nl(codes),
+        'generated-passwords': lists.to_str_with_nl(passwords),
+        'is-code-cracked': lists.has_string(credentials['codes'], codes),
+        'is-password-cracked': lists.has_string(credentials['passwords'], passwords),
+    }
+
+
+def run(input_file_path, output_dir_path, stdin, options, credentials):
     input_file = file.details(input_file_path)
     bytecode_file = FILE_NAME['bytecode'].format(name = input_file['name'])
     bytecode_file_path = os.path.join(output_dir_path, bytecode_file)
 
     compile(input_file_path, bytecode_file_path)
-
     symbolic_execution(output_dir_path, stdin, input_file['name'], bytecode_file_path, options)
 
-    time = time_taken(output_dir_path, input_file['name'])
-
-    return {
-        'time': time
-    }
+    return stats(output_dir_path, credentials)
