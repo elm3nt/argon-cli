@@ -25,7 +25,7 @@ def run(argv):
         obfuscation_combinations = args.obfuscation_list
         obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
 
-    elif (tool == ANGR or tool == KLEE or tool == EXECUTION):
+    elif (tool == RUN or tool == ANGR or tool == KLEE or tool == ALL):
         input_path = os.path.abspath(args.input)
         file.make_dir_if_not_exists(output_path)
         run_tool(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
