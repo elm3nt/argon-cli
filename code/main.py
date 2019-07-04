@@ -16,12 +16,12 @@ def compile_code(input_file_path, output_dir_path):
     return output_file_path
 
 
-def run_compiled_code(input_path, output_dir_path, arg, stdin):
+def run_compiled_code(input_path, output_dir_path, args, stdin):
     input_file = file.details(input_path)
     run_output_file = FILE_NAME['run'].format(name = input_file['name'])
     run_output_file_path = os.path.join(output_dir_path, run_output_file)
 
-    execute = CMD['run'].format(input = input_path, arg = ''.join(arg), stdin = ''.join(stdin))
+    execute = CMD['run'].format(input = input_path, args = ' '.join(args), stdin = '\n'.join(stdin))
     time = CMD['time'].format(cmd = execute, output = run_output_file_path)
     cmd = CMD['bash'].format(time)
     output = str(os.popen(cmd).read())
