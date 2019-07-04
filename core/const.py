@@ -1,11 +1,11 @@
 SE = 'se'
 ALL = 'all'
+RUN = 'run'
 ONE_BYTE = 8
 ANGR = 'angr'
 KLEE = 'klee'
 GENERATE = 'generate'
 OBFUSCATE ='obfuscate'
-EXECUTION = 'execution'
 
 
 EXT = {
@@ -17,6 +17,8 @@ EXT = {
 CMD = {
     'bash': '/bin/bash -c "{}"',
     'gcc': 'gcc {input} -o {output}',
+    'run': 'echo {stdin} | {input} {arg}',
+    'time': '{{ time {cmd} ; }} 2> {output}',
 }
 
 DIR_NAME = {
@@ -25,7 +27,7 @@ DIR_NAME = {
 
 FILE_NAME = {
     'c-out': '{name}.out',
-    'log': '{name}_log.txt',
+    'run': '{name}_run.txt',
     'bytecode': '{name}.bc',
     'empty-c-file': 'empty.c',
     'analysis': 'analysis.csv',
