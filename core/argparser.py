@@ -42,6 +42,7 @@ se_parser.add_argument('-s', '--search', default = 'random-path',
                                   'nurs:icnt', 'nurs:cpicnt', 'nurs:qc'],
                        help = 'select search type to perform symbolic analysis')
 
+sub_parser.add_parser(ALL, parents = [common_parser, se_parser])
+sub_parser.add_parser(RUN, parents = [common_parser, se_parser])
 sub_parser.add_parser(ANGR, parents = [common_parser, se_parser])
 sub_parser.add_parser(KLEE, parents = [common_parser, se_parser])
-sub_parser.add_parser(EXECUTION, parents = [common_parser, se_parser])
