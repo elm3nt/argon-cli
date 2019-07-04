@@ -1,7 +1,7 @@
 import csv
 
 from core.const import *
-from .const import CSV_HEADER as HEAD
+from .const import CSV_HEAD as HEAD
 
 
 def write_to_file(output_file_path, data):
@@ -15,7 +15,10 @@ def get_csv_header(tool):
     middle = []
     right = [ HEAD['file-path'] ]
 
-    if tool == ANGR:
+    if tool == RUN:
+        middle = [ HEAD['run-time'] ]
+
+    elif tool == ANGR:
         middle = [ HEAD['angr-time'], HEAD['angr-is-code-cracked'], HEAD['angr-is-password-cracked'],
                    HEAD['angr-generated-codes'], HEAD['angr-generated-passwords'] ]
 
@@ -23,11 +26,8 @@ def get_csv_header(tool):
         middle = [ HEAD['klee-time'], HEAD['klee-is-code-cracked'], HEAD['klee-is-password-cracked'],
                    HEAD['klee-generated-codes'], HEAD['klee-generated-passwords'] ]
 
-    elif tool == EXECUTION:
-        middle = [ HEAD['execution-time'] ]
-
     elif tool == ALL:
-        middle = [ HEAD['execution-time'], HEAD['angr-time'], HEAD['klee-time'], HEAD['angr-is-code-cracked'],
+        middle = [ HEAD['run-time'], HEAD['angr-time'], HEAD['klee-time'], HEAD['angr-is-code-cracked'],
                    HEAD['klee-is-code-cracked'], HEAD['angr-is-password-cracked'], HEAD['klee-is-password-cracked'],
                    HEAD['angr-generated-codes'], HEAD['klee-generated-codes'], HEAD['angr-generated-passwords'],
                    HEAD['klee-generated-passwords'] ]
