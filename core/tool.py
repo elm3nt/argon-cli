@@ -9,7 +9,7 @@ from stats.main import get_csv_header, write_to_file
 
 
 def run(input_path, output_path, stdin, tool, options, credentials):
-    input_files_path = file.lists(input_path, C_EXT)
+    input_files_path = file.lists(input_path, EXT['c'])
     csv_header = get_csv_header(tool)
     data = [ csv_header ]
 
