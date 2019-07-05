@@ -3,22 +3,21 @@ import sys
 
 from .const import *
 from utils import file
+from core.args import *
 from core.argparser import *
 from core.tool import run as run_tool
 from tigress.main import obfuscate, generate
-from core.args import stdin, se_options, credentials
 
 
 def run(argv):
     if len(sys.argv) == 1:
-        parser.print_help()
+        print_help()
         sys.exit(1)
 
     try:
         args = parser.parse_args()
     except:
-        parser.print_help()
-        print('\nTake reference from documentation')
+        print_help()
         sys.exit(1)
 
     tool = args.option
