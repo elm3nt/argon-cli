@@ -10,6 +10,10 @@ from core.args import stdin, se_options, credentials
 
 
 def run(argv):
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+
     try:
         args = parser.parse_args()
     except:
