@@ -1,4 +1,5 @@
 import os
+import sys
 
 from .const import *
 from utils import file
@@ -9,7 +10,13 @@ from core.args import stdin, se_options, credentials
 
 
 def run(argv):
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except:
+        parser.print_help()
+        print('\nTake reference from documentation')
+        sys.exit(1)
+
     tool = args.option
     output_path = os.path.abspath(args.output)
 
