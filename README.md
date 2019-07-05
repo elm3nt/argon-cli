@@ -1,6 +1,9 @@
-# Symbolic Analysis
+# Argon
 
-Symbolic Analysis is set of scripts to automate Klee symbolic analyzer, record timing and generate stats.
+Argon is an automation tool to generate, obfuscate and run symbolic symbolic analysis on C source files. It uses following tools to achieve it:
+* [Angr](http://angr.io/)
+* [Klee](https://github.com/klee/)
+* [Tigress](http://tigress.cs.arizona.edu/)
 
 
 ### Prerequisites
@@ -9,66 +12,73 @@ Symbolic Analysis is set of scripts to automate Klee symbolic analyzer, record t
 
 
 ### Set up the environment
-
-Syntax to create Docker container
 ```
-$ docker run -v [host machine source dir]:[target machine destination dir] -ti --name=[container name] --ulimit='stack=-1:-1' [docker image name]
+$ mkdir workspace
+$ cd workspace
+$ mkdir out
+$ git clone git@github.com:deepsadhi/argon.git
+$ docker run -v $(pwd):/workspace -ti --name=argon deepsadhi/argon
+$ docker start -ai argon
+$ cd /workspace/argon
 ```
-Example to create Docker container
-```
-$ docker run -v /home/user/workspace:/workspace -ti --name=triton --ulimit='stack=-1:-1' klee/klee
-```
-Keep all test C files in workspace directory of the host machine to peform the test.
+This will mount host's workspace directory to contianer's root directory
 
 
-## Running the tests
-
-Start Klee container
-```
-$ docker start -ai klee
-```
-
-### Run tests
-
-This script recursively traverses into test directory and looks for `C` files. For each `C` file found following tasks is performed:
-1. Generate bytecode of `C` file using `LLVM`
-2. Run `Klee` test on bytecode file
-3. Create a directory named with`C` file in the direcotry where `C` file was found and store `Klee` output
-4. Create a `time.txt` file named with `C` file in the direcotry where `C` file was found and record time taken to execute the test
-
+### Generate sameple C source code with code and password authentication
 Syntax
 ```
-$ ./batch.py [test directory] "[klee symbolic input args]"
+$ argon generate -o [output C file path] -c [code] - p [password]
 ```
 Example
 ```
-$ cd /workspace/klee-analysis
-$ ./batch.py tests/ "--sym-stdin 12"
+$ ./argon generate -o ../out/sample.c -c 18 -p p@ssw0rd
 ```
 
-### Generate stats
-
-This script recursively traverses into test directory and looks for `time.txt` files. For each `time.txt` file found following information will be extracted:
-1. Test file name
-2. Time taken to run test on test file
-3. Size of test file (in bytes)
-4. Path of test file
-As a last step, `analysis.csv` file is created in test directory with all stats.
-
+### Obfuscate generated C source code
+Obfuscation options: `A` `C` `D` `V`
 Syntax
 ```
-$ ./analysis.py [test directory]
+$ argon obfuscate -i [input C file path] -o [output directory path] -nv [number of variants] -ol [obfuscation list]
 ```
 Example
 ```
-$ cd /workspace/klee-analysis
-$ ./analysis.py tests/
+$ ./argon obfuscate -i ../out/sample.c -o ../out/obs -nv 5 -ol A AC ADC DACV
 ```
 
+## Run analysis
+Analysis takes single C source file or directory with C source files. The analysis report of test is saved in `analysis.csv` file of output path
+
+### Execution time of compiled C source code
+Syntax
+```
+$ argon run -i [input C file/dir path] -o [output directory path] -c [code] -p [password]
+```
+Example
+```
+$ ./argon run -i ../out/obs/AC -o ../out/out-run -c 18 -p p@ssw0rd
+$ ./argon run -i ../out/sample.c -o ../out/out-sample -c 18 -p p@ssw0rd
+```
+
+### Run symbolic analysis using Angr, Klee
+Syntax
+```
+$ argon (angr|klee|all) -i [input C file/dir path] -o [output directory path] -na [number of arguments] -la [length of argument] -ni [number of inputs] -li [length of input] -c [authentication code] -p [authentication password]
+```
+Example
+```
+$ argon klee -i ../out/obs/AC -o ../out/out-klee-obs -na 1 -la 2 -ni 1 -li 8 -c 18 -p p@ssw0rd
+$ argon angr -i ../out/sample.c -o ../out/out-angr-sample -na 1 -la 2 -ni 1 -li 8 -c 18 -p p@ssw0rd
+
+```
+Run symbolic analysis using Agn, Klee and note execution time as well
+```
+$ argon all -i ../out/obs/ADC -o ../out/out-all-adc -na 1 -la 2 -ni 1 -li 8 -c 18 -p p@ssw0rd
+```
 
 ## Authors
 
 * [Deepak Adhikari](https://github.com/deepsadhi)
+* [Justin Nguyen](https://github.com/Thienx99)
 
 
 ## License
