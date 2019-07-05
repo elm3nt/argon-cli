@@ -4,6 +4,7 @@ RUN = 'run'
 ONE_BYTE = 8
 ANGR = 'angr'
 KLEE = 'klee'
+PROGRAM = 'argon'
 GENERATE = 'generate'
 OBFUSCATE ='obfuscate'
 
