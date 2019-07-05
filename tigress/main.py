@@ -68,7 +68,8 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
 
 
 def generate(output_path, code = '18', password = 'p@$$w0rd'):
-    input_path = os.path.join(os.getcwd(), DIR_NAME['samples'], FILE_NAME['empty-c-file'])
+    input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
+                              DIR_NAME['samples'], FILE_NAME['empty-c-file'])
     cmd = TIGRESS_CMD['generate'].format(password = password, code = code, output = output_path, input = input_path)
     os.system(CMD['bash'].format(cmd))
 
