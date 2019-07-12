@@ -18,7 +18,7 @@ EXT = {
 CMD = {
     'bash': '/bin/bash -c "{}"',
     'gcc': 'gcc {input} -o {output}',
-    'run': 'echo {stdin} | {input} {args}',
+    'run': 'printf "{stdin}" | {input} {args}',
     'time': '{{ time {cmd} ; }} 2> {output}',
 }
 
