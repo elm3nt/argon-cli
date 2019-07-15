@@ -25,14 +25,13 @@ def init_project(input_file_path, stdin, project):
     }
 
 
-def decode_credentials(output_dir_path, stdin, args, simulation_manager):
-    index = 0
+def decode_credentials(output_dir_path, stdin, args, simulation_manager, credentials):
     codes = []
     passwords = []
 
+    test_file_name = FILE_NAME['angr-test'].format(index = '1')
     for deadended in simulation_manager.deadended:
         content = ''
-        test_file_name = FILE_NAME['angr-test'].format(index = str(index))
         output_test_file_path = os.path.join(output_dir_path, test_file_name)
 
         content += 'Arg(s)\n'
@@ -55,9 +54,7 @@ def decode_credentials(output_dir_path, stdin, args, simulation_manager):
             print()
         content += lists.to_str_with_nl(passwords) + '\n'
 
-        file.write(output_test_file_path, content)
-
-        index += 1
+    file.write(output_test_file_path, content)
 
     return {
         'codes': codes,
@@ -81,7 +78,7 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
         'passwords': [],
     }
     if hasattr(simulation_manager, 'deadended'):
-        generated = decode_credentials(output_dir_path, stdin, project_status['args'], simulation_manager)
+        generated = decode_credentials(output_dir_path, stdin, project_status['args'], simulation_manager, credentials)
 
     return {
         'time-taken': time_taken.total_seconds(),
