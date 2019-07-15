@@ -18,7 +18,6 @@ $ cd workspace
 $ mkdir out
 $ git clone git@github.com:deepsadhi/argon.git
 $ docker run -v $(pwd):/workspace -ti --name=argon deepsadhi/argon
-$ docker start -ai argon
 $ echo "export PATH=$PATH:/workspace/argon" >> ~/.bashrc  # Only if you are using Docker
 $ source ~/.bashrc
 $ cd /workspace
