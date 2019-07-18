@@ -10,14 +10,13 @@ from tigress.main import obfuscate, generate
 
 
 def run(argv):
-    if len(sys.argv) == 1:
+    if len(sys.argv) <= 2:
         print_help()
         sys.exit(1)
 
     try:
         args = parser.parse_args()
     except:
-        print_help()
         sys.exit(1)
 
     tool = args.option
