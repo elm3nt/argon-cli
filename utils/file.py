@@ -50,9 +50,8 @@ def remove_dirs_except(path, dir_exception_list = {}):
     for dir in dir_list:
         target_path = os.path.join(path, dir)
         
-        if os.path.isdir(target_path):
-            if dir not in dir_exception_list:
-                shutil.rmtree(target_path)
+        if os.path.isdir(target_path) and dir not in dir_exception_list:
+            shutil.rmtree(target_path)
 
 
 def make_dir_if_not_exists(path):
