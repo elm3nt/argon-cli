@@ -49,11 +49,11 @@ def remove_dirs_except(path, dir_exception_list = {}):
 
     for dir in dir_list:
         target_path = os.path.join(path, dir)
-        
+
         if os.path.isdir(target_path) and dir not in dir_exception_list:
             shutil.rmtree(target_path)
 
 
-def make_dir_if_not_exists(path):
-    if not os.path.isdir(path):
-        os.mkdir(path)
+def make_dir_with_parent(path):
+    cmd = 'mkdir -p {path}'
+    os.system(cmd.format(path = path))

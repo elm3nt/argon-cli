@@ -60,8 +60,7 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 file_name += obfuscation
                 target_path = os.path.join(output_path, file_name)
 
-                if not os.path.isdir(target_path):
-                    os.mkdir(target_path)
+                file.make_dir_with_parent(target_path)
 
                 input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
                 vn += 1

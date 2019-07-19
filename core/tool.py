@@ -19,7 +19,7 @@ def run(input_path, output_path, stdin, tool, options, credentials):
         input_file_size = os.path.getsize(input_file_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
 
-        os.mkdir(output_dir_path)
+        file.make_dir_with_parent(output_dir_path)
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         if tool == RUN:
