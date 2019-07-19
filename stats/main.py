@@ -10,6 +10,12 @@ def write_to_file(output_file_path, data):
         writer.writerows(data)
 
 
+def append_to_file(output_file_path, data):
+    with open(output_file_path, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
+
+
 def get_csv_header(tool):
     left = [ HEAD['file-name'], HEAD['file-size'] ]
     middle = []

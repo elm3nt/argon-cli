@@ -5,16 +5,19 @@ from utils import file
 from core.const import *
 from klee.main import run as klee_run
 from angrio.main import run as angr_run
-from stats.main import get_csv_header, write_to_file
 from code.main import compile_code, run_compiled_code
+from stats.main import get_csv_header, write_to_file, append_to_file
 
 
 def run(input_path, output_path, stdin, tool, options, credentials):
     input_files_path = file.lists(input_path, EXT['c'])
+    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
+
     csv_header = get_csv_header(tool)
-    data = [ csv_header ]
+    write_to_file(analysis_file_path, [ csv_header ])
 
     for input_file_path in input_files_path:
+        data = []
         input_file = file.details(input_file_path)
         input_file_size = os.path.getsize(input_file_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
@@ -55,5 +58,4 @@ def run(input_path, output_path, stdin, tool, options, credentials):
                           angr_test_result['generated-passwords'], klee_test_result['generated-passwords'],
                           input_file_path ])
 
-    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
-    write_to_file(analysis_file_path, data)
+        append_to_file(analysis_file_path, data)
