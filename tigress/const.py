@@ -113,10 +113,13 @@ TIGRESS_CMD = {
         --RandomFunsStateSize=1 \
         --RandomFunsOutputSize=1 \
         --RandomFunsCodeSize=10 \
-        --RandomFunsPasswordCheckCount=1 \
-        --RandomFunsPassword={password} \
-        --RandomFunsActivationCodeCheckCount=1 \
-        --RandomFunsActivationCode={code} \
+        {option} \
         --RandomFunsFailureKind=segv  \
-        --out={output} {input}'
+        --out={output} {input}',
+
+    'code': '--RandomFunsActivationCodeCheckCount=1 \
+             --RandomFunsActivationCode={code}',
+
+    'pass': '--RandomFunsPasswordCheckCount=1 \
+             --RandomFunsPassword={password}'
 }

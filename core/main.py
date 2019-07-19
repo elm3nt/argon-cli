@@ -22,6 +22,8 @@ def run(argv):
     tool = args.option
     output_path = os.path.abspath(args.output)
 
+    print(args)
+
     if tool == GENERATE:
         code = str(args.code)
         password = str(args.password)
@@ -32,7 +34,7 @@ def run(argv):
         input_path = os.path.abspath(args.input)
         file.make_dir_if_not_exists(output_path)
         obfuscation_combinations = args.obfuscation_list
-        obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
+        obfuscate(input_path, output_path, obfuscation_combinations, num_variants, tool)
 
     elif (tool == RUN or tool == ANGR or tool == KLEE or tool == ALL):
         input_path = os.path.abspath(args.input)

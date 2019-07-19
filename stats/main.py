@@ -15,7 +15,7 @@ def get_csv_header(tool):
     middle = []
     right = [ HEAD['file-path'] ]
 
-    if tool == RUN:
+    if tool == RUN or tool == OBFUSCATE:
         middle = [ HEAD['run-time'] ]
 
     elif tool == ANGR:

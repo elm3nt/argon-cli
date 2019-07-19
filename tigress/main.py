@@ -3,6 +3,7 @@ import os
 import sys
 import shutil
 from pathlib import Path
+from stats.main import get_csv_header, write_to_file
 
 from .const import *
 from utils import file
@@ -67,13 +68,37 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 vn += 1
 
 
-def generate(output_path, code = '18', password = 'p@$$w0rd'):
+def generate(output_path, code, password):
     input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                               DIR_NAME['samples'], FILE_NAME['empty-c-file'])
-    cmd = TIGRESS_CMD['generate'].format(password = password, code = code, output = output_path, input = input_path)
+  
+    if code != "None" and password == "None":
+        activation_code = TIGRESS_CMD['code'].format(code = code)
+        cmd = TIGRESS_CMD['generate'].format(option = activation_code, output = output_path, input = input_path)
+    elif code == "None" and password != "None":
+        passwd = TIGRESS_CMD['pass'].format(password = password)
+        cmd = TIGRESS_CMD['generate'].format(option = passwd, output = output_path, input = input_path)
+    else:
+        activation_code = TIGRESS_CMD['code'].format(code = code)
+        passwd = TIGRESS_CMD['pass'].format(password = password)
+        cmd = TIGRESS_CMD['generate'].format(option = ' '.join([passwd, activation_code]), output = output_path, input = input_path)
+        
     os.system(CMD['bash'].format(cmd))
 
+def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants, tool):
+    input_files_path = file.lists(input_path, EXT['c'])
+    csv_header = get_csv_header(tool)
+    data = [ csv_header ]
 
-def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
-    variant(input_path, output_path, obfuscation_combinations, no_of_variants)
-    file.remove_dirs_except(output_path, obfuscation_combinations)
+    for input_path in input_files_path:
+        input_file = file.details(input_path)
+        output_dir_path = os.path.join(output_path, input_file['name'])
+
+        os.mkdir(output_dir_path)
+
+        variant(input_path, output_dir_path, obfuscation_combinations, no_of_variants)
+        data.append([ input_file['file'] ])
+        file.remove_dirs_except(output_dir_path, obfuscation_combinations)
+
+    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
+    write_to_file(analysis_file_path, data)
