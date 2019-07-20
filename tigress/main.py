@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 from .const import *
-from utils import file
+from utils import fs
 from core.const import *
 
 
@@ -60,7 +60,7 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 file_name += obfuscation
                 target_path = os.path.join(output_path, file_name)
 
-                file.make_dir_with_parent(target_path)
+                fs.mkdir(target_path)
 
                 input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
                 vn += 1
@@ -75,4 +75,4 @@ def generate(output_path, code = '18', password = 'p@$$w0rd'):
 
 def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
     variant(input_path, output_path, obfuscation_combinations, no_of_variants)
-    file.remove_dirs_except(output_path, obfuscation_combinations)
+    fs.rmdirs(output_path, obfuscation_combinations)

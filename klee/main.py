@@ -4,7 +4,7 @@ import sys
 import shutil
 
 from .const import *
-from utils import file
+from utils import fs
 from utils import lists
 from core.const import *
 from pathlib import Path
@@ -45,7 +45,7 @@ def time_taken(input_path):
 
 
 def stats(output_dir_path, credentials):
-    input_ktest_files_path = file.lists(output_dir_path, EXT['ktest'])
+    input_ktest_files_path = fs.ls(output_dir_path, EXT['ktest'])
 
     codes = []
     passwords = []
@@ -53,10 +53,10 @@ def stats(output_dir_path, credentials):
         cmd = KLEE_CMD['ktest'].format(input = input_ktest_file_path)
         content = str(os.popen(cmd).read())
 
-        input_ktest_file = file.details(input_ktest_file_path)
+        input_ktest_file = fs.details(input_ktest_file_path)
         output_ktest_file = FILE_NAME['klee-test'].format(name = input_ktest_file['name'])
         output_ktest_file_path = os.path.join(output_dir_path, output_ktest_file)
-        file.write(output_ktest_file_path, content)
+        fs.write(output_ktest_file_path, content)
 
         results = re.findall(r'text:[\s].*\n', content)
         texts = [ text.replace('text: ', '') for text in results ]
@@ -73,7 +73,7 @@ def stats(output_dir_path, credentials):
 
 
 def run(input_file_path, output_dir_path, stdin, options, credentials):
-    input_file = file.details(input_file_path)
+    input_file = fs.details(input_file_path)
     bytecode_file = FILE_NAME['bytecode'].format(name = input_file['name'])
     bytecode_file_path = os.path.join(output_dir_path, bytecode_file)
 

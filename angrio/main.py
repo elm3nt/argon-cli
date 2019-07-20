@@ -3,7 +3,7 @@ import angr
 import claripy
 from datetime import datetime
 
-from utils import file
+from utils import fs
 from utils import lists
 from core.const import *
 
@@ -54,7 +54,7 @@ def decode_credentials(output_dir_path, stdin, args, simulation_manager, credent
             print()
         content += lists.to_str_with_nl(passwords) + '\n'
 
-    file.write(output_test_file_path, content)
+    fs.write(output_test_file_path, content)
 
     return {
         'codes': codes,
@@ -90,7 +90,7 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
 
 
 def run(input_file_path, output_dir_path, stdin, options, credentials):
-    input_file = file.details(input_file_path)
+    input_file = fs.details(input_file_path)
     output_file = FILE_NAME['c-out'].format(name = input_file['name'])
     output_file_path = os.path.join(output_dir_path, output_file)
 

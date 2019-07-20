@@ -1,19 +1,5 @@
-import csv
-
 from core.const import *
 from .const import CSV_HEAD as HEAD
-
-
-def write_to_file(output_file_path, data):
-    with open(output_file_path, 'w') as file:
-        writer = csv.writer(file)
-        writer.writerows(data)
-
-
-def append_to_file(output_file_path, data):
-    with open(output_file_path, 'a') as file:
-        writer = csv.writer(file)
-        writer.writerows(data)
 
 
 def get_csv_header(tool):

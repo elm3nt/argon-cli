@@ -1,28 +1,28 @@
 import os
 from shutil import copy2
 
-from utils import file
+from utils import fs
 from core.const import *
+from stats.main import get_csv_header
 from klee.main import run as klee_run
 from angrio.main import run as angr_run
 from code.main import compile_code, run_compiled_code
-from stats.main import get_csv_header, write_to_file, append_to_file
 
 
 def run(input_path, output_path, stdin, tool, options, credentials):
-    input_files_path = file.lists(input_path, EXT['c'])
+    input_files_path = fs.ls(input_path, EXT['c'])
     analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
 
     csv_header = get_csv_header(tool)
-    write_to_file(analysis_file_path, [ csv_header ])
+    fs.write_csv(analysis_file_path, [ csv_header ])
 
     for input_file_path in input_files_path:
         data = []
-        input_file = file.details(input_file_path)
+        input_file = fs.details(input_file_path)
         input_file_size = os.path.getsize(input_file_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
 
-        file.make_dir_with_parent(output_dir_path)
+        fs.mkdir(output_dir_path)
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         if tool == RUN:
@@ -58,4 +58,4 @@ def run(input_path, output_path, stdin, tool, options, credentials):
                           angr_test_result['generated-passwords'], klee_test_result['generated-passwords'],
                           input_file_path ])
 
-        append_to_file(analysis_file_path, data)
+        fs.append_csv(analysis_file_path, data)

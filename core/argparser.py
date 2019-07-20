@@ -6,7 +6,7 @@ from core.const import *
 common_parser = argparse.ArgumentParser(add_help = False)
 common_parser.add_argument('-o', '--output', help = 'Path of file/dir to store generated file(s)')
 
-parser = argparse.ArgumentParser(prog = 'Argon', parents = [common_parser], add_help = False)
+parser = argparse.ArgumentParser(prog = PROGRAM, parents = [common_parser], add_help = False)
 sub_parser = parser.add_subparsers(dest = 'option')
 
 tigress_genenerate_option = sub_parser.add_parser(GENERATE, parents = [common_parser], help = 'generate sample C source code with code and password')
