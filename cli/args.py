@@ -1,4 +1,4 @@
-from core.argparser import *
+from .argparser import *
 
 
 def se_options(args):
