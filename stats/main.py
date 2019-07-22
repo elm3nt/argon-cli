@@ -8,7 +8,7 @@ def get_csv_header(tool):
     right = [ HEAD['file-path'] ]
 
     if tool == RUN:
-        middle = [ HEAD['run-time'] ]
+        middle = [ HEAD['optimization-level'], HEAD['run-time'] ]
 
     elif tool == ANGR:
         middle = [ HEAD['angr-time'], HEAD['angr-is-code-cracked'], HEAD['angr-is-password-cracked'],

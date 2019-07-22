@@ -25,14 +25,7 @@ def run(input_path, output_path, stdin, tool, options, credentials):
         fs.mkdir(output_dir_path)
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
-        if tool == RUN:
-            compiled_code_path = compile_code(input_file_path, output_dir_path)
-            test_result = run_compiled_code(compiled_code_path, output_dir_path, credentials['codes'],
-                                            credentials['passwords'])
-            data.append([ input_file['file'], input_file_size, test_result['time-taken'], input_file_path ])
-
         if tool == ANGR:
-            compiled_code_path = compile_code(input_file_path, output_dir_path)
             test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
             data.append([ input_file['file'], input_file_size, str(test_result['time-taken']),
                           str(test_result['is-code-cracked']), str(test_result['is-password-cracked']),
@@ -45,8 +38,8 @@ def run(input_path, output_path, stdin, tool, options, credentials):
                           test_result['generated-codes'], test_result['generated-passwords'], input_file_path ])
 
         elif tool == ALL:
-            compiled_code_path = compile_code(input_file_path, output_dir_path)
-            run_test_result = run_compiled_code(compiled_code_path, output_dir_path, credentials['codes'],
+            compiled_code_file_path = compile_code(input_file_path, output_dir_path)
+            run_test_result = run_compiled_code(compiled_code_file_path, output_dir_path, credentials['codes'],
                                                 credentials['passwords'])
             angr_test_result = angr_run(input_file_path, output_dir_path, stdin, options, credentials)
             klee_test_result = klee_run(input_file_path, output_dir_path, stdin, options, credentials)
