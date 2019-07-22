@@ -91,10 +91,6 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
 
 
 def run(input_file_path, output_dir_path, stdin, options, credentials):
-    # input_file = fs.details(input_file_path)
-    # output_file = FILE_NAME['c-out'].format(name = input_file['name'])
     compiled_code_path = compile_code(input_file_path, output_dir_path)
-
-    # output_file_path = os.path.join(output_dir_path, output_file)
 
     return symbolic_execution(compiled_code_path, output_dir_path, stdin, options, credentials)

@@ -27,7 +27,9 @@ DIR_NAME = {
 }
 
 OPTIONS = {
-    'gcc-optimization-levels': ['0', '1', '2', '3', 's', 'fast']
+    'gcc-optimization-levels': ['0', '1', '2', '3', 's', 'fast'],
+    'klee-search-algorithm': ['dfs', 'random-state', 'random-path', 'nurs:covnew', 'nurs:md2u', 'nurs:depth',
+                              'nurs:icnt', 'nurs:cpicnt', 'nurs:qc'],
 }
 
 FILE_NAME = {

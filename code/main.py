@@ -36,7 +36,6 @@ def run_compiled_code(input_path, output_dir_path, args, stdin):
     }
 
 
-
 def run(input_path, output_path, optimization_levels, credentials):
     input_files_path = fs.ls(input_path, EXT['c'])
     analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
@@ -51,14 +50,13 @@ def run(input_path, output_path, optimization_levels, credentials):
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         for level in optimization_levels:
-            if level in OPTIONS['gcc-optimization-levels']:
-                data = []
-                compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
-                compiled_code_file_size = os.path.getsize(compiled_code_file_path)
-                compiled_code = fs.details(compiled_code_file_path)
-                test_result = run_compiled_code(compiled_code_file_path, output_dir_path, credentials['codes'],
-                                                    credentials['passwords'])
+            data = []
+            compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
+            compiled_code_file_size = os.path.getsize(compiled_code_file_path)
+            compiled_code = fs.details(compiled_code_file_path)
+            test_result = run_compiled_code(compiled_code_file_path, output_dir_path, credentials['codes'],
+                                            credentials['passwords'])
 
-                data.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
-                              compiled_code_file_path ])
-                fs.append_csv(analysis_file_path, data)
+            data.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
+                          compiled_code_file_path ])
+            fs.append_csv(analysis_file_path, data)
