@@ -1,11 +1,11 @@
 import os
 import sys
 
-from .const import *
+from .args import *
 from utils import fs
-from core.args import *
-from core.argparser import *
-from .se import run as run_se
+from core.const import *
+from .argparser import *
+from core.se import run as run_se
 from code.main import run as run_code
 from tigress.main import obfuscate, generate
 
@@ -44,5 +44,3 @@ def run(argv):
         input_path = os.path.abspath(args.input)
         fs.mkdir(output_path)
         run_se(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
-
-
