@@ -4,7 +4,7 @@ from core.const import *
 
 
 common_parser = argparse.ArgumentParser(add_help = False)
-common_parser.add_argument('-o', '--output', help = 'Path of file/dir to store generated file(s)')
+common_parser.add_argument('-o', '--output', help = 'path of file/dir to store generated file(s)')
 
 parser = argparse.ArgumentParser(prog = PROGRAM, parents = [common_parser], add_help = False)
 sub_parser = parser.add_subparsers(dest = 'option')
@@ -22,6 +22,16 @@ tigress_obfuscate_option.add_argument('-nv', '--num-variants', type = int,
                                       help = 'number of obfuscation variants to be generated')
 tigress_obfuscate_option.add_argument('-ol', '--obfuscation-list', nargs = '+',
                                       help = 'obfuscation combinations list')
+
+run_option = sub_parser.add_parser(RUN, parents = [common_parser], help = 'compile C source code in different optimization level')
+run_option.add_argument('-ol', '--optimization-levels', nargs = '+',
+                        help = 'gcc optimization levels list')
+run_option.add_argument('-i', '--input',
+                        help = 'path of benchmark dir/file(s)')
+run_option.add_argument('-c', '--codes', required = False, default = [], nargs = '+',
+                        help = 'list of activaton codes seperated by comma or space')
+run_option.add_argument('-p', '--passwords', required = False, default = [], nargs = '+',
+                        help = 'list of passwords seperated by comma or space')
 
 se_parser = argparse.ArgumentParser(add_help = False)
 se_parser.add_argument('-i', '--input',
@@ -49,7 +59,7 @@ se_parser.add_argument('-s', '--search', default = 'random-path',
                               '(dfs|random-state|random-path|nurs:covnew|nurs:md2u|nurs:depth|nurs:icnt|nurs:cpicnt|nurs:qc')
 
 sub_parser.add_parser(ALL, parents = [common_parser, se_parser], help = 'run symbolic analysis using Angr, Klee and note execution time')
-sub_parser.add_parser(RUN, parents = [common_parser, se_parser], help = 'notes execution time written to analysis.csv')
+# sub_parser.add_parser(RUN, parents = [common_parser, se_parser], help = 'notes execution time written to analysis.csv')
 sub_parser.add_parser(ANGR, parents = [common_parser, se_parser], help = 'runs symbolic analysis using Angr')
 sub_parser.add_parser(KLEE, parents = [common_parser, se_parser], help = 'runs symbolic analysis using Klee')
 

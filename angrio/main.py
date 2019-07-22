@@ -6,6 +6,7 @@ from datetime import datetime
 from utils import fs
 from utils import lists
 from core.const import *
+from code.main import compile_code
 
 
 def init_project(input_file_path, stdin, project):
@@ -90,8 +91,10 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
 
 
 def run(input_file_path, output_dir_path, stdin, options, credentials):
-    input_file = fs.details(input_file_path)
-    output_file = FILE_NAME['c-out'].format(name = input_file['name'])
-    output_file_path = os.path.join(output_dir_path, output_file)
+    # input_file = fs.details(input_file_path)
+    # output_file = FILE_NAME['c-out'].format(name = input_file['name'])
+    compiled_code_path = compile_code(input_file_path, output_dir_path)
 
-    return symbolic_execution(output_file_path, output_dir_path, stdin, options, credentials)
+    # output_file_path = os.path.join(output_dir_path, output_file)
+
+    return symbolic_execution(compiled_code_path, output_dir_path, stdin, options, credentials)

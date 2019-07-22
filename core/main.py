@@ -5,7 +5,8 @@ from .const import *
 from utils import fs
 from core.args import *
 from core.argparser import *
-from core.tool import run as run_tool
+from .se import run as run_se
+from code.main import run as run_code
 from tigress.main import obfuscate, generate
 
 
@@ -34,9 +35,14 @@ def run(argv):
         obfuscation_combinations = args.obfuscation_list
         obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
 
-    elif (tool == RUN or tool == ANGR or tool == KLEE or tool == ALL):
+    elif tool == RUN:
         input_path = os.path.abspath(args.input)
         fs.mkdir(output_path)
-        run_tool(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
+        run_code(input_path, output_path, args.optimization_levels, credentials(args))
+
+    elif (tool == ANGR or tool == KLEE or tool == ALL):
+        input_path = os.path.abspath(args.input)
+        fs.mkdir(output_path)
+        run_se(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
 
 

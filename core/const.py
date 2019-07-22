@@ -17,21 +17,25 @@ EXT = {
 
 CMD = {
     'bash': '/bin/bash -c "{}"',
-    'gcc': 'gcc {input} -o {output}',
-    'run': 'printf "{stdin}" | {input} {args}',
     'time': '{{ time {cmd} ; }} 2> {output}',
+    'gcc': 'gcc -O{level} {input} -o {output}',
+    'run': 'printf "{stdin}" | {input} {args}',
 }
 
 DIR_NAME = {
     'samples': 'samples',
 }
 
+OPTIONS = {
+    'gcc-optimization-levels': ['0', '1', '2', '3', 's', 'fast']
+}
+
 FILE_NAME = {
-    'c-out': '{name}.out',
     'run': '{name}_run.txt',
     'bytecode': '{name}.bc',
     'empty-c-file': 'empty.c',
     'analysis': 'analysis.csv',
+    'c-out': '{name}_o{level}.out',
     'klee-test': 'test_klee_{name}.txt',
     'angr-test': 'test_angr_{index}.txt',
 }
