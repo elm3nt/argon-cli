@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y wget unzip python3-pip curl \
 
 # Install dependencies for klee-stats
 RUN pip3 install -U --upgrade pip
-RUN pip2 install -U tabulate
+RUN pip2 install -U tabulate==0.8.3
 
 # Create sym link for LLVM
 RUN ln -s /usr/bin/llvm-config-6.0 /usr/bin/llvm-config && \
@@ -55,7 +55,7 @@ RUN wget https://github.com/klee/klee/archive/v2.0.zip && unzip v2.0.zip && \
   ../ && make
 
 # Install Angr
-RUN pip3 install -U angr claripy
+RUN pip3 install -U angr==8.19.4.5 claripy==8.19.4.5
 
 # Download Tigress
 RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && \
