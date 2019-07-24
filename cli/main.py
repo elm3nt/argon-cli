@@ -5,7 +5,8 @@ from .args import *
 from utils import fs
 from core.const import *
 from .argparser import *
-from core.se import run as run_se
+from se.main import run as run_se
+from core.main import file_iterator
 from code.main import run as run_code
 from tigress.main import obfuscate, generate
 
@@ -37,10 +38,21 @@ def run(argv):
 
     elif tool == RUN:
         input_path = os.path.abspath(args.input)
-        fs.mkdir(output_path)
-        run_code(input_path, output_path, args.optimization_levels, credentials(args))
+        # run_code(input_path, output_path, args.optimization_levels, credentials(args))
+        fn_args = {
+            'credentials': credentials(args),
+            'levels': args.optimization_levels,
+        }
+
+        file_iterator(input_path, output_path, RUN, run_code, fn_args)
 
     elif (tool == ANGR or tool == KLEE or tool == ALL):
         input_path = os.path.abspath(args.input)
-        fs.mkdir(output_path)
-        run_se(input_path, output_path, stdin(args), tool, se_options(args), credentials(args))
+        fn_args = {
+            'tool': tool,
+            'stdin': stdin(args),
+            'options': se_options(args),
+            'credentials': credentials(args),
+        }
+
+        file_iterator(input_path, output_path, tool, run_se, fn_args)
