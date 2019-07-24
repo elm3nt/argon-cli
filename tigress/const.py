@@ -9,8 +9,21 @@ VIRTUALIZATION = 'V'
 NL = repr('\\n').replace('\'', '')
 
 TIGRESS_REGREX = {
+    'pass': '  char password{count}[100] = "";',
+    'printf': '  printf("Please enter password:");\n  ' +
+                'scanf("%s", password{count});',
+    'check_pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
+                'failed |= stringCompareResult != 0UL;',
+
+    'code': '  int activationCode{count} ;',
+    'input': '  activationCode{count} = input[0UL];',
+    'check_code': '  failed |= activationCode{count} != {code}UL;',
+
+    'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' +
+                'input[randomFuns_i5 + {index2}] = randomFuns_value6;',
+
     'megaint': 'argc != {count} ) {{\n    ' +
-               'printf("Call this program with %i arguments ' + NL + '", {count2})'
+               'printf("Call this program with %i arguments ' + NL + '", {count2});'
 }
 
 TIGRESS_CMD = {

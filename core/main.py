@@ -25,12 +25,15 @@ def run(argv):
     if tool == GENERATE:
         code = args.code
         password = args.password
-        count = 0
+
+        count_code = 1
+        count_pass = 1
 
         if len(code) or len(password) > 1:
-            count = len(code)
+            count_code = len(code)
+            count_pass = len(password)
 
-        generate(output_path, code, password, count)
+        generate(output_path, code, password, count_code, count_pass)
 
     elif tool == OBFUSCATE:
         num_variants = args.num_variants

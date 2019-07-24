@@ -69,7 +69,7 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 vn += 1
 
 
-def generate(output_path, code, password, count):
+def generate(output_path, code, password, count_code, count_pass):
     input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                               DIR_NAME['samples'], FILE_NAME['empty-c-file'])
 
@@ -86,17 +86,34 @@ def generate(output_path, code, password, count):
 
     os.system(CMD['bash'].format(cmd))
 
-    if count > 1:
+    if count_code or count_pass> 1:
         generated_file = file.read(output_path)
 
-        megaint = TIGRESS_REGREX['megaint']
-        # megaint = TIGRESS_REGREX['megaint'].format(count = count + 1, count2 = count)
+        megaint = TIGRESS_REGREX['megaint'].format(count = count_code + 1, count2 = count_code)
+        
+        mod_file = re.sub(r'argc !=.* {\n.*', megaint, generated_file)
+        
+        for index in range(count_pass, 1, -1):
+            pas = TIGRESS_REGREX['pass'].format(count = index)
+            printf = TIGRESS_REGREX['printf'].format(count = index)
+            check_pass = TIGRESS_REGREX['check_pass'].format(count = index, password = password[index - 1])
+            mod_file = re.sub(r'(char password\[100\].*)', r'\1\n' + pas, mod_file)
+            mod_file = re.sub(r'(printf\("Please.*\n  scanf\("%s", password\);)', r'\1\n' + printf, mod_file)
+            mod_file = re.sub(r'(stringCompareResult = strncmp\(password,.*\n.*)', r'\1\n' + check_pass, mod_file)
 
-        for index in range(1, count):
-            mod_file = re.sub(r'argc !=.* {\n.*', megaint, generated_file)
-            print('count', str(index) + ' ' + str(count))
-            file.write('/workspace/test.txt', mod_file)
-            print(mod_file)
+        for index in range(count_code, 1, -1):
+            ac = TIGRESS_REGREX['code'].format(count = index)
+            code_input = TIGRESS_REGREX['input'].format(count = index)
+            check_code = TIGRESS_REGREX['check_code'].format(count = index, code = code[index - 1])
+            randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
+
+            mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
+            mod_file = re.sub(r'(int activationCode ;)', r'\1\n' + ac, mod_file)
+            mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
+            mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
+
+        file.write(output_path, mod_file)
+
 
 
 
