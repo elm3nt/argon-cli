@@ -1,6 +1,7 @@
 
 import os
 import sys
+import re
 import shutil
 from pathlib import Path
 from stats.main import get_csv_header, write_to_file
@@ -68,22 +69,36 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 vn += 1
 
 
-def generate(output_path, code, password):
+def generate(output_path, code, password, count):
     input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                               DIR_NAME['samples'], FILE_NAME['empty-c-file'])
-  
-    if code != "None" and password == "None":
-        activation_code = TIGRESS_CMD['code'].format(code = code)
+
+    if code[0] != "None" and password[0] == "None":
+        activation_code = TIGRESS_CMD['code'].format(code = code[0])
         cmd = TIGRESS_CMD['generate'].format(option = activation_code, output = output_path, input = input_path)
-    elif code == "None" and password != "None":
-        passwd = TIGRESS_CMD['pass'].format(password = password)
+    elif code[0] == "None" and password[0] != "None":
+        passwd = TIGRESS_CMD['pass'].format(password = password[0])
         cmd = TIGRESS_CMD['generate'].format(option = passwd, output = output_path, input = input_path)
     else:
-        activation_code = TIGRESS_CMD['code'].format(code = code)
-        passwd = TIGRESS_CMD['pass'].format(password = password)
+        activation_code = TIGRESS_CMD['code'].format(code = code[0])
+        passwd = TIGRESS_CMD['pass'].format(password = password[0])
         cmd = TIGRESS_CMD['generate'].format(option = ' '.join([passwd, activation_code]), output = output_path, input = input_path)
-        
+
     os.system(CMD['bash'].format(cmd))
+
+    if count > 1:
+        generated_file = file.read(output_path)
+
+        megaint = TIGRESS_REGREX['megaint']
+        # megaint = TIGRESS_REGREX['megaint'].format(count = count + 1, count2 = count)
+
+        for index in range(1, count):
+            mod_file = re.sub(r'argc !=.* {\n.*', megaint, generated_file)
+            print('count', str(index) + ' ' + str(count))
+            file.write('/workspace/test.txt', mod_file)
+            print(mod_file)
+
+
 
 def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants, tool):
     input_files_path = file.lists(input_path, EXT['c'])

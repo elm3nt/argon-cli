@@ -22,12 +22,15 @@ def run(argv):
     tool = args.option
     output_path = os.path.abspath(args.output)
 
-    print(args)
-
     if tool == GENERATE:
-        code = str(args.code)
-        password = str(args.password)
-        generate(output_path, code, password)
+        code = args.code
+        password = args.password
+        count = 0
+
+        if len(code) or len(password) > 1:
+            count = len(code)
+
+        generate(output_path, code, password, count)
 
     elif tool == OBFUSCATE:
         num_variants = args.num_variants

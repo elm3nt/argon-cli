@@ -6,6 +6,13 @@ CONTROL_FLOW = 'C'
 RENDUNDANT_DIRS = 2
 VIRTUALIZATION = 'V'
 
+NL = repr('\\n').replace('\'', '')
+
+TIGRESS_REGREX = {
+    'megaint': 'argc != {count} ) {{\n    ' +
+               'printf("Call this program with %i arguments ' + NL + '", {count2})'
+}
+
 TIGRESS_CMD = {
     'abstract': 'tigress \
         --Verbosity=1 \

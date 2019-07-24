@@ -10,9 +10,9 @@ parser = argparse.ArgumentParser(prog = 'Argon', parents = [common_parser], add_
 sub_parser = parser.add_subparsers(dest = 'option')
 
 tigress_genenerate_option = sub_parser.add_parser(GENERATE, parents = [common_parser], help = 'generate sample C source code with code and password')
-tigress_genenerate_option.add_argument('-c', '--code', type = int, default = None, nargs = '?', const = 18,
+tigress_genenerate_option.add_argument('-c', '--code', type = int, default = None, nargs = '+', #const = 18,
                                        help = 'activation code for generated program')
-tigress_genenerate_option.add_argument('-p', '--password', default = None, nargs = '?', const = 'p@ssword',
+tigress_genenerate_option.add_argument('-p', '--password', default = None, nargs = '+', #const = 'p@ssword',
                                        help = 'password for generated program')
 
 tigress_obfuscate_option = sub_parser.add_parser(OBFUSCATE, parents = [common_parser], help = 'obfuscate generated C source code')
