@@ -36,27 +36,17 @@ def run_compiled_code(input_path, output_dir_path, args, stdin):
     }
 
 
-def run(input_path, output_path, optimization_levels, credentials):
-    input_files_path = fs.ls(input_path, EXT['c'])
-    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
+def run(input_file_path, output_dir_path, params):
+    test_results = []
 
-    csv_header = get_csv_header(RUN)
-    fs.write_csv(analysis_file_path, [ csv_header ])
-    for input_file_path in input_files_path:
-        input_file = fs.details(input_file_path)
-        output_dir_path = os.path.join(output_path, input_file['name'])
+    for level in params['levels']:
+        compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
+        compiled_code_file_size = os.path.getsize(compiled_code_file_path)
+        compiled_code = fs.details(compiled_code_file_path)
 
-        fs.mkdir(output_dir_path)
-        copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
+        test_result = run_compiled_code(compiled_code_file_path, output_dir_path, params['credentials']['codes'],
+                                        params['credentials']['passwords'])
+        test_results.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
+                              compiled_code_file_path ])
 
-        for level in optimization_levels:
-            data = []
-            compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
-            compiled_code_file_size = os.path.getsize(compiled_code_file_path)
-            compiled_code = fs.details(compiled_code_file_path)
-            test_result = run_compiled_code(compiled_code_file_path, output_dir_path, credentials['codes'],
-                                            credentials['passwords'])
-
-            data.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
-                          compiled_code_file_path ])
-            fs.append_csv(analysis_file_path, data)
+    return test_results
