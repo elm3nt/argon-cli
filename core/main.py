@@ -17,10 +17,8 @@ def file_iterator(input_path, output_path, tool, fn, fn_args):
     for input_file_path in input_files_path:
         input_file = fs.details(input_file_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
-
         fs.mkdir(output_dir_path)
         copy2(input_file_path, output_dir_path) # TODO: Remove file permissions on copy
 
         test_results = fn(input_file_path, output_dir_path, fn_args)
-
         fs.append_csv(analysis_file_path, test_results)

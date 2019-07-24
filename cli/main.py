@@ -38,12 +38,10 @@ def run(argv):
 
     elif tool == RUN:
         input_path = os.path.abspath(args.input)
-        # run_code(input_path, output_path, args.optimization_levels, credentials(args))
         fn_args = {
             'credentials': credentials(args),
             'levels': args.optimization_levels,
         }
-
         file_iterator(input_path, output_path, RUN, run_code, fn_args)
 
     elif (tool == ANGR or tool == KLEE or tool == ALL):
@@ -54,5 +52,4 @@ def run(argv):
             'options': se_options(args),
             'credentials': credentials(args),
         }
-
         file_iterator(input_path, output_path, tool, run_se, fn_args)
