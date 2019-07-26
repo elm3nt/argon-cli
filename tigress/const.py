@@ -12,9 +12,10 @@ TIGRESS_REGREX = {
                 'scanf("%s", password{count});',
     'check_pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
                 'failed |= stringCompareResult != 0UL;',
+    'while': '  while (randomFuns_i5 < {count}) {{',
 
-    'code': '  int activationCode{count} ;',
-    'input': '  activationCode{count} = input[0UL];',
+    'code': '  unsigned long activationCode{count} ;',
+    'input': '  activationCode{count} = input[{count2}UL];',
     'check_code': '  failed |= activationCode{count} != {code}UL;',
 
     'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' +

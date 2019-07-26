@@ -77,6 +77,7 @@ def generate(output_path, code, password):
         activation_code = TIGRESS_CMD['code'].format(code = code[0])
         cmd = TIGRESS_CMD['generate'].format(option = activation_code, output = output_path, input = input_path)
     elif code[0] == None and password[0] != None:
+        code_count = 0
         passwd = TIGRESS_CMD['pass'].format(password = password[0])
         cmd = TIGRESS_CMD['generate'].format(option = passwd, output = output_path, input = input_path)
     else:
@@ -85,50 +86,51 @@ def generate(output_path, code, password):
         cmd = TIGRESS_CMD['generate'].format(option = ' '.join([passwd, activation_code]), output = output_path, input = input_path)
 
     os.system(CMD['bash'].format(cmd))
+    mod_file = fs.read(output_path)
 
-    if code_count or password_count > 1:
-        generated_file = fs.read(output_path)
-
+    if code_count == 0:
+        replace = TIGRESS_REGREX['while'].format(count = code_count)
+        mod_file = re.sub(r'while \(randomFuns_i5.*', replace, mod_file)
         megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
+        mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
 
-        mod_file = re.sub(r'argc !=.* {\n.*', megaint, generated_file)
-
+    if code_count > 1 or password_count > 1:
         for index in range(password_count, 1, -1):
             pas = TIGRESS_REGREX['pass'].format(count = index)
             printf = TIGRESS_REGREX['printf'].format(count = index)
+
             check_pass = TIGRESS_REGREX['check_pass'].format(count = index, password = password[index - 1])
             mod_file = re.sub(r'(char password\[100\].*)', r'\1\n' + pas, mod_file)
             mod_file = re.sub(r'(printf\("Please.*\n  scanf\("%s", password\);)', r'\1\n' + printf, mod_file)
             mod_file = re.sub(r'(stringCompareResult = strncmp\(password,.*\n.*)', r'\1\n' + check_pass, mod_file)
 
         for index in range(code_count, 1, -1):
+            megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
             ac = TIGRESS_REGREX['code'].format(count = index)
-            code_input = TIGRESS_REGREX['input'].format(count = index)
+            code_input = TIGRESS_REGREX['input'].format(count = index, count2 = index - 1)
             check_code = TIGRESS_REGREX['check_code'].format(count = index, code = code[index - 1])
             randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
-
+            mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
             mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
             mod_file = re.sub(r'(int activationCode ;)', r'\1\n' + ac, mod_file)
             mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
             mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
 
-        fs.write(output_path, mod_file)
+    fs.write(output_path, mod_file)
 
 
-def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants, tool):
+def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
     input_files_path = fs.ls(input_path, EXT['c'])
-    csv_header = get_csv_header(tool)
-    data = [ csv_header ]
 
     for input_path in input_files_path:
         input_file = fs.details(input_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
 
-        os.mkdir(output_dir_path)
+        fs.mkdir(output_dir_path)
 
         variant(input_path, output_dir_path, obfuscation_combinations, no_of_variants)
-        data.append([ input_file['file'] ])
+
         fs.rmdirs(output_dir_path, obfuscation_combinations)
 
-    analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
-    write_to_file(analysis_file_path, data)
+
+
