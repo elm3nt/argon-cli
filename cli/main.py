@@ -25,8 +25,8 @@ def run(argv):
     output_path = os.path.abspath(args.output)
 
     if tool == GENERATE:
-        code = str(args.code)
-        password = str(args.password)
+        code = args.code
+        password = args.password
         generate(output_path, code, password)
 
     elif tool == OBFUSCATE:

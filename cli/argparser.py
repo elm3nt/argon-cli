@@ -11,9 +11,9 @@ sub_parser = parser.add_subparsers(dest = 'option')
 
 tigress_genenerate_option = sub_parser.add_parser(GENERATE, parents = [common_parser],
                                        help = 'generate sample C source code with code and password')
-tigress_genenerate_option.add_argument('-c', '--code', type = int, default = 18,
+tigress_genenerate_option.add_argument('-c', '--code', type = int, default = [ None ], nargs = '*',
                                        help = 'activation code for generated program')
-tigress_genenerate_option.add_argument('-p', '--password', default = 'p@ssw0rd',
+tigress_genenerate_option.add_argument('-p', '--password', default = [ None ], nargs = '*',
                                        help = 'password for generated program')
 
 tigress_obfuscate_option = sub_parser.add_parser(OBFUSCATE, parents = [common_parser],
@@ -58,8 +58,11 @@ se_parser.add_argument('-m', '--memory', required = False, default = 2000, type 
 se_parser.add_argument('-s', '--search', default = 'random-path', choices = OPTIONS['klee-search-algorithm'],
                        help = 'search algorithm for Klee (' + '|'.join(OPTIONS['klee-search-algorithm']) + ')')
 
-sub_parser.add_parser(ALL, parents = [common_parser, se_parser], help = 'run symbolic analysis using Angr, Klee and note execution time')
-sub_parser.add_parser(ANGR, parents = [common_parser, se_parser], help = 'runs symbolic analysis using Angr')
-sub_parser.add_parser(KLEE, parents = [common_parser, se_parser], help = 'runs symbolic analysis using Klee')
+sub_parser.add_parser(ALL, parents = [common_parser, se_parser],
+                      help = 'run symbolic analysis using Angr, Klee and note execution time')
+sub_parser.add_parser(ANGR, parents = [common_parser, se_parser],
+                      help = 'runs symbolic analysis using Angr')
+sub_parser.add_parser(KLEE, parents = [common_parser, se_parser],
+                      help = 'runs symbolic analysis using Klee')
 
 
