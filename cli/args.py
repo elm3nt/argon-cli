@@ -1,3 +1,6 @@
+from .argparser import *
+
+
 def se_options(args):
     return {
         'memory': args.memory,
@@ -20,3 +23,12 @@ def stdin(args):
         'length-arg': args.length_arg,
         'length-input': args.length_input,
     }
+
+
+def print_help():
+    parser.print_help()
+    tigress_genenerate_option.print_help()
+    tigress_obfuscate_option.print_help()
+    se_parser.print_help()
+
+

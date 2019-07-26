@@ -1,13 +1,5 @@
-import csv
-
 from core.const import *
 from .const import CSV_HEAD as HEAD
-
-
-def write_to_file(output_file_path, data):
-    with open(output_file_path, 'w') as file:
-        writer = csv.writer(file)
-        writer.writerows(data)
 
 
 def get_csv_header(tool):
@@ -16,7 +8,7 @@ def get_csv_header(tool):
     right = [ HEAD['file-path'] ]
 
     if tool == RUN:
-        middle = [ HEAD['run-time'] ]
+        middle = [ HEAD['optimization-level'], HEAD['run-time'] ]
 
     elif tool == ANGR:
         middle = [ HEAD['angr-time'], HEAD['angr-is-code-cracked'], HEAD['angr-is-password-cracked'],

@@ -1,11 +1,12 @@
 
+import re
 import os
 import sys
 import shutil
 from pathlib import Path
 
 from .const import *
-from utils import file
+from utils import fs
 from core.const import *
 
 
@@ -60,20 +61,76 @@ def variant(original_input_path, output_path, obfuscation_combinations = {}, no_
                 file_name += obfuscation
                 target_path = os.path.join(output_path, file_name)
 
-                if not os.path.isdir(target_path):
-                    os.mkdir(target_path)
+                fs.mkdir(target_path)
 
                 input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
                 vn += 1
 
 
-def generate(output_path, code = '18', password = 'p@$$w0rd'):
+def generate(output_path, code, password):
+    code_count = len(code)
+    password_count = len(password)
     input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..',
                               DIR_NAME['samples'], FILE_NAME['empty-c-file'])
-    cmd = TIGRESS_CMD['generate'].format(password = password, code = code, output = output_path, input = input_path)
+
+    if code[0] != None and password[0] == None:
+        activation_code = TIGRESS_CMD['code'].format(code = code[0])
+        cmd = TIGRESS_CMD['generate'].format(option = activation_code, output = output_path, input = input_path)
+    elif code[0] == None and password[0] != None:
+        code_count = 0
+        passwd = TIGRESS_CMD['pass'].format(password = password[0])
+        cmd = TIGRESS_CMD['generate'].format(option = passwd, output = output_path, input = input_path)
+    else:
+        activation_code = TIGRESS_CMD['code'].format(code = code[0])
+        passwd = TIGRESS_CMD['pass'].format(password = password[0])
+        cmd = TIGRESS_CMD['generate'].format(option = ' '.join([passwd, activation_code]), output = output_path, input = input_path)
+
     os.system(CMD['bash'].format(cmd))
+    mod_file = fs.read(output_path)
+
+    if code_count == 0:
+        replace = TIGRESS_REGREX['while'].format(count = code_count)
+        mod_file = re.sub(r'while \(randomFuns_i5.*', replace, mod_file)
+        megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
+        mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
+
+    if code_count > 1 or password_count > 1:
+        for index in range(password_count, 1, -1):
+            pas = TIGRESS_REGREX['pass'].format(count = index)
+            printf = TIGRESS_REGREX['printf'].format(count = index)
+
+            check_pass = TIGRESS_REGREX['check_pass'].format(count = index, password = password[index - 1])
+            mod_file = re.sub(r'(char password\[100\].*)', r'\1\n' + pas, mod_file)
+            mod_file = re.sub(r'(printf\("Please.*\n  scanf\("%s", password\);)', r'\1\n' + printf, mod_file)
+            mod_file = re.sub(r'(stringCompareResult = strncmp\(password,.*\n.*)', r'\1\n' + check_pass, mod_file)
+
+        for index in range(code_count, 1, -1):
+            megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
+            ac = TIGRESS_REGREX['code'].format(count = index)
+            code_input = TIGRESS_REGREX['input'].format(count = index, count2 = index - 1)
+            check_code = TIGRESS_REGREX['check_code'].format(count = index, code = code[index - 1])
+            randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
+            mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
+            mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
+            mod_file = re.sub(r'(int activationCode ;)', r'\1\n' + ac, mod_file)
+            mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
+            mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
+
+    fs.write(output_path, mod_file)
 
 
 def obfuscate(input_path, output_path, obfuscation_combinations, no_of_variants):
-    variant(input_path, output_path, obfuscation_combinations, no_of_variants)
-    file.remove_dirs_except(output_path, obfuscation_combinations)
+    input_files_path = fs.ls(input_path, EXT['c'])
+
+    for input_path in input_files_path:
+        input_file = fs.details(input_path)
+        output_dir_path = os.path.join(output_path, input_file['name'])
+
+        fs.mkdir(output_dir_path)
+
+        variant(input_path, output_dir_path, obfuscation_combinations, no_of_variants)
+
+        fs.rmdirs(output_dir_path, obfuscation_combinations)
+
+
+

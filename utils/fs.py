@@ -1,4 +1,5 @@
 import os
+import csv
 import shutil
 from pathlib import Path
 
@@ -29,7 +30,7 @@ def write(path, content):
         file.write(content)
 
 
-def lists(path, ext):
+def ls(path, ext):
     if os.path.isfile(path):
         file = details(path)
 
@@ -44,16 +45,28 @@ def lists(path, ext):
     return []
 
 
-def remove_dirs_except(path, dir_exception_list = {}):
+def rmdirs(path, dir_exception_list = {}):
     dir_list = os.listdir(path)
 
     for dir in dir_list:
         target_path = os.path.join(path, dir)
 
-        if dir not in dir_exception_list:
+        if os.path.isdir(target_path) and dir not in dir_exception_list:
             shutil.rmtree(target_path)
 
 
-def make_dir_if_not_exists(path):
-    if not os.path.isdir(path):
-        os.mkdir(path)
+def mkdir(path):
+    cmd = 'mkdir -p {path}'
+    os.system(cmd.format(path = path))
+
+
+def write_csv(path, data):
+    with open(path, 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
+
+
+def append_csv(path, data):
+    with open(path, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)

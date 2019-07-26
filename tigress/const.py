@@ -1,10 +1,29 @@
 VN = 1
 DATA = 'D'
-ALL_DIRS = 1
 ABSTRACT = 'A'
 CONTROL_FLOW = 'C'
-RENDUNDANT_DIRS = 2
 VIRTUALIZATION = 'V'
+
+NL = repr('\\n').replace('\'', '')
+
+TIGRESS_REGREX = {
+    'pass': '  char password{count}[100] = "";',
+    'printf': '  printf("Please enter password:");\n  ' +
+                'scanf("%s", password{count});',
+    'check_pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
+                'failed |= stringCompareResult != 0UL;',
+    'while': '  while (randomFuns_i5 < {count}) {{',
+
+    'code': '  unsigned long activationCode{count} ;',
+    'input': '  activationCode{count} = input[{count2}UL];',
+    'check_code': '  failed |= activationCode{count} != {code}UL;',
+
+    'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' +
+                'input[randomFuns_i5 + {index2}] = randomFuns_value6;',
+
+    'megaint': 'argc != {count} ) {{\n    ' +
+               'printf("Call this program with %i arguments ' + NL + '", {count2});'
+}
 
 TIGRESS_CMD = {
     'abstract': 'tigress \
@@ -113,10 +132,13 @@ TIGRESS_CMD = {
         --RandomFunsStateSize=1 \
         --RandomFunsOutputSize=1 \
         --RandomFunsCodeSize=10 \
-        --RandomFunsPasswordCheckCount=1 \
-        --RandomFunsPassword={password} \
-        --RandomFunsActivationCodeCheckCount=1 \
-        --RandomFunsActivationCode={code} \
+        {option} \
         --RandomFunsFailureKind=segv  \
-        --out={output} {input}'
+        --out={output} {input}',
+
+    'code': '--RandomFunsActivationCodeCheckCount=1 \
+             --RandomFunsActivationCode={code}',
+
+    'pass': '--RandomFunsPasswordCheckCount=1 \
+             --RandomFunsPassword={password}'
 }
