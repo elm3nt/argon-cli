@@ -33,7 +33,7 @@ TIGRESS_CMD = {
         --Seed=0 \
         --SplitKinds=deep,block,top \
         --SplitCount=10 \
-        --Functions=SECRET \
+        --Functions=authenticate \
         --Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}',
@@ -44,16 +44,16 @@ TIGRESS_CMD = {
         --Transform=RndArgs \
         --Seed=0 \
         --RndArgsBogusNo=2?5 \
-                ''' + "--Functions=_v{vn}a_1_SECRET_SECRET_split_1"
-                + ",_v{vn}a_1_SECRET_SECRET_split_2"
-                + ",_v{vn}a_1_SECRET_SECRET_split_3"
-                + ",_v{vn}a_1_SECRET_SECRET_split_4"
-                + ",_v{vn}a_1_SECRET_SECRET_split_5"
-                + ",_v{vn}a_1_SECRET_SECRET_split_6"
-                + ",_v{vn}a_1_SECRET_SECRET_split_7"
-                + ",_v{vn}a_1_SECRET_SECRET_split_8"
-                + ",_v{vn}a_1_SECRET_SECRET_split_9"
-                + ",_v{vn}a_1_SECRET_SECRET_split_10 " +
+                ''' + "--Functions=_v{vn}a_1_authenticate_authenticate_split_1"
+                + ",_v{vn}a_1_authenticate_authenticate_split_2"
+                + ",_v{vn}a_1_authenticate_authenticate_split_3"
+                + ",_v{vn}a_1_authenticate_authenticate_split_4"
+                + ",_v{vn}a_1_authenticate_authenticate_split_5"
+                + ",_v{vn}a_1_authenticate_authenticate_split_6"
+                + ",_v{vn}a_1_authenticate_authenticate_split_7"
+                + ",_v{vn}a_1_authenticate_authenticate_split_8"
+                + ",_v{vn}a_1_authenticate_authenticate_split_9"
+                + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
                 '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
@@ -67,16 +67,16 @@ TIGRESS_CMD = {
         --InitOpaqueCount=2 \
         --InitOpaqueStructs=list,array  \
                 --Transform=Merge \
-                ''' + "--Functions=_v{vn}a_1_SECRET_SECRET_split_1"
-                + ",_v{vn}a_1_SECRET_SECRET_split_2"
-                + ",_v{vn}a_1_SECRET_SECRET_split_3"
-                + ",_v{vn}a_1_SECRET_SECRET_split_4"
-                + ",_v{vn}a_1_SECRET_SECRET_split_5"
-                + ",_v{vn}a_1_SECRET_SECRET_split_6"
-                + ",_v{vn}a_1_SECRET_SECRET_split_7"
-                + ",_v{vn}a_1_SECRET_SECRET_split_8"
-                + ",_v{vn}a_1_SECRET_SECRET_split_9"
-                + ",_v{vn}a_1_SECRET_SECRET_split_10 " +
+                ''' + "--Functions=_v{vn}a_1_authenticate_authenticate_split_1"
+                + ",_v{vn}a_1_authenticate_authenticate_split_2"
+                + ",_v{vn}a_1_authenticate_authenticate_split_3"
+                + ",_v{vn}a_1_authenticate_authenticate_split_4"
+                + ",_v{vn}a_1_authenticate_authenticate_split_5"
+                + ",_v{vn}a_1_authenticate_authenticate_split_6"
+                + ",_v{vn}a_1_authenticate_authenticate_split_7"
+                + ",_v{vn}a_1_authenticate_authenticate_split_8"
+                + ",_v{vn}a_1_authenticate_authenticate_split_9"
+                + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
         '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
@@ -87,14 +87,14 @@ TIGRESS_CMD = {
         --Transform=InitOpaque \
         --Functions=main \
         --Transform=UpdateOpaque \
-        --Functions=SECRET \
+        --Functions=authenticate \
         --UpdateOpaqueCount=10 \
         --Transform=AddOpaque \
-        --Functions=SECRET \
+        --Functions=authenticate \
         --AddOpaqueCount=10  \
         --AddOpaqueKinds=call,bug,true,junk \
         --Transform=Flatten \
-        --Functions=SECRET \
+        --Functions=authenticate \
         -FlattenObfuscateNext=true \
         --FlattenDispatch=switch \
         --Transform=CleanUp \
@@ -107,7 +107,7 @@ TIGRESS_CMD = {
         --Transform=InitEntropy \
         --Functions=main  \
         --Transform=EncodeLiterals \
-        --Functions=SECRET  \
+        --Functions=authenticate  \
         --Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}',
@@ -116,7 +116,7 @@ TIGRESS_CMD = {
         --Verbosity=1  \
         --FilePrefix=v{vn} \
         --Transform=Virtualize \
-        --Functions=SECRET \
+        --Functions=authenticate \
         --VirtualizeDispatch=switch \
         --Transform=CleanUp \
         --CleanUpKinds=annotations \
@@ -126,7 +126,7 @@ TIGRESS_CMD = {
         --Verbosity=1 \
         --Seed=0 \
         --Transform=RandomFuns \
-        --RandomFunsName=SECRET \
+        --RandomFunsName=authenticate \
         --RandomFunsType=long \
         --RandomFunsInputSize=1 \
         --RandomFunsStateSize=1 \
