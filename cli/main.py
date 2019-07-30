@@ -23,7 +23,6 @@ def run(argv):
     except:
         sys.exit(1)
 
-    print(args)
     tool = args.option
     output_path = os.path.abspath(args.output)
 
