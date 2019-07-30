@@ -47,7 +47,7 @@ input_parser.add_argument('-p', '--passwords', required = False, default = [], n
 
 run_option = sub_parser.add_parser(RUN, parents = [common_parser, input_parser], add_help = False, usage=SUPPRESS,
                         help = 'compile c source code with different GCC optimization level')
-run_option._optionals.title=' run usage:  run [-h] [-i] [-c  [...]] [-p  [...]] [-ol {0,1,2,3,s,fast} [{0,1,2,3,s,fast} ...]]'
+run_option._optionals.title=' run usage:  run [-h] [-i] [-c  [...]] [-p  [...]] [-ol {' + ','.join(OPTIONS['gcc-optimization-levels']) + '} ... ]'
 run_option.add_argument('-ol', '--optimization-levels', choices = OPTIONS['gcc-optimization-levels'], nargs = '+',
                         help = 'gcc optimization levels (' + '|'.join(OPTIONS['gcc-optimization-levels']) +')', metavar='')
 
