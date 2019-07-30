@@ -53,18 +53,19 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
 def variant(original_input_path, output_path, obfuscation_combinations = {}, no_of_variants = 1):
     for index in range(1, no_of_variants + 1):
         for combination in obfuscation_combinations:
-            vn = VN
-            file_name = ''
-            input_path = original_input_path
+            if re.search(RE_OBFUSCATION, combination):
+                vn = VN
+                file_name = ''
+                input_path = original_input_path
 
-            for obfuscation in combination:
-                file_name += obfuscation
-                target_path = os.path.join(output_path, file_name)
+                for obfuscation in combination:
+                    file_name += obfuscation
+                    target_path = os.path.join(output_path, file_name)
 
-                fs.mkdir(target_path)
+                    fs.mkdir(target_path)
 
-                input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
-                vn += 1
+                    input_path = obscure(input_path, output_path, obfuscation.upper(), file_name, str(index), vn)
+                    vn += 1
 
 
 def generate(output_path, code, password):
@@ -110,9 +111,11 @@ def generate(output_path, code, password):
             code_input = TIGRESS_REGREX['input'].format(count = index, count2 = index - 1)
             check_code = TIGRESS_REGREX['check_code'].format(count = index, code = code[index - 1])
             randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
+
             mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
             mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
-            mod_file = re.sub(r'(int activationCode ;)', r'\1\n' + ac, mod_file)
+            mod_file = re.sub(r'int activationCode ;', 'unsigned long activationCode ;', mod_file)
+            mod_file = re.sub(r'(unsigned long activationCode ;)', r'\1\n' + ac, mod_file)
             mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
             mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
 

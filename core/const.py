@@ -7,6 +7,7 @@ KLEE = 'klee'
 PROGRAM = 'argon'
 GENERATE = 'generate'
 OBFUSCATE ='obfuscate'
+RE_OBFUSCATION = r'[ACDV]+$'
 
 
 EXT = {

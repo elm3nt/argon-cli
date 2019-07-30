@@ -1,10 +1,11 @@
 import os
+import re
 import sys
 
-from .args import *
 from utils import fs
+from cli.args import *
 from core.const import *
-from .argparser import *
+from cli.argparser import *
 from se.main import run as run_se
 from core.main import file_iterator
 from code.main import run as run_code
@@ -12,6 +13,7 @@ from tigress.main import obfuscate, generate
 
 
 def run(argv):
+
     if len(sys.argv) <= 2:
         print_help()
         sys.exit(1)
@@ -34,6 +36,13 @@ def run(argv):
         input_path = os.path.abspath(args.input)
         fs.mkdir(output_path)
         obfuscation_combinations = args.obfuscation_list
+
+        for obs in obfuscation_combinations:
+            if not re.search(RE_OBFUSCATION, obs):
+                print('One more more items in the list does not contain [A, C, D, V]')
+                print('Error at: ' + obs)
+                sys.exit(1)
+
         obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
 
     elif tool == RUN:
