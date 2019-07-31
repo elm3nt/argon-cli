@@ -6,8 +6,13 @@ from core.const import *
 common_parser = argparse.ArgumentParser(add_help = False)
 common_parser.add_argument('-o', '--output', help = 'path of file/dir to store generated file(s)')
 
-parser = argparse.ArgumentParser(prog = PROGRAM, parents = [common_parser], add_help = False)
-sub_parser = parser.add_subparsers(dest = 'option')
+parser = argparse.ArgumentParser(description='', usage = SUPPRESS, parents=[common_parser], prog = PROGRAM,
+                                 formatter_class=RawTextHelpFormatter, epilog = 'help for each option:')
+parser._optionals.title= 'Argon Help'
+parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + VERSION)
+sub_parser = parser.add_subparsers(title='argon options', dest = 'option', description='mandatory argument: \n ' +
+                                  ' -o , --output         path of file/dir to store generated file(s)',
+                                   metavar='usage: argon [-o] {generate,obfuscate,run,all,angr,klee}\n\n')
 
 tigress_genenerate_option = sub_parser.add_parser(GENERATE, parents = [common_parser],
                                        help = 'generate sample C source code with code and password')
@@ -64,5 +69,6 @@ sub_parser.add_parser(ANGR, parents = [common_parser, se_parser],
                       help = 'runs symbolic analysis using Angr')
 sub_parser.add_parser(KLEE, parents = [common_parser, se_parser],
                       help = 'runs symbolic analysis using Klee')
+
 
 
