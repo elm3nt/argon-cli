@@ -40,13 +40,14 @@ def run(input_file_path, output_dir_path, params):
     test_results = []
 
     for level in params['levels']:
-        compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
-        compiled_code_file_size = os.path.getsize(compiled_code_file_path)
-        compiled_code = fs.details(compiled_code_file_path)
+        if level in OPTIONS['gcc-optimization-levels']:
+            compiled_code_file_path = compile_code(input_file_path, output_dir_path, level)
+            compiled_code_file_size = os.path.getsize(compiled_code_file_path)
+            compiled_code = fs.details(compiled_code_file_path)
 
-        test_result = run_compiled_code(compiled_code_file_path, output_dir_path, params['credentials']['codes'],
-                                        params['credentials']['passwords'])
-        test_results.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
-                              compiled_code_file_path ])
+            test_result = run_compiled_code(compiled_code_file_path, output_dir_path, params['credentials']['codes'],
+                                            params['credentials']['passwords'])
+            test_results.append([ compiled_code['file'], compiled_code_file_size, level, test_result['time-taken'],
+                                compiled_code_file_path ])
 
     return test_results

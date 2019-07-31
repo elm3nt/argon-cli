@@ -4,12 +4,11 @@ RUN = 'run'
 ONE_BYTE = 8
 ANGR = 'angr'
 KLEE = 'klee'
+VERSION = '0.2.0'
 PROGRAM = 'argon'
 GENERATE = 'generate'
 OBFUSCATE ='obfuscate'
 RE_OBFUSCATION = r'[ACDV]+$'
-VERSION = '0.2.0'
-
 
 EXT = {
     'c': '.c',
