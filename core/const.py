@@ -8,6 +8,7 @@ PROGRAM = 'argon'
 GENERATE = 'generate'
 OBFUSCATE ='obfuscate'
 RE_OBFUSCATION = r'[ACDV]+$'
+VERSION = '0.2.0'
 
 
 EXT = {

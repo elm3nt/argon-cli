@@ -11,6 +11,7 @@ common_parser.add_argument('-o', '--output', help = argparse.SUPPRESS, metavar='
 parser = argparse.ArgumentParser(description='', usage = SUPPRESS, parents=[common_parser], prog = PROGRAM,
                                  formatter_class=RawTextHelpFormatter, epilog = 'help for each option:')
 parser._optionals.title= 'Argon Help'
+parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + VERSION)
 sub_parser = parser.add_subparsers(title='argon options', dest = 'option', description='mandatory argument: \n ' +
                                   ' -o , --output         path of file/dir to store generated file(s)',
                                    metavar='usage: argon [-o] {generate,obfuscate,run,all,angr,klee}\n\n')
@@ -78,5 +79,6 @@ sub_parser.add_parser(ANGR, parents = [common_parser, se_parser, input_parser], 
 
 sub_parser.add_parser(KLEE, parents = [common_parser, se_parser, input_parser], add_help = False,
                       help = 'runs symbolic analysis using Klee\n\n')
+
 
 

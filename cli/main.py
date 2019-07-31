@@ -14,7 +14,7 @@ from tigress.main import obfuscate, generate
 
 def run(argv):
 
-    if len(sys.argv) <= 2:
+    if len(sys.argv) <= 0:
         print_help()
         sys.exit(1)
 
