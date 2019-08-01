@@ -1,4 +1,4 @@
-from .argparser import *
+from cli.argparser import *
 
 
 def se_options(args):
@@ -30,5 +30,6 @@ def print_help():
     tigress_genenerate_option.print_help()
     tigress_obfuscate_option.print_help()
     se_parser.print_help()
+    run_option.print_help()
 
 
