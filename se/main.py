@@ -9,22 +9,54 @@ from angrio.main import run as angr_run
 from code.main import compile_code, run_compiled_code
 
 
+def get_credentials(credentials):
+    result = []
+    if len(credentials):
+        result += [ '\n'.join(str(e) for e in credentials) ]
+
+    return result
+
+
+def extract_codes(test_result, codes):
+    result = []
+    if len(codes):
+        result += [ test_result['is-code-cracked'], test_result['generated-codes'] ]
+
+    return result
+
+
+def extract_passwords(test_result, passwords):
+    result = []
+    if len(passwords):
+        result += [ test_result['is-password-cracked'], test_result['generated-passwords'] ]
+
+    return result
+
+
 def angr(input_file_path, output_dir_path, params):
     test_result = angr_run(input_file_path, output_dir_path, params['stdin'], params['options'],
-                            params['credentials'])
+                           params['credentials'])
 
-    return [ str(test_result['time-taken']), str(test_result['is-code-cracked']),
-             str(test_result['is-password-cracked']), test_result['generated-codes'],
-             test_result['generated-passwords'] ]
+    result = [ test_result['time-taken'] ]
+    result += get_credentials(params['credentials']['codes'])
+    result += extract_codes(test_result, params['credentials']['codes'])
+    result += get_credentials(params['credentials']['passwords'])
+    result += extract_passwords(test_result, params['credentials']['passwords'])
+
+    return result
 
 
 def klee(input_file_path, output_dir_path, params):
     test_result = klee_run(input_file_path, output_dir_path, params['stdin'], params['options'],
-                            params['credentials'])
+                           params['credentials'])
 
-    return [ str(test_result['time-taken']), str(test_result['is-code-cracked']),
-             str(test_result['is-password-cracked']), test_result['generated-codes'],
-             test_result['generated-passwords'] ]
+    result = [ test_result['time-taken'] ]
+    result += get_credentials(params['credentials']['codes'])
+    result += extract_codes(test_result, params['credentials']['codes'])
+    result += get_credentials(params['credentials']['passwords'])
+    result += extract_passwords(test_result, params['credentials']['passwords'])
+
+    return result
 
 
 def all(input_file_path, output_dir_path, params):
@@ -36,12 +68,15 @@ def all(input_file_path, output_dir_path, params):
     angr_test_result = angr_run(input_file_path, output_dir_path, params['stdin'], params['options'],
                                 params['credentials'])
 
-    return [ str(run_test_result['time-taken']), str(angr_test_result['time-taken']),
-             str(klee_test_result['time-taken']), str(angr_test_result['is-code-cracked']),
-             str(klee_test_result['is-code-cracked']), str(angr_test_result['is-password-cracked']),
-             str(klee_test_result['is-password-cracked']), angr_test_result['generated-codes'],
-             klee_test_result['generated-codes'], angr_test_result['generated-passwords'],
-             klee_test_result['generated-passwords'] ]
+    result = [ run_test_result['time-taken'], angr_test_result['time-taken'], klee_test_result['time-taken'] ]
+    result += get_credentials(params['credentials']['codes'])
+    result += extract_codes(angr_test_result, params['credentials']['codes'])
+    result += extract_codes(klee_test_result, params['credentials']['codes'])
+    result += get_credentials(params['credentials']['passwords'])
+    result += extract_codes(angr_test_result, params['credentials']['passwords'])
+    result += extract_codes(klee_test_result, params['credentials']['passwords'])
+
+    return result
 
 
 def run(input_file_path, output_dir_path, params):

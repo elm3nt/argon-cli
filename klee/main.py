@@ -37,7 +37,7 @@ def time_taken(input_path):
     cmd = KLEE_CMD['stats'].format(input = input_path)
     content = str(os.popen(cmd).read())
 
-    seconds =  re.search(r'[\s]*[\d]*\.[\d]*', str(content))
+    seconds =  re.search(KLEE_RE['kstats-time'], str(content))
     if seconds:
         time = float(seconds.group(0).strip())
 
@@ -58,8 +58,8 @@ def stats(output_dir_path, credentials):
         output_ktest_file_path = os.path.join(output_dir_path, output_ktest_file)
         fs.write(output_ktest_file_path, content)
 
-        results = re.findall(r'text:[\s].*\n', content)
-        texts = [ text.replace('text: ', '') for text in results ]
+        results = re.findall(KLEE_RE['ktest-text'], content)
+        texts = [ text.replace('text: ', '').replace('\n', '') for text in results ]
         codes = codes + texts
         passwords = passwords + texts
 

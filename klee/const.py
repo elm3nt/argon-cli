@@ -15,3 +15,8 @@ KLEE_CMD = {
                 --search={search} \
                 {input} {sym_args} {sym_stdin}',
 }
+
+KLEE_RE = {
+    'ktest-text': r'text:[\s].*\n',
+    'kstats-time': r'[\s]*[\d]*\.[\d]*',
+}

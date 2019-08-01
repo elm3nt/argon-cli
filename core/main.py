@@ -1,8 +1,8 @@
 import os
 from shutil import copy2
 
-from .const import *
 from utils import fs
+from core.const import *
 from stats.main import get_csv_header
 
 
@@ -10,7 +10,7 @@ def file_iterator(input_path, output_path, tool, fn, fn_args):
     input_files_path = fs.ls(input_path, EXT['c'])
     fs.mkdir(output_path)
 
-    csv_header = get_csv_header(tool)
+    csv_header = get_csv_header(tool, fn_args['credentials'])
     analysis_file_path = os.path.join(output_path, FILE_NAME['analysis'])
     fs.write_csv(analysis_file_path, [ csv_header ])
 

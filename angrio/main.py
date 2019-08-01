@@ -37,19 +37,19 @@ def decode_credentials(output_dir_path, stdin, args, simulation_manager, credent
 
         content += 'Arg(s)\n'
         for arg in args:
-            code = str(deadended.solver.eval(arg, cast_to = bytes))
+            code = deadended.solver.eval(arg, cast_to = bytes).decode('utf8', errors='ignore')
             codes.append(code)
         content += lists.to_str_with_nl(codes) + '\n'
 
         content += '\nInput(s)\n'
         if stdin['num-input'] >= 1:
-            dump_0 = str(deadended.posix.dumps(0))
+            dump_0 = deadended.posix.dumps(0).decode('utf8', errors='ignore')
             print('input: ', dump_0)
             passwords.append(dump_0)
-            dump_1 = str(deadended.posix.dumps(1))
+            dump_1 = deadended.posix.dumps(1).decode('utf8', errors='ignore')
             print('input: ', dump_1)
             passwords.append(dump_1)
-            dump_2 = str(deadended.posix.dumps(2))
+            dump_2 = deadended.posix.dumps(2).decode('utf8', errors='ignore')
             print('input: ', dump_2)
             passwords.append(dump_2)
             print()
