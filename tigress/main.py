@@ -81,7 +81,7 @@ def generate(output_path, code, password):
         code_count = 0
         passwd = TIGRESS_CMD['pass'].format(password = password[0])
         cmd = TIGRESS_CMD['generate'].format(option = passwd, output = output_path, input = input_path)
-    else:
+    elif code[0] != None and password[0] != None:
         activation_code = TIGRESS_CMD['code'].format(code = code[0])
         passwd = TIGRESS_CMD['pass'].format(password = password[0])
         cmd = TIGRESS_CMD['generate'].format(option = ' '.join([passwd, activation_code]), output = output_path, input = input_path)
@@ -89,34 +89,33 @@ def generate(output_path, code, password):
     os.system(CMD['bash'].format(cmd))
     mod_file = fs.read(output_path)
 
-    if code_count == 0:
-        replace = TIGRESS_REGREX['while'].format(count = code_count)
-        mod_file = re.sub(r'while \(randomFuns_i5.*', replace, mod_file)
-        megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
-        mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
+    if not code_count:
+        replace = TIGRESS_REPLACE['while'].format(count = code_count)
+        mod_file = re.sub(TIGRESS_RE['while-random-funs'], replace, mod_file)
+        mega_init = TIGRESS_REPLACE['mega-init'].format(count = code_count + 1, count2 = code_count)
+        mod_file = re.sub(TIGRESS_RE['argc-nl'], mega_init, mod_file)
 
-    if code_count > 1 or password_count > 1:
-        for index in range(password_count, 1, -1):
-            pas = TIGRESS_REGREX['pass'].format(count = index)
-            printf = TIGRESS_REGREX['printf'].format(count = index)
+    for index in range(password_count, 1, -1):
+        pas = TIGRESS_REPLACE['pass'].format(count = index)
+        printf = TIGRESS_REPLACE['printf'].format(count = index)
 
-            check_pass = TIGRESS_REGREX['check_pass'].format(count = index, password = password[index - 1])
-            mod_file = re.sub(r'(char password\[100\].*)', r'\1\n' + pas, mod_file)
-            mod_file = re.sub(r'(printf\("Please.*\n  scanf\("%s", password\);)', r'\1\n' + printf, mod_file)
-            mod_file = re.sub(r'(stringCompareResult = strncmp\(password,.*\n.*)', r'\1\n' + check_pass, mod_file)
+        check_pass = TIGRESS_REPLACE['check-pass'].format(count = index, password = password[index - 1])
+        mod_file = re.sub(TIGRESS_RE['char-password'], TIGRESS_RE['one-nl'] + pas, mod_file)
+        mod_file = re.sub(TIGRESS_RE['printf-please'], TIGRESS_RE['one-nl'] + printf, mod_file)
+        mod_file = re.sub(TIGRESS_RE['string-compare-result'], TIGRESS_RE['one-nl'] + check_pass, mod_file)
 
-        for index in range(code_count, 1, -1):
-            megaint = TIGRESS_REGREX['megaint'].format(count = code_count + 1, count2 = code_count)
-            ac = TIGRESS_REGREX['code'].format(count = index)
-            code_input = TIGRESS_REGREX['input'].format(count = index, count2 = index - 1)
-            check_code = TIGRESS_REGREX['check_code'].format(count = index, code = code[index - 1])
-            randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
-            mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
-            mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
-            mod_file = re.sub(r'int activationCode ;', 'unsigned long activationCode ;', mod_file)
-            mod_file = re.sub(r'(unsigned long activationCode ;)', r'\1\n' + ac, mod_file)
-            mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
-            mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
+    for index in range(code_count, 1, -1):
+        mega_init = TIGRESS_REPLACE['mega-init'].format(count = code_count + 1, count2 = code_count)
+        ac = TIGRESS_REPLACE['code'].format(count = index)
+        code_input = TIGRESS_REPLACE['input'].format(count = index, count2 = index - 1)
+        check_code = TIGRESS_REPLACE['check-code'].format(count = index, code = code[index - 1])
+        randomfuns = TIGRESS_REPLACE['randfuns'].format(index = index, index2 = index - 1)
+        mod_file = re.sub(TIGRESS_RE['argc-nl'], mega_init, mod_file)
+        mod_file = re.sub(TIGRESS_RE['random-funs-value'], TIGRESS_RE['one-nl'] + randomfuns, mod_file )
+        mod_file = re.sub(TIGRESS_RE['int-activation-code'], TIGRESS_REPLACE['unsigned-long-activation-code'], mod_file)
+        mod_file = re.sub(TIGRESS_RE['unsigned-long-activation-code'], TIGRESS_RE['one-nl'] + ac, mod_file)
+        mod_file = re.sub(TIGRESS_RE['activation-code'], TIGRESS_RE['one-nl'] + code_input, mod_file)
+        mod_file = re.sub(TIGRESS_RE['failed'], TIGRESS_RE['one-nl'] + check_code, mod_file)
 
     fs.write(output_path, mod_file)
 
