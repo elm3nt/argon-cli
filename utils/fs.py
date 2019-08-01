@@ -1,4 +1,5 @@
 import os
+import sys
 import csv
 import shutil
 from pathlib import Path
@@ -56,9 +57,29 @@ def rmdirs(path, dir_exception_list = {}):
 
 
 def mkdir(path):
-    cmd = 'mkdir -p {path}'
-    os.system(cmd.format(path = path))
+    if os.path.isdir(path):
+        base_path = os.path.dirname(path)
+        dir_name = os.path.basename(path)
+        dir_index = dir_name.split('-')
 
+        if dir_index[-1].isdigit():
+            index = int(dir_index[-1]) + 1
+            print(index)
+            new_dir_name = '-'.join(dir_index[0:-1]) + '-' + str(index)
+        else:
+            new_dir_name = dir_name + '-2'
+
+        new_dir_path = os.path.join(base_path, new_dir_name)
+        mkdir(new_dir_path)
+    else:
+        # print(path)
+        # cmd = 'mkdir -p {path}'.format(path = path)
+        # print(cmd)
+        # return path
+        # os.system(cmd.format(path = path))
+        print(path)
+        path = os.mkdir(path)
+        return path
 
 def write_csv(path, data):
     with open(path, 'w') as file:
@@ -70,3 +91,6 @@ def append_csv(path, data):
     with open(path, 'a') as file:
         writer = csv.writer(file)
         writer.writerows(data)
+
+if __name__ == '__main__':
+    mkdir('workspace/a')
