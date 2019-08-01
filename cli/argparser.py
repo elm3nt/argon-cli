@@ -1,4 +1,5 @@
 import argparse
+from argparse import *
 
 from core.const import *
 
