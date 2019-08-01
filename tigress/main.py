@@ -113,7 +113,8 @@ def generate(output_path, code, password):
             randomfuns = TIGRESS_REGREX['randfuns'].format(index = index, index2 = index - 1)
             mod_file = re.sub(r'argc !=.* {\n.*', megaint, mod_file)
             mod_file = re.sub(r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)', r'\1\n' + randomfuns, mod_file )
-            mod_file = re.sub(r'(int activationCode ;)', r'\1\n' + ac, mod_file)
+            mod_file = re.sub(r'int activationCode ;', 'unsigned long activationCode ;', mod_file)
+            mod_file = re.sub(r'(unsigned long activationCode ;)', r'\1\n' + ac, mod_file)
             mod_file = re.sub(r'(activationCode =.*)', r'\1\n' + code_input, mod_file)
             mod_file = re.sub(r'(failed \|= activationCode !.*)', r'\1\n' + check_code, mod_file)
 
