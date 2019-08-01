@@ -73,8 +73,8 @@ def all(input_file_path, output_dir_path, params):
     result += extract_codes(angr_test_result, params['credentials']['codes'])
     result += extract_codes(klee_test_result, params['credentials']['codes'])
     result += get_credentials(params['credentials']['passwords'])
-    result += extract_codes(angr_test_result, params['credentials']['passwords'])
-    result += extract_codes(klee_test_result, params['credentials']['passwords'])
+    result += extract_passwords(angr_test_result, params['credentials']['passwords'])
+    result += extract_passwords(klee_test_result, params['credentials']['passwords'])
 
     return result
 

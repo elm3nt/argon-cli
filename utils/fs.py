@@ -1,4 +1,5 @@
 import os
+import sys
 import csv
 import shutil
 from pathlib import Path
@@ -55,9 +56,30 @@ def rmdirs(path, dir_exception_list = {}):
             shutil.rmtree(target_path)
 
 
+def find_non_existing_dir(path):
+    if os.path.isdir(path):
+        base_path = os.path.dirname(path)
+        dir_name = os.path.basename(path)
+        dir_index = dir_name.split('-')
+
+        if dir_index[-1].isdigit():
+            index = int(dir_index[-1]) + 1
+            new_dir_name = '-'.join(dir_index[0:-1]) + '-' + str(index)
+        else:
+            new_dir_name = dir_name + '-2'
+
+        new_dir_path = os.path.join(base_path, new_dir_name)
+        return find_non_existing_dir(new_dir_path)
+
+    return path
+
+
 def mkdir(path):
-    cmd = 'mkdir -p {path}'
-    os.system(cmd.format(path = path))
+    new_dir_path = find_non_existing_dir(path)
+    cmd = 'mkdir -p {path}'.format(path = new_dir_path)
+    os.system(cmd)
+
+    return new_dir_path
 
 
 def write_csv(path, data):
