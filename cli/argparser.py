@@ -20,9 +20,9 @@ tigress_genenerate_option = sub_parser.add_parser(GENERATE, parents = [common_pa
                                        formatter_class=RawTextHelpFormatter,
                                        help = 'generate sample C source code with code and password')
 tigress_genenerate_option._optionals.title=' generate usage: argon generate [-o] [-c [[...]]] [-p [[...]]]'
-tigress_genenerate_option.add_argument('-c', '--code', type = int, default = [ None ], nargs = '*',
+tigress_genenerate_option.add_argument('-c', '--codes', type = int, default = [ None ], nargs = '*',
                                        help = 'activation code for generated program', metavar='')
-tigress_genenerate_option.add_argument('-p', '--password', default = [ None ], nargs = '*',
+tigress_genenerate_option.add_argument('-p', '--passwords', default = [ None ], nargs = '*',
                                        help = 'password for generated program\n\n', metavar='')
 
 tigress_obfuscate_option = sub_parser.add_parser(OBFUSCATE, parents = [common_parser], add_help = False, usage=SUPPRESS,
