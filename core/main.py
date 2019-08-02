@@ -7,6 +7,15 @@ from stats.main import get_csv_header
 
 
 def file_iterator(input_path, output_path, tool, fn, fn_args):
+    '''[summary]
+
+    Arguments:
+    input_path {[type]} -- [description]
+    output_path {[type]} -- [description]
+    tool {[type]} -- [description]
+    fn {function} -- [description]
+    fn_args {[type]} -- [description]
+    '''
     input_files_path = fs.ls(input_path, EXT['c'])
     new_output_path = fs.mkdir(output_path)
 

@@ -26,8 +26,8 @@ def stdin(args):
 
 
 def print_help():
-    parser.print_help()
-    tigress_genenerate_option.print_help()
-    tigress_obfuscate_option.print_help()
-    se_parser.print_help()
-    run_option.print_help()
+    PARSER.print_help()
+    TIGRESS_GENERATE.print_help()
+    TIGRESS_OBFUSCATE.print_help()
+    SE_PARSER.print_help()
+    RUN_OPTION.print_help()

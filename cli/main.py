@@ -13,6 +13,11 @@ from tigress.main import obfuscate, generate
 
 
 def run(argv):
+    """[summary]
+
+    Arguments:
+        argv {[type]} -- [description]
+    """
     if len(sys.argv) <= 1:
         print_help()
         sys.exit(1)

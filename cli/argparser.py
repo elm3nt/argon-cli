@@ -1,48 +1,50 @@
 import argparse
-from argparse import *
+from argparse import SUPPRESS, RawTextHelpFormatter
 
-from core.const import *
+from core.const import PROGRAM, GENERATE, OBFUSCATE, RUN, KLEE, ANGR, ALL, \
+                       VERSION, OPTIONS
 
 
-common_parser = argparse.ArgumentParser(
+COMMON_PARSER = argparse.ArgumentParser(
     usage=SUPPRESS, add_help=False, prog=PROGRAM)
-common_parser._optionals.title = 'mandatory argument'
-common_parser.add_argument(
+COMMON_PARSER._optionals.title = 'mandatory argument'
+COMMON_PARSER.add_argument(
     '-o',
     '--output',
     help=argparse.SUPPRESS,
     metavar='')
 
-parser = argparse.ArgumentParser(
+PARSER = argparse.ArgumentParser(
     description='',
     usage=SUPPRESS,
-    parents=[common_parser],
+    parents=[COMMON_PARSER],
     prog=PROGRAM,
     formatter_class=RawTextHelpFormatter,
     epilog='help for each option:')
-parser._optionals.title = 'Argon Help'
-parser.add_argument(
+PARSER._optionals.title = 'Argon Help'
+PARSER.add_argument(
     '-v',
     '--version',
     action='version',
     version='%(prog)s ' +
     VERSION)
-sub_parser = parser.add_subparsers(
+SUB_PARSER = PARSER.add_subparsers(
     title='argon options',
     dest='option',
-    description='mandatory argument: \n ' +
+    description='mandatory argument: \n ' \
     ' -o , --output         path of file/dir to store generated file(s)',
     metavar='usage: argon {generate,obfuscate,run,all,angr,klee} [-o]\n\n')
 
-tigress_genenerate_option = sub_parser.add_parser(
+TIGRESS_GENERATE = SUB_PARSER.add_parser(
     GENERATE,
-    parents=[common_parser],
+    parents=[COMMON_PARSER],
     usage=SUPPRESS,
     add_help=False,
     formatter_class=RawTextHelpFormatter,
     help='generate sample C source code with code and password')
-tigress_genenerate_option._optionals.title = ' generate usage: argon generate [-o] [-c [[...]]] [-p [[...]]]'
-tigress_genenerate_option.add_argument(
+TIGRESS_GENERATE._optionals.title = ' generate usage: argon generate [-o] ' \
+    '[-c [[...]]] [-p [[...]]]'
+TIGRESS_GENERATE.add_argument(
     '-c',
     '--codes',
     type=int,
@@ -50,7 +52,7 @@ tigress_genenerate_option.add_argument(
     nargs='*',
     help='activation code for generated program',
     metavar='')
-tigress_genenerate_option.add_argument(
+TIGRESS_GENERATE.add_argument(
     '-p',
     '--passwords',
     default=[None],
@@ -58,40 +60,41 @@ tigress_genenerate_option.add_argument(
     help='password for generated program\n\n',
     metavar='')
 
-tigress_obfuscate_option = sub_parser.add_parser(
+TIGRESS_OBFUSCATE = SUB_PARSER.add_parser(
     OBFUSCATE,
-    parents=[common_parser],
+    parents=[COMMON_PARSER],
     add_help=False,
     usage=SUPPRESS,
     formatter_class=RawTextHelpFormatter,
     help='obfuscate generated C source code')
-tigress_obfuscate_option._optionals.title = ' obfuscate usage: argon obfuscate [-o] [-i] [-nv] [-ol  [...]]'
-tigress_obfuscate_option.add_argument(
+TIGRESS_OBFUSCATE._optionals.title = ' obfuscate usage: argon obfuscate [-o] ' \
+    '[-i] [-nv] [-ol  [...]]'
+TIGRESS_OBFUSCATE.add_argument(
     '-i',
     '--input',
     help='path of benchmark dir/file(s)',
     metavar='')
-tigress_obfuscate_option.add_argument(
+TIGRESS_OBFUSCATE.add_argument(
     '-nv',
     '--num-variants',
     type=int,
     help='number of obfuscation variants to be generated',
     metavar='')
-tigress_obfuscate_option.add_argument(
+TIGRESS_OBFUSCATE.add_argument(
     '-ol',
     '--obfuscation-list',
     nargs='+',
     help='obfuscation combinations list\n\n',
     metavar='')
 
-input_parser = argparse.ArgumentParser(
+INPUT_PARSER = argparse.ArgumentParser(
     add_help=False,
     formatter_class=RawTextHelpFormatter,
     usage=SUPPRESS)
-input_parser._optionals.title = ' symbolic execution universal arguements'
-input_parser.add_argument('-i', '--input',
+INPUT_PARSER._optionals.title = ' symbolic execution universal arguements'
+INPUT_PARSER.add_argument('-i', '--input',
                           help='path of benchmark dir/file(s)', metavar='')
-input_parser.add_argument(
+INPUT_PARSER.add_argument(
     '-c',
     '--codes',
     required=False,
@@ -99,7 +102,7 @@ input_parser.add_argument(
     nargs='+',
     help='list of activaton codes seperated by comma or space',
     metavar='')
-input_parser.add_argument(
+INPUT_PARSER.add_argument(
     '-p',
     '--passwords',
     required=False,
@@ -109,17 +112,18 @@ input_parser.add_argument(
     metavar='')
 
 
-run_option = sub_parser.add_parser(
+RUN_OPTION = SUB_PARSER.add_parser(
     RUN,
     parents=[
-        common_parser,
-        input_parser],
+        COMMON_PARSER,
+        INPUT_PARSER],
     add_help=False,
     usage=SUPPRESS,
     help='compile c source code with different GCC optimization level')
-run_option._optionals.title = ' run usage: argon run [-h] [-i] [-o] [-c  [...]] [-p  [...]] [-ol {' + '|'.join(
-    OPTIONS['gcc-optimization-levels']) + '} '
-run_option.add_argument(
+RUN_OPTION._optionals.title = ' run usage: argon run [-h] [-i] [-o] ' \
+    '[-c  [...]]  [-p  [...]] [-ol {' + '|'.join(
+        OPTIONS['gcc-optimization-levels']) + '} '
+RUN_OPTION.add_argument(
     '-ol',
     '--optimization-levels',
     choices=OPTIONS['gcc-optimization-levels'],
@@ -131,29 +135,30 @@ run_option.add_argument(
     metavar='')
 
 
-se_parser = argparse.ArgumentParser(add_help=False, usage=SUPPRESS)
-se_parser._optionals.title = ' symbolic execution usage: argon {all,angr,klee} [-i] [-o] [-na] [-la] [-ni] [-li] [-t] [-m] [-s]'
-se_parser.add_argument(
+SE_PARSER = argparse.ArgumentParser(add_help=False, usage=SUPPRESS)
+SE_PARSER._optionals.title = ' symbolic execution usage: argon ' \
+    '{all,angr,klee} [-i] [-o] [-na] [-la] [-ni] [-li] [-t] [-m] [-s]'
+SE_PARSER.add_argument(
     '-na',
     '--num-arg',
     type=int,
     default=0,
     help='number of arguments required by the program',
     metavar='')
-se_parser.add_argument('-la', '--length-arg', type=int, default=0,
+SE_PARSER.add_argument('-la', '--length-arg', type=int, default=0,
                        help='length of argument', metavar='')
-se_parser.add_argument(
+SE_PARSER.add_argument(
     '-ni',
     '--num-input',
     type=int,
     default=0,
     help='number of inputs required by the program',
     metavar='')
-se_parser.add_argument('-li', '--length-input', type=int, default=0,
+SE_PARSER.add_argument('-li', '--length-input', type=int, default=0,
                        help='length of input', metavar='')
-se_parser.add_argument('-t', '--timeout', required=False, default=0, type=int,
+SE_PARSER.add_argument('-t', '--timeout', required=False, default=0, type=int,
                        help='time to stop for symbolic analyer', metavar='')
-se_parser.add_argument(
+SE_PARSER.add_argument(
     '-m',
     '--memory',
     required=False,
@@ -161,7 +166,7 @@ se_parser.add_argument(
     type=int,
     help='memory limit for symbolic analyzer',
     metavar='')
-se_parser.add_argument(
+SE_PARSER.add_argument(
     '-s',
     '--search',
     default='random-path',
@@ -172,29 +177,29 @@ se_parser.add_argument(
     ')',
     metavar='')
 
-sub_parser.add_parser(
+SUB_PARSER.add_parser(
     ALL,
     parents=[
-        common_parser,
-        se_parser,
-        input_parser],
+        COMMON_PARSER,
+        SE_PARSER,
+        INPUT_PARSER],
     add_help=False,
     help='run symbolic analysis using Angr, Klee and note execution time')
 
-sub_parser.add_parser(
+SUB_PARSER.add_parser(
     ANGR,
     parents=[
-        common_parser,
-        se_parser,
-        input_parser],
+        COMMON_PARSER,
+        SE_PARSER,
+        INPUT_PARSER],
     add_help=False,
     help='runs symbolic analysis using Angr')
 
-sub_parser.add_parser(
+SUB_PARSER.add_parser(
     KLEE,
     parents=[
-        common_parser,
-        se_parser,
-        input_parser],
+        COMMON_PARSER,
+        SE_PARSER,
+        INPUT_PARSER],
     add_help=False,
     help='runs symbolic analysis using Klee\n\n')
