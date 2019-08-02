@@ -54,8 +54,8 @@ RUN wget https://github.com/klee/klee/archive/v2.0.zip && unzip v2.0.zip && \
   -DKLEE_UCLIBC_PATH=../../klee-uclibc-klee_uclibc_v1.2 \
   ../ && make
 
-# Install Angr
-RUN pip3 install -U angr==8.19.4.5 claripy==8.19.4.5
+# Install argon dependencies
+RUN sudo pip3 install --upgrade pip && RUN sudo pip3 install -r requirements.txt
 
 # Download Tigress
 RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && \

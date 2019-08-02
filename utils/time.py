@@ -2,7 +2,7 @@ import re
 
 
 def get_time(content):
-    hr_min_sec =  re.search(r'real[\s]*(.*?)h(.*?)m(.*?)s', content)
+    hr_min_sec = re.search(r'real[\s]*(.*?)h(.*?)m(.*?)s', content)
     if hr_min_sec:
         hh = int(hr_min_sec.group(1))
         mm = int(hr_min_sec.group(2))

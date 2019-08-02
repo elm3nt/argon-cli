@@ -15,10 +15,11 @@ def init_project(input_file_path, stdin, project):
 
     if stdin['num-arg'] >= 1:
         for i in range(0, stdin['num-arg']):
-            args.append(claripy.BVS('arg'+str(i), int(stdin['length-arg']) * ONE_BYTE))
+            args.append(claripy.BVS('arg' + str(i),
+                                    int(stdin['length-arg']) * ONE_BYTE))
 
         entry_state = [input_file_path] + args
-        state = project.factory.entry_state(args = entry_state)
+        state = project.factory.entry_state(args=entry_state)
 
     return {
         'args': args,
@@ -26,18 +27,25 @@ def init_project(input_file_path, stdin, project):
     }
 
 
-def decode_credentials(output_dir_path, stdin, args, simulation_manager, credentials):
+def decode_credentials(
+        output_dir_path,
+        stdin,
+        args,
+        simulation_manager,
+        credentials):
     codes = []
     passwords = []
 
-    test_file_name = FILE_NAME['angr-test'].format(index = '1')
+    test_file_name = FILE_NAME['angr-test'].format(index='1')
     for deadended in simulation_manager.deadended:
         content = ''
         output_test_file_path = os.path.join(output_dir_path, test_file_name)
 
         content += 'Arg(s)\n'
         for arg in args:
-            code = deadended.solver.eval(arg, cast_to = bytes).decode('utf8', errors='ignore')
+            code = deadended.solver.eval(
+                arg, cast_to=bytes).decode(
+                'utf8', errors='ignore')
             codes.append(code)
         content += lists.to_str_with_nl(codes) + '\n'
 
@@ -63,12 +71,18 @@ def decode_credentials(output_dir_path, stdin, args, simulation_manager, credent
     }
 
 
-def symbolic_execution(input_file_path, output_dir_path, stdin, options, credentials):
+def symbolic_execution(
+        input_file_path,
+        output_dir_path,
+        stdin,
+        options,
+        credentials):
     start_time = datetime.now()
 
     project = angr.Project(input_file_path)
     project_status = init_project(input_file_path, stdin, project)
-    simulation_manager = project.factory.simulation_manager(project_status['state'])
+    simulation_manager = project.factory.simulation_manager(
+        project_status['state'])
     simulation_manager.run()
 
     end_time = datetime.now()
@@ -79,7 +93,12 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
         'passwords': [],
     }
     if hasattr(simulation_manager, 'deadended'):
-        generated = decode_credentials(output_dir_path, stdin, project_status['args'], simulation_manager, credentials)
+        generated = decode_credentials(
+            output_dir_path,
+            stdin,
+            project_status['args'],
+            simulation_manager,
+            credentials)
 
     return {
         'time-taken': time_taken.total_seconds(),
@@ -93,4 +112,9 @@ def symbolic_execution(input_file_path, output_dir_path, stdin, options, credent
 def run(input_file_path, output_dir_path, stdin, options, credentials):
     compiled_code_path = compile_code(input_file_path, output_dir_path)
 
-    return symbolic_execution(compiled_code_path, output_dir_path, stdin, options, credentials)
+    return symbolic_execution(
+        compiled_code_path,
+        output_dir_path,
+        stdin,
+        options,
+        credentials)

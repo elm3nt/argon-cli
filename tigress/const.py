@@ -16,15 +16,14 @@ TIGRESS_RE = {
     'int-activation-code': r'int activationCode ;',
     'unsigned-long-activation-code': r'(unsigned long activationCode ;)',
     'activation-code': r'(activationCode =.*)',
-    'failed': r'(failed \|= activationCode !.*)'
-}
+    'failed': r'(failed \|= activationCode !.*)'}
 
 TIGRESS_REPLACE = {
     'pass': '  char password{count}[100] = "";',
     'printf': '  printf("Please enter password:");\n  ' +
-                'scanf("%s", password{count});',
+    'scanf("%s", password{count});',
     'check-pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
-                'failed |= stringCompareResult != 0UL;',
+    'failed |= stringCompareResult != 0UL;',
     'while': '  while (randomFuns_i5 < {count}) {{',
 
     'code': '  unsigned long activationCode{count} ;',
@@ -35,7 +34,7 @@ TIGRESS_REPLACE = {
                 'input[randomFuns_i5 + {index2}] = randomFuns_value6;',
 
     'mega-init': 'argc != {count} ) {{\n    ' +
-               'printf("Call this program with %i arguments ' + repr('\\n').replace('\'', '') + '", {count2});',
+    'printf("Call this program with %i arguments ' + repr('\\n').replace('\'', '') + '", {count2});',
     'unsigned-long-activation-code': 'unsigned long activationCode ;'
 
 }
@@ -92,7 +91,7 @@ TIGRESS_CMD = {
                 + ",_v{vn}a_1_authenticate_authenticate_split_8"
                 + ",_v{vn}a_1_authenticate_authenticate_split_9"
                 + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
-        '''--Transform=CleanUp \
+    '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
 

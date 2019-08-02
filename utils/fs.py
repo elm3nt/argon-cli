@@ -36,17 +36,17 @@ def ls(path, ext):
         file = details(path)
 
         if file['ext'] == ext:
-            return [ path ]
+            return [path]
 
     elif os.path.isdir(path):
         file_list = Path(path).glob('**/*{}'.format(ext))
 
-        return [ str(file_path) for file_path in file_list ]
+        return [str(file_path) for file_path in file_list]
 
     return []
 
 
-def rmdirs(path, dir_exception_list = {}):
+def rmdirs(path, dir_exception_list={}):
     dir_list = os.listdir(path)
 
     for dir in dir_list:
@@ -76,7 +76,7 @@ def find_non_existing_dir(path):
 
 def mkdir(path):
     new_dir_path = find_non_existing_dir(path)
-    cmd = 'mkdir -p {path}'.format(path = new_dir_path)
+    cmd = 'mkdir -p {path}'.format(path=new_dir_path)
     os.system(cmd)
 
     return new_dir_path

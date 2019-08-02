@@ -19,7 +19,7 @@ def run(argv):
 
     try:
         args = parser.parse_args()
-    except:
+    except BaseException:
         sys.exit(1)
 
     tool = args.option
@@ -38,11 +38,16 @@ def run(argv):
 
         for obs in obfuscation_combinations:
             if not re.search(RE_OBFUSCATION, obs):
-                print('One more more items in the list does not contain [A, C, D, V]')
+                print(
+                    'One more more items in the list does not contain [A, C, D, V]')
                 print('Error at: ' + obs)
                 sys.exit(1)
 
-        obfuscate(input_path, output_path, obfuscation_combinations, num_variants)
+        obfuscate(
+            input_path,
+            output_path,
+            obfuscation_combinations,
+            num_variants)
 
     elif tool == RUN:
         input_path = os.path.abspath(args.input)
