@@ -36,17 +36,17 @@ def ls(path, ext):
         file = details(path)
 
         if file['ext'] == ext:
-            return [ path ]
+            return [path]
 
     elif os.path.isdir(path):
         file_list = Path(path).glob('**/*{}'.format(ext))
 
-        return [ str(file_path) for file_path in file_list ]
+        return [str(file_path) for file_path in file_list]
 
     return []
 
 
-def rmdirs(path, dir_exception_list = {}):
+def rmdirs(path, dir_exception_list={}):
     dir_list = os.listdir(path)
 
     for dir in dir_list:
@@ -56,7 +56,7 @@ def rmdirs(path, dir_exception_list = {}):
             shutil.rmtree(target_path)
 
 
-def mkdir(path):
+def find_non_existing_dir(path):
     if os.path.isdir(path):
         base_path = os.path.dirname(path)
         dir_name = os.path.basename(path)
@@ -64,22 +64,23 @@ def mkdir(path):
 
         if dir_index[-1].isdigit():
             index = int(dir_index[-1]) + 1
-            print(index)
             new_dir_name = '-'.join(dir_index[0:-1]) + '-' + str(index)
         else:
             new_dir_name = dir_name + '-2'
 
         new_dir_path = os.path.join(base_path, new_dir_name)
-        mkdir(new_dir_path)
-    else:
-        # print(path)
-        # cmd = 'mkdir -p {path}'.format(path = path)
-        # print(cmd)
-        # return path
-        # os.system(cmd.format(path = path))
-        print(path)
-        path = os.mkdir(path)
-        return path
+        return find_non_existing_dir(new_dir_path)
+
+    return path
+
+
+def mkdir(path):
+    new_dir_path = find_non_existing_dir(path)
+    cmd = 'mkdir -p {path}'.format(path=new_dir_path)
+    os.system(cmd)
+
+    return new_dir_path
+
 
 def write_csv(path, data):
     with open(path, 'w') as file:

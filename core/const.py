@@ -7,7 +7,7 @@ KLEE = 'klee'
 VERSION = '0.2.0'
 PROGRAM = 'argon'
 GENERATE = 'generate'
-OBFUSCATE ='obfuscate'
+OBFUSCATE = 'obfuscate'
 RE_OBFUSCATION = r'[ACDV]+$'
 
 EXT = {
@@ -27,11 +27,22 @@ DIR_NAME = {
     'samples': 'samples',
 }
 
-OPTIONS = {
-    'gcc-optimization-levels': ['0', '1', '2', '3', 's', 'fast'],
-    'klee-search-algorithm': ['dfs', 'random-state', 'random-path', 'nurs:covnew', 'nurs:md2u', 'nurs:depth',
-                              'nurs:icnt', 'nurs:cpicnt', 'nurs:qc'],
-}
+OPTIONS = {'gcc-optimization-levels': ['0',
+                                       '1',
+                                       '2',
+                                       '3',
+                                       's',
+                                       'fast'],
+           'klee-search-algorithm': ['dfs',
+                                     'random-state',
+                                     'random-path',
+                                     'nurs:covnew',
+                                     'nurs:md2u',
+                                     'nurs:depth',
+                                     'nurs:icnt',
+                                     'nurs:cpicnt',
+                                     'nurs:qc'],
+           }
 
 FILE_NAME = {
     'run': '{name}_run.txt',

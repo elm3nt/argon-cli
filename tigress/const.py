@@ -4,25 +4,39 @@ ABSTRACT = 'A'
 CONTROL_FLOW = 'C'
 VIRTUALIZATION = 'V'
 
-NL = repr('\\n').replace('\'', '')
 
-TIGRESS_REGREX = {
+TIGRESS_RE = {
+    'while-random-funs': r'while \(randomFuns_i5.*',
+    'argc-nl': r'argc !=.* {\n.*',
+    'char-password': r'(char password\[100\].*)',
+    'one-nl': r'\1\n',
+    'printf-please': r'(printf\("Please.*\n  scanf\("%s", password\);)',
+    'string-compare-result': r'(stringCompareResult = strncmp\(password,.*\n.*)',
+    'random-funs-value': r'(randomFuns_value6 =.*\n    input\[randomFuns_i5\].*)',
+    'int-activation-code': r'int activationCode ;',
+    'unsigned-long-activation-code': r'(unsigned long activationCode ;)',
+    'activation-code': r'(activationCode =.*)',
+    'failed': r'(failed \|= activationCode !.*)'}
+
+TIGRESS_REPLACE = {
     'pass': '  char password{count}[100] = "";',
     'printf': '  printf("Please enter password:");\n  ' +
-                'scanf("%s", password{count});',
-    'check_pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
-                'failed |= stringCompareResult != 0UL;',
+    'scanf("%s", password{count});',
+    'check-pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
+    'failed |= stringCompareResult != 0UL;',
     'while': '  while (randomFuns_i5 < {count}) {{',
 
     'code': '  unsigned long activationCode{count} ;',
     'input': '  activationCode{count} = input[{count2}UL];',
-    'check_code': '  failed |= activationCode{count} != {code}UL;',
+    'check-code': '  failed |= activationCode{count} != {code}UL;',
 
     'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' +
                 'input[randomFuns_i5 + {index2}] = randomFuns_value6;',
 
-    'megaint': 'argc != {count} ) {{\n    ' +
-               'printf("Call this program with %i arguments ' + NL + '", {count2});'
+    'mega-init': 'argc != {count} ) {{\n    ' +
+    'printf("Call this program with %i arguments ' + repr('\\n').replace('\'', '') + '", {count2});',
+    'unsigned-long-activation-code': 'unsigned long activationCode ;'
+
 }
 
 TIGRESS_CMD = {
@@ -77,7 +91,7 @@ TIGRESS_CMD = {
                 + ",_v{vn}a_1_authenticate_authenticate_split_8"
                 + ",_v{vn}a_1_authenticate_authenticate_split_9"
                 + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
-        '''--Transform=CleanUp \
+    '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
 

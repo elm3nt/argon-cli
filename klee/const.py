@@ -4,7 +4,7 @@ KLEE_CMD = {
     'sym-args': '--sym-args 1 {max} {length}',
     'stats': 'klee-stats --print-rel-times {input}',
     'compile': 'clang -emit-llvm -c {input} -o {output}',
-    'options':'klee \
+    'options': 'klee \
                 --libc=uclibc \
                 --output-dir={output} \
                 --only-output-states-covering-new \
