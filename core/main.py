@@ -1,4 +1,4 @@
-'''Project core module.'''
+'''Module for core functions.'''
 import os
 from shutil import copy2
 

@@ -1,5 +1,4 @@
-'''Project constants'''
-
+'''Constants for core module.'''
 SE = 'se'
 ALL = 'all'
 RUN = 'run'

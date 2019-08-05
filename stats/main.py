@@ -1,4 +1,4 @@
-'''Statistics module.'''
+'''Mdule for stats.'''
 from core.const import RUN, KLEE, ANGR, ALL
 from stats.const import CSV_HEAD as HEAD
 

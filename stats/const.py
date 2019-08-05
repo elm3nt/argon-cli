@@ -1,3 +1,4 @@
+'''Constants for stats module.'''
 CSV_HEAD = {
     'codes': 'Codes',
     'file-path': 'Path',
