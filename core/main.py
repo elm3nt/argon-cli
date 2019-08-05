@@ -8,7 +8,7 @@ from stats.main import get_csv_header
 
 
 def file_iterator(input_path, output_path, tool, func_name, func_args):
-    """
+    '''
     Recursively iterate c files from a given path. Call given function on each
     file.
 
@@ -18,7 +18,7 @@ def file_iterator(input_path, output_path, tool, func_name, func_args):
         tool {str} -- Tool to run on each file iteration
         func_name {str} -- Name of function to call in each iternation
         func_args {dict} -- Arguments requried for function call
-    """
+    '''
     input_files_path = fs.ls(input_path, EXT['c'])
     new_output_path = fs.mkdir(output_path)
 
