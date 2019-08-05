@@ -1,3 +1,5 @@
+'''Project constants'''
+
 SE = 'se'
 ALL = 'all'
 RUN = 'run'
