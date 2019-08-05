@@ -1,11 +1,20 @@
+''' Module for file system operations.'''
 import os
-import sys
 import csv
 import shutil
 from pathlib import Path
 
 
 def details(file_path):
+    '''
+    Get detials of file.
+
+    Arguments:
+        file_path {str} -- Path of file
+
+    Returns:
+        list -- File details
+    '''
     path = os.path.dirname(str(file_path))
     file = os.path.basename(str(file_path))
     name, ext = os.path.splitext(file)
@@ -19,6 +28,15 @@ def details(file_path):
 
 
 def read(path):
+    '''
+    Read file content of file.
+
+    Arguments:
+        path {str} -- Path of file
+
+    Returns:
+        str -- Content of file
+    '''
     content = ''
     with open(path, 'r') as file:
         content = file.read()
@@ -27,11 +45,28 @@ def read(path):
 
 
 def write(path, content):
+    '''
+    Write to file.
+
+    Arguments:
+        path {str} -- Path of file
+        content {str} -- Content to write
+    '''
     with open(path, 'w') as file:
         file.write(content)
 
 
 def ls(path, ext):
+    '''
+    Recursively list files of sepecific extension of a file or a directory.
+
+    Arguments:
+        path {str} -- Path of directory or a file
+        ext {str} -- File extenion to be listed
+
+    Returns:
+        list -- List of files
+    '''
     if os.path.isfile(path):
         file = details(path)
 
@@ -47,16 +82,35 @@ def ls(path, ext):
 
 
 def rmdirs(path, dir_exception_list={}):
+    '''
+    Delete directories execept from exception lists.
+
+    Arguments:
+        path {str} -- Path of direcotry
+
+    Keyword Arguments:
+        dir_exception_list {dict} -- List of directories that should not be
+                                     deleted (default: {{}})
+    '''
     dir_list = os.listdir(path)
 
-    for dir in dir_list:
-        target_path = os.path.join(path, dir)
+    for dir_name in dir_list:
+        target_path = os.path.join(path, dir_name)
 
-        if os.path.isdir(target_path) and dir not in dir_exception_list:
+        if os.path.isdir(target_path) and dir_name not in dir_exception_list:
             shutil.rmtree(target_path)
 
 
 def find_non_existing_dir(path):
+    '''
+    Recursively find directory that does not exists.
+
+    Arguments:
+        path {str} -- Path of directory
+
+    Returns:
+        str -- Path of directory that does not exists
+    '''
     if os.path.isdir(path):
         base_path = os.path.dirname(path)
         dir_name = os.path.basename(path)
@@ -75,6 +129,15 @@ def find_non_existing_dir(path):
 
 
 def mkdir(path):
+    '''
+    Make directory with parent.
+
+    Arguments:
+        path {str} -- Path of directory
+
+    Returns:
+        str -- Path of directory created
+    '''
     new_dir_path = find_non_existing_dir(path)
     cmd = 'mkdir -p {path}'.format(path=new_dir_path)
     os.system(cmd)
@@ -83,12 +146,26 @@ def mkdir(path):
 
 
 def write_csv(path, data):
+    '''
+    Write data to CSV file.
+
+    Arguments:
+        path {str} -- Path of file
+        data {list} -- Data to write in file
+    '''
     with open(path, 'w') as file:
         writer = csv.writer(file)
         writer.writerows(data)
 
 
 def append_csv(path, data):
+    '''
+    Add data at the end of CSV file.
+
+    Arguments:
+        path {str} -- Path of file
+        data {list} -- Data to add in file
+    '''
     with open(path, 'a') as file:
         writer = csv.writer(file)
         writer.writerows(data)

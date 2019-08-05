@@ -1,3 +1,4 @@
+'''Angr module for symbolic execution.'''
 import os
 import angr
 import claripy
@@ -5,11 +6,22 @@ from datetime import datetime
 
 from utils import fs
 from utils import lists
-from core.const import *
 from code.main import compile_code
+from core.const import ONE_BYTE, FILE_NAME
 
 
 def init_project(input_file_path, stdin, project):
+    '''
+    Initialize angr project.
+
+    Arguments:
+        input_file_path {str} -- Path of input file
+        stdin {dict} -- Symbolic execution arguments and inputs size
+        project {class} -- Angr project
+
+    Returns:
+        dict -- Angr project arguments and states
+    '''
     args = []
     state = project.factory.entry_state()
 
@@ -31,8 +43,19 @@ def decode_credentials(
         output_dir_path,
         stdin,
         args,
-        simulation_manager,
-        credentials):
+        simulation_manager):
+    '''
+    Decode authentication credentials of a program.
+
+    Arguments:
+        output_dir_path {str} -- Output directory path
+        stdin {dict} -- Symbolic execution arguments and inputs size
+        args {list} -- Extracted program's argument list
+        simulation_manager {class} -- Angr simulation manager of project
+
+    Returns:
+        dict -- Extracted activation codes and passwords of a program
+    '''
     codes = []
     passwords = []
 
@@ -45,7 +68,7 @@ def decode_credentials(
         for arg in args:
             code = deadended.solver.eval(
                 arg, cast_to=bytes).decode(
-                'utf8', errors='ignore')
+                    'utf8', errors='ignore')
             codes.append(code)
         content += lists.to_str_with_nl(codes) + '\n'
 
@@ -75,8 +98,20 @@ def symbolic_execution(
         input_file_path,
         output_dir_path,
         stdin,
-        options,
         credentials):
+    '''
+    Run symbolic execution on a program using Angr.
+
+    Arguments:
+        input_file_path {str} -- Input path of compiled c program
+        output_dir_path {str} -- Output path to store rest result
+        stdin {dict} -- Symbolic execution arguments and inputs size
+        credentials {dict} -- Activation codes and passwords of c program
+                              authenticate function
+
+    Returns:
+        dict -- Symbolic execution statistics
+    '''
     start_time = datetime.now()
 
     project = angr.Project(input_file_path)
@@ -97,8 +132,7 @@ def symbolic_execution(
             output_dir_path,
             stdin,
             project_status['args'],
-            simulation_manager,
-            credentials)
+            simulation_manager)
 
     return {
         'time-taken': time_taken.total_seconds(),
@@ -110,11 +144,25 @@ def symbolic_execution(
 
 
 def run(input_file_path, output_dir_path, stdin, options, credentials):
+    '''
+    Run symbolic execution on a c program using Angr.
+
+    Returns:
+    Arguments:
+        input_file_path {str} -- Input path of compiled c program
+        output_dir_path {str} -- Output path to store rest result
+        stdin {dict} -- Symbolic execution arguments and inputs size
+        options {dict} -- Memory, timeout options for symbolic exection tool
+        credentials {dict} -- Activation codes and passwords of c program
+                              authenticate function
+
+    Returns:
+        dict -- Symbolic execution statistics
+    '''
     compiled_code_path = compile_code(input_file_path, output_dir_path)
 
     return symbolic_execution(
         compiled_code_path,
         output_dir_path,
         stdin,
-        options,
         credentials)
