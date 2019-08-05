@@ -13,7 +13,7 @@ def details(file_path):
         file_path {str} -- Path of file
 
     Returns:
-        dist -- File details
+        list -- File details
     '''
     path = os.path.dirname(str(file_path))
     file = os.path.basename(str(file_path))
