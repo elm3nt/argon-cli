@@ -1,4 +1,4 @@
-'''Argon tool selection module.'''
+'''Cli module.'''
 import os
 import re
 import sys
@@ -14,12 +14,12 @@ from core.const import RE_OBFUSCATION, RUN, KLEE, ALL, ANGR, GENERATE, OBFUSCATE
 
 
 def run(argv):
-    """
+    '''
     Selects which tool to be used by user.
 
     Arguments:
         argv {list} -- List of arguements
-    """
+    '''
     if len(argv) <= 1:
         print_help()
         sys.exit(1)

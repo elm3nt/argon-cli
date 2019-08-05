@@ -38,7 +38,7 @@ def credentials(args):
 
 def stdin(args):
     '''
-    Symbolic execution main arguements for the tools, KLEE and ANGR, to function.
+    Symbolic execution main arguements for the tools, Klee and Angr to function.
 
     Arguments:
         args {list} -- List of arguements
@@ -56,7 +56,7 @@ def stdin(args):
 
 def print_help():
     '''
-    Prints help for each of features of Argon.
+    Prints help of program.
     '''
     PARSER.print_help()
     TIGRESS_GENERATE.print_help()

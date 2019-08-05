@@ -169,6 +169,3 @@ def append_csv(path, data):
     with open(path, 'a') as file:
         writer = csv.writer(file)
         writer.writerows(data)
-
-if __name__ == '__main__':
-    mkdir('workspace/a')

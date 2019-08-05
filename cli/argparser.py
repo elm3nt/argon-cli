@@ -1,9 +1,9 @@
-'''Argument module.'''
+'''Module for argparser.'''
 import argparse
 from argparse import SUPPRESS, RawTextHelpFormatter
 
 from core.const import PROGRAM, GENERATE, OBFUSCATE, RUN, KLEE, ANGR, ALL, \
-                       VERSION, OPTIONS
+                       VERSION, OPTIONS, PROGRAM_HELP
 
 COMMON_PARSER = argparse.ArgumentParser(
     usage=SUPPRESS, add_help=False, prog=PROGRAM)
@@ -21,7 +21,7 @@ PARSER = argparse.ArgumentParser(
     prog=PROGRAM,
     formatter_class=RawTextHelpFormatter,
     epilog='help for each option:')
-PARSER._optionals.title = 'Argon Help'
+PARSER._optionals.title = PROGRAM_HELP
 PARSER.add_argument(
     '-v',
     '--version',
@@ -29,21 +29,20 @@ PARSER.add_argument(
     version='%(prog)s ' +
     VERSION)
 SUB_PARSER = PARSER.add_subparsers(
-    title='argon options',
+    title='' + PROGRAM + ' options',
     dest='option',
     description='mandatory argument: \n ' \
     ' -o , --output         path of file/dir to store generated file(s)',
-    metavar='usage: argon {generate,obfuscate,run,all,angr,klee} [-o]\n\n')
-
+    metavar='usage: ' + PROGRAM + ' {' + ','.join(OPTIONS['tools']) + '} [-o]\n\n')
 TIGRESS_GENERATE = SUB_PARSER.add_parser(
     GENERATE,
     parents=[COMMON_PARSER],
     usage=SUPPRESS,
     add_help=False,
     formatter_class=RawTextHelpFormatter,
-    help='generate sample C source code with code and password')
-TIGRESS_GENERATE._optionals.title = ' generate usage: argon generate [-o] ' \
-    '[-c [[...]]] [-p [[...]]]'
+    help='generate sample c source code with code and password')
+TIGRESS_GENERATE._optionals.title = ' generate usage: ' + PROGRAM + \
+    ' ' + GENERATE + ' [-o] [-c [[...]]] [-p [[...]]]'
 TIGRESS_GENERATE.add_argument(
     '-c',
     '--codes',
@@ -66,9 +65,9 @@ TIGRESS_OBFUSCATE = SUB_PARSER.add_parser(
     add_help=False,
     usage=SUPPRESS,
     formatter_class=RawTextHelpFormatter,
-    help='obfuscate generated C source code')
-TIGRESS_OBFUSCATE._optionals.title = ' obfuscate usage: argon obfuscate [-o] ' \
-    '[-i] [-nv] [-ol  [...]]'
+    help='obfuscate generated c source code')
+TIGRESS_OBFUSCATE._optionals.title = ' ' + OBFUSCATE + ' usage: ' + PROGRAM + \
+    ' ' + OBFUSCATE + ' [-o] [-i] [-nv] [-ol  [...]]'
 TIGRESS_OBFUSCATE.add_argument(
     '-i',
     '--input',
@@ -120,9 +119,9 @@ RUN_OPTION = SUB_PARSER.add_parser(
     add_help=False,
     usage=SUPPRESS,
     help='compile c source code with different GCC optimization level')
-RUN_OPTION._optionals.title = ' run usage: argon run [-h] [-i] [-o] ' \
-    '[-c  [...]]  [-p  [...]] [-ol {' + '|'.join(
-        OPTIONS['gcc-optimization-levels']) + '} '
+RUN_OPTION._optionals.title = ' ' + RUN + ' usage: ' + PROGRAM + \
+    ' ' + RUN + ' [-h] [-i] [-o] [-c  [...]]  [-p  [...]] [-ol {' + \
+        '|'.join(OPTIONS['gcc-optimization-levels']) + '}'
 RUN_OPTION.add_argument(
     '-ol',
     '--optimization-levels',
@@ -134,10 +133,11 @@ RUN_OPTION.add_argument(
     ')',
     metavar='')
 
-
+ALL_TOOLS = [ALL, ANGR, KLEE]
 SE_PARSER = argparse.ArgumentParser(add_help=False, usage=SUPPRESS)
-SE_PARSER._optionals.title = ' symbolic execution usage: argon ' \
-    '{all,angr,klee} [-i] [-o] [-na] [-la] [-ni] [-li] [-t] [-m] [-s]'
+SE_PARSER._optionals.title = ' symbolic execution usage: ' + PROGRAM + ' ' \
+    '{' + ','.join(ALL_TOOLS) + '} [-i] [-o] [-na] [-la] [-ni] [-li] ' \
+    '[-t] [-m] [-s]'
 SE_PARSER.add_argument(
     '-na',
     '--num-arg',

@@ -4,8 +4,8 @@ import os
 
 from utils import fs
 from core.const import CMD, RE_OBFUSCATION, EXT, DIR_NAME, FILE_NAME
-from .const import ABSTRACT, TIGRESS_CMD, DATA, CONTROL_FLOW, VIRTUALIZATION, \
-                   TIGRESS_REPLACE, VN, TIGRESS_RE
+from tigress.const import ABSTRACT, TIGRESS_CMD, DATA, CONTROL_FLOW, \
+                          VIRTUALIZATION, TIGRESS_REPLACE, VN, TIGRESS_RE
 
 
 def obscure(input_path, output_path, obfuscation, file_name, index, v_n):
@@ -22,7 +22,7 @@ def obscure(input_path, output_path, obfuscation, file_name, index, v_n):
         v_n {int} -- Vn
 
     Returns:
-        [str] -- path of the newly generated c file to be used for next
+        str -- path of the newly generated c file to be used for next
                  obfuscation
     '''
     output_file_path = ''
