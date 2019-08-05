@@ -80,7 +80,7 @@ def run(input_file_path, output_dir_path, params):
                          arguments, passwords list required to compiled code
 
     Returns:
-        [list] -- Execution time statistics of c program
+        list -- Execution time statistics of c program
     '''
 
     test_results = []
