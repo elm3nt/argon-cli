@@ -1,9 +1,9 @@
+'''Argument module.'''
 import argparse
 from argparse import SUPPRESS, RawTextHelpFormatter
 
 from core.const import PROGRAM, GENERATE, OBFUSCATE, RUN, KLEE, ANGR, ALL, \
                        VERSION, OPTIONS
-
 
 COMMON_PARSER = argparse.ArgumentParser(
     usage=SUPPRESS, add_help=False, prog=PROGRAM)

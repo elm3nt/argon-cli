@@ -1,13 +1,26 @@
+'''Compile and execute c source code.'''
 import os
-from shutil import copy2
 
 from utils import fs
-from core.const import *
 from utils.time import get_time
-from stats.main import get_csv_header
+from core.const import CMD, FILE_NAME, OPTIONS
 
 
 def compile_code(input_file_path, output_dir_path, level='0'):
+    '''
+    Compile c source code using GCC.
+
+    Arguments:
+        input_file_path {str} -- C source code file path
+        output_dir_path {str} -- C complied code file path
+
+    Keyword Arguments:
+        level {str} -- GCC optimization level to compile C source code
+                       (default: {'0'})
+
+    Returns:
+        str -- File path of compiled c source code
+    '''
     input_file = fs.details(input_file_path)
     output_file = FILE_NAME['c-out'].format(
         name=input_file['name'], level=level)
@@ -24,6 +37,18 @@ def compile_code(input_file_path, output_dir_path, level='0'):
 
 
 def run_compiled_code(input_path, output_dir_path, args, stdin):
+    '''
+    Run complied c source code executable.
+
+    Arguments:
+        input_path {str} -- File path of compiled c source code
+        output_dir_path {str} -- File path to store `time` command output
+        args {list} -- Arguments required to run c program
+        stdin {list} -- Passwords required to run c program
+
+    Returns:
+        float -- [description]
+    '''
     input_file = fs.details(input_path)
     run_output_file = FILE_NAME['run'].format(name=input_file['name'])
     run_output_file_path = os.path.join(output_dir_path, run_output_file)
@@ -44,6 +69,20 @@ def run_compiled_code(input_path, output_dir_path, args, stdin):
 
 
 def run(input_file_path, output_dir_path, params):
+    '''
+    Compile c source code and run it.
+
+    Arguments:
+        input_file_path {str} -- Path of c source code file
+        output_dir_path {str} -- Path to store compiled c source code and
+                                 execution time statistics
+        params {dict} -- GCC optimization level to compile c source code and
+                         arguments, passwords list required to compiled code
+
+    Returns:
+        [list] -- Execution time statistics of c program
+    '''
+
     test_results = []
 
     for level in params['levels']:

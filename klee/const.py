@@ -1,3 +1,4 @@
+''' Klee module constants.'''
 KLEE_CMD = {
     'ktest': 'ktest-tool {input}',
     'sym-stdin': '--sym-stdin {length}',

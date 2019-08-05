@@ -1,3 +1,4 @@
+'''Tigress Constant values.'''
 VN = 1
 DATA = 'D'
 ABSTRACT = 'A'
@@ -20,21 +21,22 @@ TIGRESS_RE = {
 
 TIGRESS_REPLACE = {
     'pass': '  char password{count}[100] = "";',
-    'printf': '  printf("Please enter password:");\n  ' +
-    'scanf("%s", password{count});',
-    'check-pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' +
-    'failed |= stringCompareResult != 0UL;',
+    'printf': '  printf("Please enter password:");\n  ' \
+              'scanf("%s", password{count});',
+    'check-pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' \
+                  'failed |= stringCompareResult != 0UL;',
     'while': '  while (randomFuns_i5 < {count}) {{',
 
     'code': '  unsigned long activationCode{count} ;',
     'input': '  activationCode{count} = input[{count2}UL];',
     'check-code': '  failed |= activationCode{count} != {code}UL;',
 
-    'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' +
+    'randfuns': '    randomFuns_value6 = strtoul(argv[randomFuns_i5 + {index}], 0, 10);\n    ' \
                 'input[randomFuns_i5 + {index2}] = randomFuns_value6;',
 
-    'mega-init': 'argc != {count} ) {{\n    ' +
-    'printf("Call this program with %i arguments ' + repr('\\n').replace('\'', '') + '", {count2});',
+    'mega-init': 'argc != {count} ) {{\n    ' \
+                 'printf("Call this program with %i arguments ' +
+                 repr('\\n').replace('\'', '') + '", {count2});',
     'unsigned-long-activation-code': 'unsigned long activationCode ;'
 
 }
@@ -58,17 +60,17 @@ TIGRESS_CMD = {
         --Transform=RndArgs \
         --Seed=0 \
         --RndArgsBogusNo=2?5 \
-                ''' + "--Functions=_v{vn}a_1_authenticate_authenticate_split_1"
-                + ",_v{vn}a_1_authenticate_authenticate_split_2"
-                + ",_v{vn}a_1_authenticate_authenticate_split_3"
-                + ",_v{vn}a_1_authenticate_authenticate_split_4"
-                + ",_v{vn}a_1_authenticate_authenticate_split_5"
-                + ",_v{vn}a_1_authenticate_authenticate_split_6"
-                + ",_v{vn}a_1_authenticate_authenticate_split_7"
-                + ",_v{vn}a_1_authenticate_authenticate_split_8"
-                + ",_v{vn}a_1_authenticate_authenticate_split_9"
-                + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
-                '''--Transform=CleanUp \
+                ''' + '--Functions=_v{vn}a_1_authenticate_authenticate_split_1'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_2'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_3'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_4'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_5'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_6'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_7'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_8'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_9'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_10 ' +
+                  '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
 
@@ -81,17 +83,17 @@ TIGRESS_CMD = {
         --InitOpaqueCount=2 \
         --InitOpaqueStructs=list,array  \
                 --Transform=Merge \
-                ''' + "--Functions=_v{vn}a_1_authenticate_authenticate_split_1"
-                + ",_v{vn}a_1_authenticate_authenticate_split_2"
-                + ",_v{vn}a_1_authenticate_authenticate_split_3"
-                + ",_v{vn}a_1_authenticate_authenticate_split_4"
-                + ",_v{vn}a_1_authenticate_authenticate_split_5"
-                + ",_v{vn}a_1_authenticate_authenticate_split_6"
-                + ",_v{vn}a_1_authenticate_authenticate_split_7"
-                + ",_v{vn}a_1_authenticate_authenticate_split_8"
-                + ",_v{vn}a_1_authenticate_authenticate_split_9"
-                + ",_v{vn}a_1_authenticate_authenticate_split_10 " +
-    '''--Transform=CleanUp \
+                ''' + '--Functions=_v{vn}a_1_authenticate_authenticate_split_1'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_2'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_3'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_4'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_5'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_6'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_7'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_8'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_9'
+                  + ',_v{vn}a_1_authenticate_authenticate_split_10 ' +
+                  '''--Transform=CleanUp \
         --CleanUpKinds=annotations \
         --out={output} {input}''',
 
