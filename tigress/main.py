@@ -1,16 +1,30 @@
-
+'''Tigress module.'''
 import re
 import os
-import sys
-import shutil
-from pathlib import Path
 
-from .const import *
 from utils import fs
-from core.const import *
+from core.const import CMD, RE_OBFUSCATION, EXT, DIR_NAME, FILE_NAME
+from tigress.const import ABSTRACT, TIGRESS_CMD, DATA, CONTROL_FLOW, \
+                          VIRTUALIZATION, TIGRESS_REPLACE, VN, TIGRESS_RE
 
 
-def obscure(input_path, output_path, obfuscation, file_name, index, vn):
+def obscure(input_path, output_path, obfuscation, file_name, index, v_n):
+    '''
+    Applies obfuscation techniques for any combination of ABSTRACT, DATA,
+    CONTROL FLOW, and VIRTUALIZATION.
+
+    Arguments:
+        input_path {str} -- Non-obfuscated c file path
+        output_path {str} -- Obfuscated c file path
+        obfuscation {str} -- Obfuscatoin choice
+        file_name {str} -- Name of the generated file
+        index {str} -- The number of generated variants
+        v_n {int} -- Vn
+
+    Returns:
+        str -- path of the newly generated c file to be used for next
+                 obfuscation
+    '''
     output_file_path = ''
     temp_c_file_1 = 'temp1.c'
     temp_c_file_2 = 'temp2.c'
@@ -20,17 +34,17 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
         output_file_path_1 = os.path.join(
             output_path, file_name, temp_c_file_1)
         cmd_temp_1 = TIGRESS_CMD['abstract'].format(
-            vn=vn, output=output_file_path_1, input=input_path)
+            vn=v_n, output=output_file_path_1, input=input_path)
         os.system(CMD['bash'].format(cmd_temp_1))
 
         output_file_path_2 = os.path.join(
             output_path, file_name, temp_c_file_2)
         cmd_temp_2 = TIGRESS_CMD['abstract-2'].format(
-            vn=vn, output=output_file_path_2, input=output_file_path_1)
+            vn=v_n, output=output_file_path_2, input=output_file_path_1)
         os.system(CMD['bash'].format(cmd_temp_2))
 
         output_file_path = os.path.join(output_path, file_name, output_file)
-        cmd = TIGRESS_CMD['abstract-3'].format(vn=vn,
+        cmd = TIGRESS_CMD['abstract-3'].format(vn=v_n,
                                                output=output_file_path,
                                                input=output_file_path_2)
         os.system(CMD['bash'].format(cmd))
@@ -41,19 +55,19 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
     elif obfuscation == CONTROL_FLOW:
         output_file_path = os.path.join(output_path, file_name, output_file)
         cmd = TIGRESS_CMD['control-flow'].format(
-            vn=vn, output=output_file_path, input=input_path)
+            vn=v_n, output=output_file_path, input=input_path)
         os.system(CMD['bash'].format(cmd))
 
     elif obfuscation == DATA:
         output_file_path = os.path.join(output_path, file_name, output_file)
         cmd = TIGRESS_CMD['data'].format(
-            vn=vn, output=output_file_path, input=input_path)
+            vn=v_n, output=output_file_path, input=input_path)
         os.system(CMD['bash'].format(cmd))
 
     elif obfuscation == VIRTUALIZATION:
         output_file_path = os.path.join(output_path, file_name, output_file)
         cmd = TIGRESS_CMD['virtualization'].format(
-            vn=vn, output=output_file_path, input=input_path)
+            vn=v_n, output=output_file_path, input=input_path)
         os.system(CMD['bash'].format(cmd))
 
     return output_file_path
@@ -62,12 +76,25 @@ def obscure(input_path, output_path, obfuscation, file_name, index, vn):
 def variant(
         original_input_path,
         output_path,
-        obfuscation_combinations={},
+        obfuscation_combinations,
         no_of_variants=1):
+    '''
+    Iterates through the number of variatns and obfuscation list to generate the
+    necessary output path and calls the obscure function.
+
+    Arguments:
+        original_input_path {str} -- Single non-obfuscated file path
+        output_path {str} -- obfuscated c file path
+
+    Keyword Arguments:
+        obfuscation_combinations {dict} -- List of combinations of each
+                                           obfuscation technique (default: {{}})
+        no_of_variants {int} -- The number of variants to be generated (default: {1})
+    '''
     for index in range(1, no_of_variants + 1):
         for combination in obfuscation_combinations:
             if re.search(RE_OBFUSCATION, combination):
-                vn = VN
+                v_n = VN
                 file_name = ''
                 input_path = original_input_path
 
@@ -83,11 +110,20 @@ def variant(
                         obfuscation.upper(),
                         file_name,
                         str(index),
-                        vn)
-                    vn += 1
+                        v_n)
+                    v_n += 1
 
 
 def generate(output_path, code, password):
+    '''
+    Generates a original c file with a code and/or password to be used for
+    symbolic execution tools.
+
+    Arguments:
+        output_path {str} -- Generated c file path
+        code {list} -- List of activation codes to implemented into the c file
+        password {list} -- List of passwords to be implemented into the c file
+    '''
     code_count = len(code)
     password_count = len(password)
     input_path = os.path.join(
@@ -145,7 +181,7 @@ def generate(output_path, code, password):
     for index in range(code_count, 1, -1):
         mega_init = TIGRESS_REPLACE['mega-init'].format(
             count=code_count + 1, count2=code_count)
-        ac = TIGRESS_REPLACE['code'].format(count=index)
+        act_code = TIGRESS_REPLACE['code'].format(count=index)
         code_input = TIGRESS_REPLACE['input'].format(
             count=index, count2=index - 1)
         check_code = TIGRESS_REPLACE['check-code'].format(
@@ -164,7 +200,7 @@ def generate(output_path, code, password):
             mod_file)
         mod_file = re.sub(
             TIGRESS_RE['unsigned-long-activation-code'],
-            TIGRESS_RE['one-nl'] + ac,
+            TIGRESS_RE['one-nl'] + act_code,
             mod_file)
         mod_file = re.sub(
             TIGRESS_RE['activation-code'],
@@ -185,6 +221,17 @@ def obfuscate(
         output_path,
         obfuscation_combinations,
         no_of_variants):
+    '''
+    Iterates through each c file in a folder or just a single c file and
+    calls the variant function.
+
+    Arguments:
+        input_path {str} -- Non-obfuscated c file/files path
+        output_path {str} -- Obfuscated c file path
+        obfuscation_combinations {list} -- the list of combinations of
+                                           obfuscation techniques
+        no_of_variants {int} -- The number of variants for each obfuscation
+    '''
     input_files_path = fs.ls(input_path, EXT['c'])
 
     for input_path in input_files_path:

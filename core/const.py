@@ -9,6 +9,7 @@ VERSION = '0.2.0'
 PROGRAM = 'argon'
 GENERATE = 'generate'
 OBFUSCATE = 'obfuscate'
+PROGRAM_HELP = 'Argon help'
 RE_OBFUSCATION = r'[ACDV]+$'
 
 EXT = {
@@ -43,6 +44,12 @@ OPTIONS = {'gcc-optimization-levels': ['0',
                                      'nurs:icnt',
                                      'nurs:cpicnt',
                                      'nurs:qc'],
+           'tools': [RUN,
+                     ALL,
+                     ANGR,
+                     KLEE,
+                     GENERATE,
+                     OBFUSCATE],
            }
 
 FILE_NAME = {

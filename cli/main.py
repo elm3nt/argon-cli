@@ -1,24 +1,31 @@
+'''Cli module.'''
 import os
 import re
 import sys
 
 from utils import fs
-from cli.args import *
-from core.const import *
-from cli.argparser import *
+from cli.argparser import PARSER
 from se.main import run as run_se
 from core.main import file_iterator
 from code.main import run as run_code
 from tigress.main import obfuscate, generate
+from cli.args import print_help, credentials, stdin, se_options
+from core.const import RE_OBFUSCATION, RUN, KLEE, ALL, ANGR, GENERATE, OBFUSCATE
 
 
 def run(argv):
-    if len(sys.argv) <= 1:
+    '''
+    Selects which tool to be used by user.
+
+    Arguments:
+        argv {list} -- List of arguements
+    '''
+    if len(argv) <= 1:
         print_help()
         sys.exit(1)
 
     try:
-        args = parser.parse_args()
+        args = PARSER.parse_args()
     except BaseException:
         sys.exit(1)
 

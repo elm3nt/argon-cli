@@ -1,4 +1,4 @@
-'''Compile and execute c source code.'''
+'''Compile and execute c source code module.'''
 import os
 
 from utils import fs
