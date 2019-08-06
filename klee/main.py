@@ -16,9 +16,10 @@ def compile_to_bytecode(input_file_path, output_file_path):
         input_file_path {str} -- Path of c source code file
         output_file_path {str} -- Path to source bytecode file
     '''
-    cmd = KLEE_CMD['compile_to_bytecode'].format(
+    cmd = KLEE_CMD['compile'].format(
         input=input_file_path,
         output=output_file_path)
+
     os.system(CMD['bash'].format(cmd))
 
 

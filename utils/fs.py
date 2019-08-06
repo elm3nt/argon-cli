@@ -128,17 +128,21 @@ def find_non_existing_dir(path):
     return path
 
 
-def mkdir(path):
+def mkdir(path, check_dir_exists=True):
     '''
     Make directory with parent.
 
     Arguments:
         path {str} -- Path of directory
+        check_dir_exists {bool} -- Check if directory already exists
 
     Returns:
         str -- Path of directory created
     '''
-    new_dir_path = find_non_existing_dir(path)
+    new_dir_path = path
+    if check_dir_exists:
+        new_dir_path = find_non_existing_dir(path)
+
     cmd = 'mkdir -p {path}'.format(path=new_dir_path)
     os.system(cmd)
 
