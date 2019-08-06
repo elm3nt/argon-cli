@@ -56,7 +56,7 @@ RUN wget https://github.com/klee/klee/archive/v2.0.zip && unzip v2.0.zip && \
 
 
 # Download Tigress
-RUN wget https://github.com/elm3nt/table/raw/d1ba4bf5e4da0f24ccca6e35d242ee7e7d8a9dd4/resources/tigress-Linux-x86_64-2.2.zip && \
+RUN wget https://github.com/elm3nt/table/raw/d1ba4bf5e4da0f24ccca6e35d242ee7e7d8a9dd4/tigress-Linux-x86_64-2.2.zip && \
   unzip tigress-Linux-x86_64-2.2.zip && rm tigress-Linux-x86_64-2.2.zip
 # Tigress requires older version of GCC
 RUN sudo rm /usr/bin/gcc && sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
@@ -64,16 +64,16 @@ RUN sudo rm /usr/bin/gcc && sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
 RUN echo 'export TIGRESS_HOME=/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
 
 # Install Argon
-RUN sudo pip3 install --upgrade pip && RUN sudo pip3 install -r requirements.txt
-RUN git clone git@github.com:elm3nt/argon-cli.git
+RUN wget https://github.com/elm3nt/argon-cli/archive/master.zip && unzip master.zip && \
+  rm master.zip && mv argon-cli-master argon-cli
+RUN sudo pip3 install -U -r /home/argon/tools/argon-cli/requirements.txt
 
 # Add path of Argon, Tigress and Klee
 RUN echo 'export PATH=$PATH:/home/argon/tools/argon-cli' >> /home/argon/.bashrc
 RUN echo 'export PATH=$PATH:/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
 RUN echo 'export PATH=$PATH:/home/argon/tools/klee-2.0/build/bin' >> /home/argon/.bashrc
 
-
 # Update user and permissions
 USER argon
 WORKDIR /home/argon
-RUN sudo chown argon:argon tools/ -R
+RUN sudo chown argon:argon /home/argon/tools/ -R
