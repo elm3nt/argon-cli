@@ -102,7 +102,7 @@ def variant(
                     file_name += obfuscation
                     target_path = os.path.join(output_path, file_name)
 
-                    fs.mkdir(target_path)
+                    fs.mkdir(target_path, False)
 
                     input_path = obscure(
                         input_path,
@@ -179,6 +179,8 @@ def generate(output_path, code, password):
             mod_file)
 
     for index in range(code_count, 1, -1):
+        code_args = TIGRESS_REPLACE['num-code'].format(
+            count=code_count)
         mega_init = TIGRESS_REPLACE['mega-init'].format(
             count=code_count + 1, count2=code_count)
         act_code = TIGRESS_REPLACE['code'].format(count=index)
@@ -188,6 +190,7 @@ def generate(output_path, code, password):
             count=index, code=code[index - 1])
         randomfuns = TIGRESS_REPLACE['randfuns'].format(
             index=index, index2=index - 1)
+        mod_file = re.sub(TIGRESS_RE['arg-code'], code_args, mod_file)
         mod_file = re.sub(TIGRESS_RE['argc-nl'], mega_init, mod_file)
         mod_file = re.sub(
             TIGRESS_RE['random-funs-value'],
@@ -238,7 +241,7 @@ def obfuscate(
         input_file = fs.details(input_path)
         output_dir_path = os.path.join(output_path, input_file['name'])
 
-        fs.mkdir(output_dir_path)
+        fs.mkdir(output_dir_path, False)
 
         variant(
             input_path,

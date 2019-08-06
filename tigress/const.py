@@ -17,7 +17,8 @@ TIGRESS_RE = {
     'int-activation-code': r'int activationCode ;',
     'unsigned-long-activation-code': r'(unsigned long activationCode ;)',
     'activation-code': r'(activationCode =.*)',
-    'failed': r'(failed \|= activationCode !.*)'}
+    'failed': r'(failed \|= activationCode !.*)',
+    'arg-code': r'unsigned long input\[.*] ;'}
 
 TIGRESS_REPLACE = {
     'pass': '  char password{count}[100] = "";',
@@ -26,7 +27,7 @@ TIGRESS_REPLACE = {
     'check-pass': '  stringCompareResult = strncmp(password{count}, "{password}", 100UL);\n  ' \
                   'failed |= stringCompareResult != 0UL;',
     'while': '  while (randomFuns_i5 < {count}) {{',
-
+    'num-code': 'unsigned long input[{count}] ;',
     'code': '  unsigned long activationCode{count} ;',
     'input': '  activationCode{count} = input[{count2}UL];',
     'check-code': '  failed |= activationCode{count} != {code}UL;',

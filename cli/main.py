@@ -30,7 +30,11 @@ def run(argv):
         sys.exit(1)
 
     tool = args.option
-    output_path = os.path.abspath(args.output)
+    if args.output:
+        output_path = os.path.abspath(args.output)
+    else:
+        print_help()
+        exit(1)
 
     if tool == GENERATE:
         codes = args.codes
@@ -40,7 +44,7 @@ def run(argv):
     elif tool == OBFUSCATE:
         num_variants = args.num_variants
         input_path = os.path.abspath(args.input)
-        fs.mkdir(output_path)
+        fs.mkdir(output_path, False)
         obfuscation_combinations = args.obfuscation_list
 
         for obs in obfuscation_combinations:
