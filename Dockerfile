@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-LABEL Maintainer="Deepak Adhikari" Version="0.1.0-alpha"
+LABEL Maintainer="Deepak Adhikari"
 
 # Install Klee dependencies
 RUN apt-get update && apt-get install -y wget unzip python3-pip curl \
@@ -54,18 +54,24 @@ RUN wget https://github.com/klee/klee/archive/v2.0.zip && unzip v2.0.zip && \
   -DKLEE_UCLIBC_PATH=../../klee-uclibc-klee_uclibc_v1.2 \
   ../ && make
 
-# Install argon dependencies
-RUN sudo pip3 install --upgrade pip && RUN sudo pip3 install -r requirements.txt
 
 # Download Tigress
-RUN wget https://github.com/tum-i22/obfuscation-benchmarks/raw/d11452ffb3ec7418a462f65d4034f9f1474136c8/resources/tigress-Linux-x86_64-2.2.zip && \
+RUN wget https://github.com/elm3nt/table/raw/d1ba4bf5e4da0f24ccca6e35d242ee7e7d8a9dd4/resources/tigress-Linux-x86_64-2.2.zip && \
   unzip tigress-Linux-x86_64-2.2.zip && rm tigress-Linux-x86_64-2.2.zip
-# Tigress requires older version of Gcc
+# Tigress requires older version of GCC
 RUN sudo rm /usr/bin/gcc && sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
-
-# Add path of Klee and Tigress
+# Tigress requires environment variable
 RUN echo 'export TIGRESS_HOME=/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
-RUN echo 'export PATH=$PATH:/home/argon/tools/klee-2.0/build/bin:/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
+
+# Install Argon
+RUN sudo pip3 install --upgrade pip && RUN sudo pip3 install -r requirements.txt
+RUN git clone git@github.com:elm3nt/argon-cli.git
+
+# Add path of Argon, Tigress and Klee
+RUN echo 'export PATH=$PATH:/home/argon/tools/argon-cli' >> /home/argon/.bashrc
+RUN echo 'export PATH=$PATH:/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
+RUN echo 'export PATH=$PATH:/home/argon/tools/klee-2.0/build/bin' >> /home/argon/.bashrc
+
 
 # Update user and permissions
 USER argon
