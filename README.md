@@ -30,7 +30,7 @@ Syntax
 ```
 $ argon generate -o [output c file path] -c [code] - p [password]
 ```
-**Please make sure you specify a filename in the output path with a c extension 
+**Please make sure you specify a filename in the output path with a c extension.**
 
 Example
 ```
