@@ -21,15 +21,17 @@ $ mkdir out
 $ docker run -v $(pwd):/home/argon/workspace -ti --name=argon elm3nt/argon
 $ cd ~/workspace
 ```
-This will mount host's workspace directory to contianer's workspace directory situated in home directory.
+This will mount the host's workspace directory to the container's workspace directory situated in home directory.
 
 
 ### Generate c file with authentication
-Generates sameple c source file using `Tigress` `randomFunc`. You can provide either `activation codes` or `passwords` or both for `authentication` function.
+Generates sample c source file using `Tigress` `randomFunc`. You can provide either `activation codes` or `passwords` or both for `authentication` function.
 Syntax
 ```
 $ argon generate -o [output c file path] -c [code] - p [password]
 ```
+**Please make sure you specify a filename in the output path with a c extension 
+
 Example
 ```
 $ argon generate -o out/sample.c -c 18
@@ -53,7 +55,7 @@ $ argon obfuscate -i out/sample.c -o out/obs -nv 5 -ol A AC ADC DACV
 ```
 
 ## Execution time analysis
-Generates analysis report of execution time of compiled c source file using provided `GCC` optimiazation levels (`0` `1` `2` `3` `s` `fast`). It can take input as single c source file or directory with c source files. The analysis report is saved in `analysis.csv` file of output path.
+Generates analysis report of execution time for compiled c source file using provided `GCC` optimiazation levels (`0` `1` `2` `3` `s` `fast`). It can take input as single c source file or directory with c source files. The analysis report is saved in `analysis.csv` file of output path.
 
 ### Compile and execute c source file 
 Syntax
