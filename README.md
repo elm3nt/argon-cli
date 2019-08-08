@@ -136,4 +136,4 @@ Analysis report
 
 ## License
 
-This source code is released under the [MIT License](LICENSE.md)
+This source code is released under the [MIT License](LICENSE)
