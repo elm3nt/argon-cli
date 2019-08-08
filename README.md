@@ -1,8 +1,6 @@
-<h1 align="center">Argon</h1>
-<p align="center">
-  An automation tool to generate, obfuscate, compile and run symbolic execution on c source files
-</p>
+# Argon
 
+An automation tool to generate, obfuscate, compile and run symbolic execution on c source files
 ![Argon Architecture](architecture.png)
 
 
