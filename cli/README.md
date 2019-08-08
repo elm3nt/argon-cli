@@ -1,13 +1,21 @@
+## Argon commands
+
 ```
-Argon commands:
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
+```
 
-mandatory argument: ALL TOOLS REQUIRE THIS ARGUEMENT!!
+
+## Mandatory argument: ALL TOOLS REQUIRE THIS ARGUEMENT!!
+
+```
    -o , --output         path of file/dir to store generated file(s)
+```
 
-argon tool options:
 
+## Argon tool options:
+
+```
   usage: argon {run,all,angr,klee,generate,obfuscate} [-o]
 
     generate            generate sample c source code with code and password
@@ -16,9 +24,12 @@ argon tool options:
     all                 run symbolic analysis using Angr, Klee and note execution time
     angr                runs symbolic analysis using Angr
     klee                runs symbolic analysis using Klee
-                        
-help for each option:
+```
 
+
+## Help for each option:
+
+```
  generate usage: argon generate [-o] [-c [[...]]] [-p [[...]]]:
  
   -c, --codes           activation code for generated program
