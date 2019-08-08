@@ -42,6 +42,12 @@ TIGRESS_REPLACE = {
 
 }
 
+'''
+Taken reference from:
+Holder, William & Mcdonald, J & Andel, Todd. (2017).
+Evaluating Optimal Phase Ordering in Obfuscation Executives.
+10.1145/3151137.3151140.
+'''
 TIGRESS_CMD = {
     'abstract': 'tigress \
         --Verbosity=1 \
