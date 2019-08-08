@@ -6,14 +6,14 @@
 ```
 
 
-## Mandatory argument: ALL TOOLS REQUIRE THIS ARGUEMENT!!
+## Mandatory argument - ALL TOOLS REQUIRE THIS ARGUEMENT!!
 
 ```
    -o , --output         path of file/dir to store generated file(s)
 ```
 
 
-## Argon tool options:
+## Argon tool options
 
 ```
   usage: argon {run,all,angr,klee,generate,obfuscate} [-o]
@@ -27,7 +27,7 @@
 ```
 
 
-## Help for each option:
+## Help for each option
 
 ```
  generate usage: argon generate [-o] [-c [[...]]] [-p [[...]]]:
