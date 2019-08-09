@@ -9,7 +9,7 @@ An automation tool to generate, obfuscate, compile and run symbolic execution on
 - Generate sample c source code with activation codes and passwords based authentication using [Tigress](http://tigress.cs.arizona.edu/)
 - Compile c source files with different optimization levels using [GCC](https://gcc.gnu.org/) and run it
 - Compile c source files to bytecodes using [Clang](https://clang.llvm.org/)
-- Run symbolic execution using [Angr](http://angr.io/) and [Klee](https://github.com/klee/)
+- Run symbolic execution using [Angr](http://angr.io/) and [Klee](http://klee.github.io/)
 - Generate analysis report of symbolic execution and run time
 
 
@@ -112,7 +112,7 @@ $ argon klee -i out/obs/codepass/AC -o out/out-klee-ac -na 1 -la 2 -ni 1 -li 6 #
 
 Run symbolic execution using Angr, Klee and notes execution time as well
 ```
-$ argon all -i out/obs/codepass/ADC -o out/out-all-adc -na 1 -la 2 -ni 1 -li 8 -c 18 -p secret
+$ argon all -i out/obs/codepass/A -o out/out-all-a -na 1 -la 2 -ni 1 -li 8 -c 18 -p secret
 
 ```
 Analysis report
