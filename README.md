@@ -106,7 +106,7 @@ $ argon (angr|klee|all) -i [input C file/dir path] -o [output directory path] -n
 
 Example
 ```
-$ argon angr -i out/code.c -o out/out-angr-code -na 1 -la 2 -c 18 # Does not verify code after running symbolic execution
+$ argon angr -i out/password.c -o out/out-angr-password -ni 1 -li 6  # Does not verify password after running symbolic execution
 $ argon klee -i out/obs/codepass/AC -o out/out-klee-ac -na 1 -la 2 -ni 1 -li 6 # Varifies activation codes and password after running symbolic execution
 ```
 
