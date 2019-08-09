@@ -6,11 +6,11 @@ An automation tool to generate, obfuscate, compile and run symbolic execution on
 
 ## Features
 
-- Generates sample c source code using [Tigress](http://tigress.cs.arizona.edu/). The program requires activation codes and passwords to run 
-- Compiles c source files with different optimization levels using [GCC](https://gcc.gnu.org/) and run it
-- Compiles c source files to bytecodes using [Clang](https://clang.llvm.org/)
-- Runs symbolic execution using [Angr](http://angr.io/) and [Klee](https://github.com/klee/)
-- Generates analysis report of symbolic execution
+- Generate sample c source code with activation codes and passwords based authentication using [Tigress](http://tigress.cs.arizona.edu/)
+- Compile c source files with different optimization levels using [GCC](https://gcc.gnu.org/) and run it
+- Compile c source files to bytecodes using [Clang](https://clang.llvm.org/)
+- Run symbolic execution using [Angr](http://angr.io/) and [Klee](https://github.com/klee/)
+- Generate analysis report of symbolic execution and run time
 
 
 ## Quick start
@@ -24,19 +24,19 @@ $ mkdir out
 $ docker run -v $(pwd):/home/argon/workspace -ti --name=argon elm3nt/argon
 $ cd ~/workspace
 ```
-This mmounts workspace directory created in host machine to the container home directory. This helps to easly access benchmark and test results files. For argon commandline help refer to cli [README](cli/README.md).
+It mounts workspace directory created in host machine to the container home directory. This helps to easly access benchmark and test results files from host machine. For argon command line help refer to cli [README](cli/README.md).
 
 
 ## Generate c source file with authentication function
 
-Generates sample c source file using Tigress randomFunc option. You can provide either activation codes or passwords or both for authentication function.
+Generate sample c source file using Tigress `randomFunc` option. You can provide either activation codes or passwords or both for authentication function.
 
 Syntax
 ```
-$ argon generate -o [output c file path] -c [code] - p [password]
+$ argon generate -o [output c file path] -c [code] -p [password]
 ```
 
-**Note: Please make sure you specify filename with a extension in output path.**
+**Note: Please make sure you specify filename with c extension in output path**
 
 
 Example
@@ -48,7 +48,7 @@ $ argon generate -o out/codepass.c -c 18 -p secret
 
 ## Obfuscate generated c source file
 
-Obfuscates generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations, for e.g. A, C, D V or any combinations of short codes such as AC, ADC, DACV.  
+Obfuscate generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations. For e.g. A, C, D V or any combinations of short codes such as AC, ADC, DACV.  
 
 **Note: Make sure you use generated c source file from `generate` command. Your custom c source file might not work.**
 
@@ -64,7 +64,7 @@ $ argon obfuscate -i out/codepass.c -o out/obs -nv 5 -ol A AC ADC DACV
 
 ## Execution time analysis
 
-It takes input as c source file(s). You can provide single c source file path. If you provide directory path it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provied optimiazation levels (0, 1, 2, 3, s, fast) in the options. The analysis report is saved in analysis.csv file of output path.
+It takes input as c source file(s). You can provide single c source file path. If you provide directory path, it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provided optimiazation levels (0, 1, 2, 3, s, fast) in the options. The analysis report is saved in analysis.csv file of output path.
 
 Syntax to compile and execute c source file 
 
@@ -92,12 +92,12 @@ Analysis report
 
 ## Symbolic execution analysis
 
-Generates symbolic execution analysis report of c source files using `Klee` or `Angr` or both. It takes input as c source file(s). You can provide single c source file path. Or if you provide directory path it will recursively search for c source files in that direcotry. The analysis report with crack time,  saved in `analysis.csv` file of output path.
-- The c source file must have either c `args` authentication or c standard stdin (e.g. `scanf`) authentication or both
+Generate symbolic execution analysis report of c source files using `Klee` or `Angr` or both. It takes input as c source file(s). You can provide single c source file path. Or if you provide directory path, it will recursively search for c source files in that direcotry. The analysis report is saved in `analysis.csv` file of output path.
+- The c source file must have either c `args` based authentication or c standard stdin (e.g. `scanf`) based authentication or both
 - If source program has c `args` based authentication, the command requires number of arguments and length of argument to perform symbolic execution
-- Similarly if source program has c `stdin` based authentication number of standard inputs and length of standard input is required
+- Similarly if source program has c `stdin` based authentication, number of standard inputs and length of standard input is required
 - If source file has both `args` and `stdin` based authentication provide both of them
-- If you want validate whether symbolic execution tools cracked activation codes and passwords correctly, provide activation codes and passwords in the command
+- If you want validate whether symbolic execution tools cracked activation codes and passwords correctly, provide activation codes and passwords at the command
 
 Syntax
 ```
