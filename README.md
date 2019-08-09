@@ -75,7 +75,7 @@ $ argon run -i [input C file/dir path] -o [output directory path] -ol {0|1|2|3|s
 Example
 ```
 $ argon run -i out/obs/codepass/AC -o out/out-run -ol 0 -c 18 -p secret
-$ argon run -i out/codepass.c -o out/out-sample -ol 0 1 2 3 s fast -c 18 -p secret
+$ argon run -i out/codepass.c -o out/out-codepass -ol 0 1 2 3 s fast -c 18 -p secret
 ```
 
 Analysis report
@@ -107,7 +107,7 @@ $ argon (angr|klee|all) -i [input C file/dir path] -o [output directory path] -n
 Example
 ```
 $ argon angr -i out/code.c -o out/out-angr-code -na 1 -la 2 -c 18 # Does not verify code after running symbolic execution
-$ argon klee -i out/obs/codepass/AC -o out/out-klee-obs -na 1 -la 2 -ni 1 -li 6 # Varifies activation codes and password after running symbolic execution
+$ argon klee -i out/obs/codepass/AC -o out/out-klee-ac -na 1 -la 2 -ni 1 -li 6 # Varifies activation codes and password after running symbolic execution
 ```
 
 Run symbolic execution using Angr, Klee and notes execution time as well
