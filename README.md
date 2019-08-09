@@ -75,7 +75,7 @@ $ argon run -i [input C file/dir path] -o [output directory path] -ol {0|1|2|3|s
 Example
 ```
 $ argon run -i out/obs/codepass/AC -o out/out-run -ol 0 -c 18 -p secret
-$ argon run -i out/sample.c -o out/out-sample -ol 0 1 2 3 s fast -c 18 -p secret
+$ argon run -i out/codepass.c -o out/out-sample -ol 0 1 2 3 s fast -c 18 -p secret
 ```
 
 Analysis report
