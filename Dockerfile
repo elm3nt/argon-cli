@@ -66,7 +66,7 @@ RUN echo 'export TIGRESS_HOME=/home/argon/tools/tigress-2.2' >> /home/argon/.bas
 # Install Argon
 RUN wget https://github.com/elm3nt/argon-cli/archive/v0.1.0.zip && unzip v0.1.0.zip && \
   rm v0.1.0.zip
-RUN sudo pip3 install -U -r /home/argon/tools/argon-cli/requirements.txt
+RUN sudo pip3 install -U -r /home/argon/tools/argon-cli-0.1.0/requirements.txt
 
 # Add path of Argon, Tigress and Klee
 RUN echo 'export PATH=$PATH:/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
