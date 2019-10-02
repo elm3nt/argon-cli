@@ -48,7 +48,7 @@ $ argon generate -o out/codepass.c -c 18 -p secret
 
 ## Obfuscate generated c source file
 
-Obfuscate generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations. For e.g. A, C, D V or any combinations of short codes such as AC, ADC, DACV.
+Obfuscate generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations. For e.g. `A`, `C`, `D`, `V` or any combinations of short codes such as `AC`, `ADC`, `DACV`.
 
 **Note: Make sure you use generated c source file from `generate` command. Your custom c source file might not work.**
 
