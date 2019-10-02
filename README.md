@@ -48,7 +48,7 @@ $ argon generate -o out/codepass.c -c 18 -p secret
 
 ## Obfuscate generated c source file
 
-Obfuscate generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations. For e.g. A, C, D V or any combinations of short codes such as AC, ADC, DACV.
+Obfuscate generated c source file with Tigress transformations (Abstract, Control flow, Data and Virtualization). Use short code of each transformations. For e.g. `A`, `C`, `D`, `V` or any combinations of short codes such as `AC`, `ADC`, `DACV`.
 
 **Note: Make sure you use generated c source file from `generate` command. Your custom c source file might not work.**
 
@@ -64,7 +64,7 @@ $ argon obfuscate -i out/codepass.c -o out/obs -nv 5 -ol A AC ADC DACV
 
 ## Execution time analysis
 
-It takes input as c source file(s). You can provide single c source file path. If you provide directory path, it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provided optimiazation levels (0, 1, 2, 3, s, fast) in the options. The analysis report is saved in analysis.csv file of output path.
+It takes input as c source file(s). You can provide single c source file path. Or if you provide directory path, it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provided optimiazation levels `0`, `1`, `2`, `3`, `s`, `fast` in the options. The analysis report is saved in `analysis.csv` file of output path.
 
 Syntax to compile and execute c source file
 
@@ -93,7 +93,7 @@ Analysis report
 ## Symbolic execution analysis
 
 Generate symbolic execution analysis report of c source files using `Klee` or `Angr` or both. It takes input as c source file(s). You can provide single c source file path. Or if you provide directory path, it will recursively search for c source files in that direcotry. The analysis report is saved in `analysis.csv` file of output path.
-- The c source file must have either c `args` based authentication or c standard stdin (e.g. `scanf`) based authentication or both
+- A c source file must have either c `args` based authentication or c standard stdin (e.g. `scanf`) based authentication or both
 - If source program has c `args` based authentication, the command requires number of arguments and length of argument to perform symbolic execution
 - Similarly if source program has c `stdin` based authentication, number of standard inputs and length of standard input is required
 - If source file has both `args` and `stdin` based authentication provide both of them

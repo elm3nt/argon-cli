@@ -64,13 +64,13 @@ RUN sudo rm /usr/bin/gcc && sudo ln -s /usr/bin/gcc-4.8 /usr/bin/gcc
 RUN echo 'export TIGRESS_HOME=/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
 
 # Install Argon
-RUN wget https://github.com/elm3nt/argon-cli/archive/v0.1.0.zip && unzip v0.1.0.zip && \
-  rm v0.1.0.zip
-RUN sudo pip3 install -U -r /home/argon/tools/argon-cli-0.1.0/requirements.txt
+RUN wget https://github.com/elm3nt/argon-cli/archive/v0.1.1.zip && unzip v0.1.1.zip && \
+  rm v0.1.1.zip
+RUN sudo pip3 install -U -r /home/argon/tools/argon-cli-0.1.1/requirements.txt
 
 # Add path of Argon, Tigress and Klee
 RUN echo 'export PATH=$PATH:/home/argon/tools/tigress-2.2' >> /home/argon/.bashrc
-RUN echo 'export PATH=$PATH:/home/argon/tools/argon-cli-0.1.0' >> /home/argon/.bashrc
+RUN echo 'export PATH=$PATH:/home/argon/tools/argon-cli-0.1.1' >> /home/argon/.bashrc
 RUN echo 'export PATH=$PATH:/home/argon/tools/klee-2.0/build/bin' >> /home/argon/.bashrc
 
 # Update user and permissions
