@@ -64,7 +64,7 @@ $ argon obfuscate -i out/codepass.c -o out/obs -nv 5 -ol A AC ADC DACV
 
 ## Execution time analysis
 
-It takes input as c source file(s). You can provide single c source file path. If you provide directory path, it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provided optimiazation levels (0, 1, 2, 3, s, fast) in the options. The analysis report is saved in analysis.csv file of output path.
+It takes input as c source file(s). You can provide single c source file path. If you provide directory path, it will recursively search for c source files in that direcotry. Then these c source files are compiled using GCC with provided optimiazation levels `0`, `1`, `2`, `3`, `s`, `fast` in the options. The analysis report is saved in `analysis.csv` file of output path.
 
 Syntax to compile and execute c source file
 
