@@ -41,7 +41,7 @@ pylint==2.3.1
 PySMT==0.8.0
 pyvex==8.19.4.5
 pyxdg==0.25
-rpyc==4.1.0
+rpyc==4.1.2
 SecretStorage==2.3.1
 six==1.11.0
 smmap2==2.0.5
