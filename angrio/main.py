@@ -160,10 +160,15 @@ def run(input_file_path, output_dir_path, stdin, options, credentials):
     Returns:
         dict -- Symbolic execution statistics
     '''
-    compiled_code_path = compile_code(input_file_path, output_dir_path)
+    name, ext = os.path.splitext(input_file_path)
+
+    if ext == '.c':
+        source_path = compile_code(input_file_path, output_dir_path)
+    elif ext == '.out':
+        source_path = input_file_path
 
     return symbolic_execution(
-        compiled_code_path,
+        source_path,
         output_dir_path,
         stdin,
         credentials)

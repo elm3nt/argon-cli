@@ -20,6 +20,10 @@ def file_iterator(input_path, output_path, tool, func_name, func_args):
         func_args {dict} -- Arguments requried for function call
     '''
     input_files_path = fs.ls(input_path, EXT['c'])
+
+    if tool == 'angr':
+        input_files_path += fs.ls(input_path, 'out')
+
     new_output_path = fs.mkdir(output_path)
 
     csv_header = get_csv_header(tool, func_args['credentials'])
