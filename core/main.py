@@ -3,8 +3,8 @@ import os
 from shutil import copy2
 
 from utils import fs
-from core.const import EXT, FILE_NAME
 from stats.main import get_csv_header
+from core.const import EXT, FILE_NAME, ANGR
 
 
 def file_iterator(input_path, output_path, tool, func_name, func_args):
@@ -21,8 +21,8 @@ def file_iterator(input_path, output_path, tool, func_name, func_args):
     '''
     input_files_path = fs.ls(input_path, EXT['c'])
 
-    if tool == 'angr':
-        input_files_path += fs.ls(input_path, 'out')
+    if tool == ANGR:
+        input_files_path += fs.ls(input_path, EXT['out'])
 
     new_output_path = fs.mkdir(output_path)
 
