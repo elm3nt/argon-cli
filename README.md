@@ -24,7 +24,7 @@ $ mkdir out
 $ docker run -v $(pwd):/home/argon/workspace -ti --name=argon elm3nt/argon
 $ cd ~/workspace
 ```
-It mounts workspace directory created in host machine to the container home directory. This helps to easly access benchmark and test results files from host machine. For argon command line help refer to cli [README](cli/README.md).
+Above command downloads Argon image - [elm3nt/argon](https://hub.docker.com/r/elm3nt/argon) from Docker Hub. Then it mounts workspace directory created in host machine to the container's home directory. This helps to easly access benchmark and test results files from host machine. For argon command line help refer to cli [README](cli/README.md).
 
 
 ## Generate c source file with authentication function
@@ -98,6 +98,7 @@ Generate symbolic execution analysis report of c source files using `Klee` or `A
 - Similarly if source program has c `stdin` based authentication, number of standard inputs and length of standard input is required
 - If source file has both `args` and `stdin` based authentication provide both of them
 - If you want validate whether symbolic execution tools cracked activation codes and passwords correctly, provide activation codes and passwords at the command
+- `Angr` can run symbolic execution both for `c` source file and executable file with `.out` extension
 
 Syntax
 ```

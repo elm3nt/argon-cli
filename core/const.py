@@ -14,6 +14,7 @@ RE_OBFUSCATION = r'[ACDV]+$'
 
 EXT = {
     'c': '.c',
+    'out': '.out',
     'txt': '.txt',
     'ktest': '.ktest',
 }
