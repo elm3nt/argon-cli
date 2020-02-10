@@ -7,7 +7,7 @@ from datetime import datetime
 from utils import fs
 from utils import lists
 from code.main import compile_code
-from core.const import ONE_BYTE, FILE_NAME
+from core.const import ONE_BYTE, FILE_NAME, EXT
 
 
 def init_project(input_file_path, stdin, project):
@@ -160,15 +160,29 @@ def run(input_file_path, output_dir_path, stdin, options, credentials):
     Returns:
         dict -- Symbolic execution statistics
     '''
-    name, ext = os.path.splitext(input_file_path)
+    file = fs.details(input_file_path)
 
-    if ext == '.c':
-        source_path = compile_code(input_file_path, output_dir_path)
-    elif ext == '.out':
-        source_path = input_file_path
+    if file['ext'] == EXT['c']:
+        compiled_code_path = compile_code(input_file_path, output_dir_path)
+        return symbolic_execution(
+            compiled_code_path,
+            output_dir_path,
+            stdin,
+            credentials)
 
-    return symbolic_execution(
-        source_path,
-        output_dir_path,
-        stdin,
-        credentials)
+    elif file['ext'] == EXT['out']:
+        return symbolic_execution(
+            input_file_path,
+            output_dir_path,
+            stdin,
+            credentials)
+
+    else:
+        return {
+            'time-taken': 0,
+            'generated-codes': 'Invalid file type',
+            'generated-passwords': 'File must be of .c or .out extension',
+            'is-code-cracked': False,
+            'is-password-cracked': False,
+        }
+
