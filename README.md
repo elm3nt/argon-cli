@@ -98,7 +98,7 @@ Generate symbolic execution analysis report of c source files using `Klee` or `A
 - Similarly if source program has c `stdin` based authentication, number of standard inputs and length of standard input is required
 - If source file has both `args` and `stdin` based authentication provide both of them
 - If you want validate whether symbolic execution tools cracked activation codes and passwords correctly, provide activation codes and passwords at the command
-- `Angr` can run symbolic execution both for `c` source file and executable file with `.out` extension
+- `Angr` can run symbolic execution both for `c` source file and executable file with `.out` `.exe` extensions
 
 Syntax
 ```

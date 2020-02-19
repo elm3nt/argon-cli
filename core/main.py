@@ -23,6 +23,7 @@ def file_iterator(input_path, output_path, tool, func_name, func_args):
 
     if tool == ANGR:
         input_files_path += fs.ls(input_path, EXT['out'])
+        input_files_path += fs.ls(input_path, EXT['exe'])
 
     new_output_path = fs.mkdir(output_path)
 

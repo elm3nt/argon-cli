@@ -170,7 +170,7 @@ def run(input_file_path, output_dir_path, stdin, options, credentials):
             stdin,
             credentials)
 
-    elif file['ext'] == EXT['out']:
+    elif file['ext'] == EXT['out'] or file['ext'] == EXT['exe']:
         return symbolic_execution(
             input_file_path,
             output_dir_path,
