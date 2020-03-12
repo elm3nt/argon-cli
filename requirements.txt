@@ -31,7 +31,7 @@ networkx==2.3
 pefile==2019.4.18
 plumbum==1.6.7
 progressbar==2.5
-psutil==5.6.3
+psutil==5.6.6
 pycodestyle==2.5.0
 pycparser==2.19
 pycrypto==2.6.1
