@@ -12,7 +12,7 @@ cffi==1.12.3
 claripy==8.19.4.5
 cle==8.19.4.5
 cooldict==1.4
-cryptography==2.1.4
+cryptography==3.2
 decorator==4.4.0
 dpkt==1.9.2
 future==0.17.1
